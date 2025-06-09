@@ -9,19 +9,21 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ruicomp.cmptemplate.domain.models.Caller
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SavedCallerScreen(onBack: () -> Unit) {
-    val sampleCallers = listOf(
-        Caller(1, "John Doe", "123-456-7890"),
-        Caller(2, "Jane Smith", "098-765-4321")
-    )
+fun SavedCallerScreen(
+    onBack: () -> Unit,
+    viewModel: SavedCallerViewModel = koinInject()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    var showAddCallerDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -35,7 +37,7 @@ fun SavedCallerScreen(onBack: () -> Unit) {
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /* TODO: Add new caller */ }) {
+            FloatingActionButton(onClick = { showAddCallerDialog = true }) {
                 Icon(Icons.Default.Add, contentDescription = "Add Caller")
             }
         }
@@ -46,12 +48,68 @@ fun SavedCallerScreen(onBack: () -> Unit) {
                 .padding(paddingValues),
             contentPadding = PaddingValues(16.dp)
         ) {
-            items(sampleCallers) { caller ->
-                CallerItem(caller = caller, onCall = { /*TODO*/ }, onDelete = { /*TODO*/ })
+            items(uiState.callers) { caller ->
+                CallerItem(
+                    caller = caller,
+                    onCall = { /*TODO*/ },
+                    onDelete = { viewModel.onDeleteCaller(caller.id) }
+                )
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }
+
+    if (showAddCallerDialog) {
+        AddCallerDialog(
+            onDismiss = { showAddCallerDialog = false },
+            onConfirm = { name, number ->
+                viewModel.onAddCaller(name, number)
+                showAddCallerDialog = false
+            }
+        )
+    }
+}
+
+@Composable
+private fun AddCallerDialog(
+    onDismiss: () -> Unit,
+    onConfirm: (String, String) -> Unit
+) {
+    var name by remember { mutableStateOf("") }
+    var number by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Add New Caller") },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text("Name") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = number,
+                    onValueChange = { number = it },
+                    label = { Text("Number") }
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = { onConfirm(name, number) },
+                enabled = name.isNotBlank() && number.isNotBlank()
+            ) {
+                Text("Add")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
 }
 
 @Composable

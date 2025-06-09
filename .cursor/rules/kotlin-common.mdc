@@ -102,4 +102,3 @@ Generate code, corrections, and refactorings that comply with the basic principl
 - Use repository pattern for data persistence
   - see cache if you need to cache data
 - Use MVI pattern to manage state and events in viewmodels 
-

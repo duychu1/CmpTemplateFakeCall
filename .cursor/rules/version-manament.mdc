@@ -1,0 +1,53 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Library Version Management Rules
+
+## Description
+Simple rules for managing dependency versions in `libs.versions.toml`
+
+## File Pattern
+- `gradle/libs.versions.toml`
+
+## Version Update Rules
+
+### Core Rule
+- ONLY update if new version is higher than current version
+- NEVER downgrade to lower versions
+- Keep current version if new version is equal
+
+### Version Examples
+```toml
+# CORRECT Updates ✅
+1.10.2 -> 1.10.3    # Valid (higher version)
+2.0.2 -> 2.1.0      # Valid (higher version)
+36 -> 37            # Valid (higher number)
+
+# INCORRECT Updates ❌
+4.1.0 -> 4.0.9      # Invalid (lower version)
+2.1.21 -> 2.1.21    # Invalid (same version)
+36 -> 35            # Invalid (lower number)
+```
+
+### Current Base Versions
+```toml
+# Reference versions - Update only if higher
+agp = "8.8.2"
+android-compileSdk = "36"
+kotlin = "2.1.21"
+kotlinx-coroutines = "1.10.2"
+sqldelight = "2.0.2"
+koin = "4.1.0"
+```
+
+### Version Types
+- Regular: 1.10.2
+- Beta/Alpha: 2.9.0-beta01
+- Single number (SDK): 36
+
+### Quick Check
+1. Compare version numbers
+2. Update only if new > current
+3. Test after updating

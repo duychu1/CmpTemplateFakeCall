@@ -1,0 +1,14 @@
+CREATE TABLE caller (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    number TEXT NOT NULL
+);
+
+getAllCallers:
+SELECT * FROM caller;
+
+insertCaller:
+INSERT INTO caller(name, number) VALUES (?, ?);
+
+deleteCallerById:
+DELETE FROM caller WHERE id = ?; 

@@ -143,7 +143,6 @@ const sharedCodeGuidelines = `
 7. Use common utilities and extensions
 8. Share network and database logic
 9. Implement common error handling strategies
-10. Use shared preferences/settings management
 `;
 
 ### Dependency Management
@@ -159,7 +158,7 @@ const dependencyGuidelines = `
    - Kotlinx.serialization for JSON handling
    - Kotlinx.datetime for date/time operations
    - Napier for logging
-   - Multiplatform settings for preferences
+   - Multiplatform datastore to save key- value
 `;
 
 ### Testing Guidelines
