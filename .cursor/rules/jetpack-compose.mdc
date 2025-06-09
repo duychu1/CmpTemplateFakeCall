@@ -1,0 +1,221 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+
+### Compose Multiplatform .cursorrules
+
+### Flexibility Notice
+### Note: This is a recommended project structure, but be flexible and adapt to existing project structures.
+### Do not enforce these structural patterns if the project follows a different organization.
+### Focus on maintaining consistency with the existing project architecture while applying Compose Multiplatform best practices.
+
+### Project Architecture and Best Practices
+const composeMultiplatformBestPractices = [
+    "Adapt to existing project architecture while maintaining clean code principles",
+    "Maximize code sharing between platforms while respecting platform-specific requirements",
+    "Follow Material Design 3 guidelines with platform-appropriate adaptations",
+    "Implement clean architecture with shared domain/data layers and platform-specific presentation when needed",
+    "Use Kotlin coroutines and Flow for asynchronous operations across platforms",
+    "Implement dependency injection using Koin for multiplatform projects",
+    "Follow unidirectional data flow with shared ViewModels and platform-specific UI adaptations",
+    "Use Compose Multiplatform navigation(navigation-compose:2.9.0-beta01) with platform-aware routing",
+    "Implement proper state hoisting and composition with shared state management",
+    "Handle platform-specific resources and assets appropriately",
+    "Use expect/actual declarations for platform-specific implementations",
+    "Implement proper lifecycle management across different platforms"
+];
+
+### Folder Structure
+### Note: This is a reference structure for Compose Multiplatform. Adapt to the project's existing organization
+const projectStructure = `
+shared/
+  src/
+    commonMain/
+      kotlin/com/package/
+        data/
+          repository/
+          datasource/
+          models/
+          mappers/
+        domain/
+          usecases/
+          models/
+          repository/
+        presentation/
+          screens/
+          components/
+          theme/
+          viewmodels/
+          navigation/
+        di/
+        utils/
+        resources/
+    androidMain/
+      kotlin/com/package/
+        platform/
+        resources/
+    iosMain/
+      kotlin/com/package/
+        platform/
+        resources/
+    desktopMain/
+      kotlin/com/package/
+        platform/
+        resources/
+    commonTest/
+    androidUnitTest/
+    iosTest/
+    desktopTest/
+androidApp/
+  src/
+    main/
+      java/com/package/
+        MainActivity.kt
+        Application.kt
+      res/
+iosApp/
+  iosApp/
+    ContentView.swift
+    App.swift
+desktopApp/
+  src/
+    jvmMain/
+      kotlin/
+        Main.kt
+`;
+
+### Compose Multiplatform UI Guidelines
+const composeMultiplatformGuidelines = `
+1. Use remember and derivedStateOf appropriately across all platforms
+2. Implement platform-aware recomposition optimization
+3. Use proper Compose modifiers with platform-specific considerations
+4. Follow composable function naming conventions consistently
+5. Implement comprehensive preview annotations for different platforms
+6. Use proper state management with platform-aware MutableState
+7. Implement robust error handling and loading states across platforms
+8. Use MaterialTheme with platform-appropriate customizations
+9. Follow accessibility guidelines for each target platform
+10. Implement consistent animation patterns with platform adaptations
+11. Handle different screen sizes and orientations across platforms
+12. Use expect/actual for platform-specific UI components when necessary
+13. Implement proper resource management (strings, images, colors) across platforms
+14. Handle platform-specific navigation patterns and back button behavior
+15. Implement proper keyboard and input handling for desktop platforms
+`;
+
+### Platform-Specific Considerations
+const platformConsiderations = `
+Android:
+- Follow Android Material 3 Design guidelines
+- Handle Android lifecycle properly
+- Implement proper back button navigation
+- Use Android-specific resources and permissions
+- Handle different screen densities and sizes
+- Implement proper deep linking
+
+iOS:
+- Follow iOS Human Interface Guidelines where appropriate
+- Handle iOS lifecycle and background states
+- Implement proper iOS navigation patterns
+- Use iOS-specific resources and permissions
+- Handle safe areas and notches
+- Implement proper iOS sharing and integration
+
+Desktop:
+- Handle mouse and keyboard interactions
+- Implement proper window management
+- Handle different screen resolutions
+- Implement desktop-specific UI patterns (menus, toolbars)
+- Handle file system access appropriately
+- Implement proper desktop navigation patterns
+`;
+
+### Shared Code Guidelines
+const sharedCodeGuidelines = `
+1. Maximize code sharing in domain and data layers
+2. Use expect/actual declarations sparingly and only when necessary
+3. Keep platform-specific code in platform source sets
+4. Share ViewModels and business logic across platforms
+5. Use common data models and repository interfaces
+6. Implement shared validation and business rules
+7. Use common utilities and extensions
+8. Share network and database logic
+9. Implement common error handling strategies
+10. Use shared preferences/settings management
+`;
+
+### Dependency Management
+const dependencyGuidelines = `
+1. Use Kotlin Multiplatform libraries when available
+2. Implement platform-specific dependencies in appropriate source sets
+3. Use version catalogs for consistent dependency management
+4. Prefer multiplatform alternatives to platform-specific libraries
+5. Common libraries to consider:
+   - Ktor for networking
+   - SQLDelight for database
+   - Koin for dependency injection
+   - Kotlinx.serialization for JSON handling
+   - Kotlinx.datetime for date/time operations
+   - Napier for logging
+   - Multiplatform settings for preferences
+`;
+
+### Testing Guidelines
+const testingGuidelines = `
+1. Write shared unit tests in commonTest
+2. Implement platform-specific tests in respective test source sets
+3. Use fake repositories and mock dependencies for testing
+4. Test shared ViewModels and business logic thoroughly
+5. Implement UI tests for each platform using appropriate frameworks
+6. Use proper testing coroutine dispatchers
+7. Test expect/actual implementations on each platform
+8. Implement integration tests for shared components
+9. Test resource loading and platform-specific features
+10. Use screenshot testing for UI consistency across platforms
+`;
+
+### Performance Guidelines
+const performanceGuidelines = `
+1. Minimize recomposition using proper keys across all platforms
+2. Use lazy loading components efficiently on all platforms
+3. Implement efficient image loading with platform-appropriate caching
+4. Optimize state management to prevent unnecessary updates
+5. Handle memory management properly on each platform
+6. Implement efficient background processing
+7. Use proper lifecycle awareness across platforms
+8. Optimize resource loading and caching
+9. Handle different performance characteristics of each platform
+10. Profile and optimize platform-specific bottlenecks
+11. Implement proper data synchronization strategies
+12. Use efficient serialization for data transfer
+`;
+
+### Build and Configuration
+const buildGuidelines = `
+1. Use Kotlin Multiplatform Gradle plugin correctly
+2. Configure proper source sets for each platform
+3. Handle platform-specific build configurations
+4. Implement proper resource bundling for each platform
+5. Configure proper signing and publishing for each platform
+6. Use appropriate build variants and flavors
+7. Implement proper CI/CD for multiplatform projects
+8. Handle platform-specific permissions and capabilities
+9. Configure proper proguard/R8 rules for release builds
+10. Implement proper versioning strategy across platforms
+`;
+
+### Code Style and Conventions
+const codeStyleGuidelines = `
+1. Follow Kotlin coding conventions consistently
+2. Use consistent naming across all platforms and modules
+3. Implement proper documentation for shared APIs
+4. Use consistent error handling patterns
+5. Follow consistent logging practices
+6. Implement proper null safety across platforms
+7. Use consistent async/await patterns with coroutines
+8. Follow consistent data class and sealed class usage
+9. Implement proper extension function patterns
+10. Use consistent import organization across modules
+`;

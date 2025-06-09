@@ -1,0 +1,48 @@
+To develop a mobile application that allows users to simulate incoming phone calls. Users can schedule a fake call with customizable caller name, number, date, and time. The app offers instant call options and saved contacts for convenience. A premium model is available for extended functionality.
+🔑 Key Features
+1. Call Now
+    Instantly triggers a fake call.
+    Caller information is taken from default or last-used configuration.
+2. Schedule a Call
+    Users input:
+        Caller name
+        Phone number
+        Date and Time of fake call
+    Option to pick contacts from a saved list.
+    Button: “Schedule Call”
+3. Saved Caller
+    Displays a list of saved contacts.
+    Each contact shows:
+        Avatar icon (initial)
+        Name and number
+        Call and delete buttons
+    Floating Action Button (FAB) to add a new contact.
+4. Call History
+    (Future feature or extension)
+    Shows a list of previously triggered fake calls.
+5. Premium Features
+    Allows:
+        Scheduling multiple calls
+        Longer fake call durations
+    Monetization:
+        Users can watch an ad to unlock premium temporarily.
+6. Notifications
+    Encourages enabling notifications for updates or reminders.
+📱 UI/UX Details
+General
+    Consistent use of rounded cards and containers.
+    Primary color theme: Blue/Green/Yellow.
+    Top bar (AppBar) with titles and back/menu buttons.
+    Bottom FAB for adding items (in Saved Contacts).
+Schedule Screen
+    Two major sections:
+        Contact Info
+        Date & Time
+    Clean input fields with icons.
+    "Pick from Contacts" opens saved contacts.
+Home Screen
+    2x2 grid of primary features:
+        Call Now, Saved Caller, Schedule Calls, Call History
+    Lock icon on Schedule Calls for non-premium users.
+
+    Prominent Premium section with "Watch Ad" CTA.
