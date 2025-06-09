@@ -5,9 +5,6 @@ import com.ruicomp.cmptemplate.data.local.DatabaseDriverFactory
 import com.ruicomp.cmptemplate.data.repository.CallerRepositoryImpl
 import com.ruicomp.cmptemplate.database.AppDatabase
 import com.ruicomp.cmptemplate.domain.repository.CallerRepository
-import com.ruicomp.cmptemplate.domain.usecases.AddCaller
-import com.ruicomp.cmptemplate.domain.usecases.DeleteCaller
-import com.ruicomp.cmptemplate.domain.usecases.GetCallers
 import com.ruicomp.cmptemplate.presentation.screens.saved_caller.SavedCallerViewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -17,11 +14,7 @@ val appModule = module {
     single<CallerDataSource> { CallerDataSource(get()) }
     single<CallerRepository> { CallerRepositoryImpl(get()) }
 
-    factory<GetCallers> { GetCallers(get()) }
-    factory<AddCaller> { AddCaller(get()) }
-    factory<DeleteCaller> { DeleteCaller(get()) }
-    
-    factory<SavedCallerViewModel> { SavedCallerViewModel(get(), get(), get()) }
+    factory<SavedCallerViewModel> { SavedCallerViewModel(get()) }
 }
 
 expect val platformModule: Module 

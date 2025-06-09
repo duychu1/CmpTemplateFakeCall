@@ -40,7 +40,6 @@ shared/
           models/
           mappers/
         domain/
-          usecases/
           models/
           repository/
         presentation/

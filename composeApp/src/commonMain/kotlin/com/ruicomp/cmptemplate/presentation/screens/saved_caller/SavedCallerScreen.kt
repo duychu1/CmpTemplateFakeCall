@@ -13,7 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ruicomp.cmptemplate.domain.models.Caller
+import com.ruicomp.cmptemplate.domain.models.Contact
 import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,12 +23,12 @@ fun SavedCallerScreen(
     viewModel: SavedCallerViewModel = koinInject()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var showAddCallerDialog by remember { mutableStateOf(false) }
+    var showAddContactDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Saved Caller") },
+                title = { Text("Saved Contacts") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -37,41 +37,55 @@ fun SavedCallerScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { showAddCallerDialog = true }) {
-                Icon(Icons.Default.Add, contentDescription = "Add Caller")
+            FloatingActionButton(onClick = { showAddContactDialog = true }) {
+                Icon(Icons.Default.Add, contentDescription = "Add Contact")
             }
         }
     ) { paddingValues ->
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
-            contentPadding = PaddingValues(16.dp)
+                .padding(paddingValues)
         ) {
-            items(uiState.callers) { caller ->
-                CallerItem(
-                    caller = caller,
-                    onCall = { /*TODO*/ },
-                    onDelete = { viewModel.onDeleteCaller(caller.id) }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+            if (uiState.isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            } else if (uiState.error != null) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("Error: ${uiState.error}", color = MaterialTheme.colorScheme.error)
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    contentPadding = PaddingValues(16.dp)
+                ) {
+                    items(uiState.contacts) { contact ->
+                        ContactItem(
+                            contact = contact,
+                            onCall = { /*TODO*/ },
+                            onDelete = { viewModel.onDeleteContact(contact.id) }
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                }
             }
         }
     }
 
-    if (showAddCallerDialog) {
-        AddCallerDialog(
-            onDismiss = { showAddCallerDialog = false },
+    if (showAddContactDialog) {
+        AddContactDialog(
+            onDismiss = { showAddContactDialog = false },
             onConfirm = { name, number ->
-                viewModel.onAddCaller(name, number)
-                showAddCallerDialog = false
+                viewModel.onAddContact(name, number)
+                showAddContactDialog = false
             }
         )
     }
 }
 
 @Composable
-private fun AddCallerDialog(
+private fun AddContactDialog(
     onDismiss: () -> Unit,
     onConfirm: (String, String) -> Unit
 ) {
@@ -80,7 +94,7 @@ private fun AddCallerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add New Caller") },
+        title = { Text("Add New Contact") },
         text = {
             Column {
                 OutlinedTextField(
@@ -113,10 +127,10 @@ private fun AddCallerDialog(
 }
 
 @Composable
-private fun CallerItem(
-    caller: Caller,
-    onCall: (Caller) -> Unit,
-    onDelete: (Caller) -> Unit
+private fun ContactItem(
+    contact: Contact,
+    onCall: (Contact) -> Unit,
+    onDelete: (Contact) -> Unit
 ) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -127,14 +141,14 @@ private fun CallerItem(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text(text = caller.name, style = MaterialTheme.typography.bodyLarge)
-                Text(text = caller.number, style = MaterialTheme.typography.bodyMedium)
+                Text(text = contact.name, style = MaterialTheme.typography.bodyLarge)
+                Text(text = contact.number, style = MaterialTheme.typography.bodyMedium)
             }
             Row {
-                IconButton(onClick = { onCall(caller) }) {
+                IconButton(onClick = { onCall(contact) }) {
                     Icon(Icons.Default.Call, contentDescription = "Call")
                 }
-                IconButton(onClick = { onDelete(caller) }) {
+                IconButton(onClick = { onDelete(contact) }) {
                     Icon(Icons.Default.Delete, contentDescription = "Delete")
                 }
             }
