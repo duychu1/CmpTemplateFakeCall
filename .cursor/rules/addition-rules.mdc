@@ -7,4 +7,4 @@ alwaysApply: false
 
 1. When using sqldelight: when create table: create if not exists
 
-2. Using repository in viewmodel, dont need use case
+2. Using repository in viewmodel, dont need usecase
