@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS call_history (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    number TEXT NOT NULL,
+    timestamp INTEGER NOT NULL
+);
+
+getAllCallHistory:
+SELECT * FROM call_history ORDER BY timestamp DESC;
+
+insertCallHistory:
+INSERT INTO call_history(name, number, timestamp) VALUES (?, ?, ?);
+
+clearCallHistory:
+DELETE FROM call_history; 
