@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ruicomp.cmptemplate.domain.repository.CallerRepository
 import com.ruicomp.cmptemplate.domain.models.Contact
+import com.ruicomp.cmptemplate.domain.usecases.AddCallToHistory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -12,7 +13,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SavedCallerViewModel(
-    private val repository: CallerRepository
+    private val repository: CallerRepository,
+    private val addCallToHistory: AddCallToHistory
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SavedContactsState())
@@ -56,6 +58,13 @@ class SavedCallerViewModel(
             } catch (e: Exception) {
                 _uiState.update { it.copy(isLoading = false, error = e.message) }
             }
+        }
+    }
+
+    fun onCallContact(contact: Contact) {
+        viewModelScope.launch {
+            addCallToHistory(contact)
+            // TODO: A fake call screen will be shown here
         }
     }
 } 

@@ -152,12 +152,12 @@ const dependencyGuidelines = `
 4. Prefer multiplatform alternatives to platform-specific libraries
 5. Common libraries to consider:
    - Ktor for networking
-   - SQLDelight for database
+   - SQLDelight for database (when create table: create if not exists)
    - Koin for dependency injection
    - Kotlinx.serialization for JSON handling
    - Kotlinx.datetime for date/time operations
    - Napier for logging
-   - Multiplatform datastore to save key- value
+   - Multiplatform datastore to save key-value
 `;
 
 ### Testing Guidelines
