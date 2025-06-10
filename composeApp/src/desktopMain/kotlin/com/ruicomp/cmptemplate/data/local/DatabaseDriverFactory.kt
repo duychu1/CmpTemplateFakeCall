@@ -7,9 +7,10 @@ import java.io.File
 
 actual class DatabaseDriverFactory {
     actual fun createDriver(): SqlDriver {
-        val databasePath = File(System.getProperty("java.io.tmpdir"), "app.db")
-        val driver = JdbcSqliteDriver("jdbc:sqlite:${databasePath.absolutePath}")
-        AppDatabase.Schema.create(driver)
+        val driver = JdbcSqliteDriver("jdbc:sqlite:caller.db")
+        if (!File("caller.db").exists()) {
+            AppDatabase.Schema.create(driver)
+        }
         return driver
     }
 } 

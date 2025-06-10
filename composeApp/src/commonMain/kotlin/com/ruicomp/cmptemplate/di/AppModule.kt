@@ -2,7 +2,6 @@ package com.ruicomp.cmptemplate.di
 
 import com.ruicomp.cmptemplate.data.local.CallHistoryDataSource
 import com.ruicomp.cmptemplate.data.local.CallerDataSource
-import com.ruicomp.cmptemplate.data.local.DatabaseDriverFactory
 import com.ruicomp.cmptemplate.data.repository.CallHistoryRepositoryImpl
 import com.ruicomp.cmptemplate.data.repository.CallerRepositoryImpl
 import com.ruicomp.cmptemplate.database.AppDatabase
@@ -16,21 +15,23 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 val appModule = module {
-    single<AppDatabase> { AppDatabase(get<DatabaseDriverFactory>().createDriver()) }
+    single { AppDatabase(driver = get()) }
 
-    // Caller
-    single<CallerDataSource> { CallerDataSource(get()) }
-    single<CallerRepository> { CallerRepositoryImpl(get()) }
+    // DataSources
+    single { CallerDataSource(database = get()) }
+    single { CallHistoryDataSource(database = get()) }
 
-    // Call History
-    single<CallHistoryDataSource> { CallHistoryDataSource(get()) }
-    single<CallHistoryRepository> { CallHistoryRepositoryImpl(get()) }
-    factory<GetCallHistory> { GetCallHistory(get()) }
-    factory<AddCallToHistory> { AddCallToHistory(get()) }
+    // Repositories
+    single<CallerRepository> { CallerRepositoryImpl(dataSource = get()) }
+    single<CallHistoryRepository> { CallHistoryRepositoryImpl(dataSource = get()) }
+
+    // Use cases
+    factory { GetCallHistory(repository = get()) }
+    factory { AddCallToHistory(repository = get()) }
 
     // ViewModels
-    factory<SavedCallerViewModel> { SavedCallerViewModel(get(), get()) }
-    factory<CallHistoryViewModel> { CallHistoryViewModel(get()) }
+    factory { SavedCallerViewModel(repository = get(), addCallToHistory = get()) }
+    factory { CallHistoryViewModel(getCallHistory = get(), addCallToHistory = get()) }
 }
 
 expect val platformModule: Module 

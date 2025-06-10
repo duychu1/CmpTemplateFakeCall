@@ -114,13 +114,6 @@ fun SavedCallerScreen(
                             showBottomSheet = false
                         }
                     }
-                },
-                onCancel = {
-                    scope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            showBottomSheet = false
-                        }
-                    }
                 }
             )
         }

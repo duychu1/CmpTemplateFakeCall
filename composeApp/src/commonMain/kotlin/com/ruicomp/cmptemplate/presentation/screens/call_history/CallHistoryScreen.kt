@@ -1,5 +1,6 @@
 package com.ruicomp.cmptemplate.presentation.screens.call_history
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,27 +16,36 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ruicomp.cmptemplate.domain.models.CallHistory
+import com.ruicomp.cmptemplate.domain.models.Contact
+import com.ruicomp.cmptemplate.presentation.screens.saved_caller.FakeCallSheetContent
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -48,6 +58,10 @@ fun CallHistoryScreen(
     viewModel: CallHistoryViewModel = koinInject()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val scope = rememberCoroutineScope()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var showBottomSheet by remember { mutableStateOf(false) }
+    var selectedHistoryItem by remember { mutableStateOf<CallHistory?>(null) }
 
     Scaffold(
         topBar = {
@@ -84,17 +98,55 @@ fun CallHistoryScreen(
                     contentPadding = PaddingValues(16.dp)
                 ) {
                     items(uiState.history) { historyItem ->
-                        CallHistoryItem(historyItem)
+                        CallHistoryItem(
+                            item = historyItem,
+                            onRecall = {
+                                selectedHistoryItem = it
+                                showBottomSheet = true
+                            }
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
             }
         }
     }
+
+    if (showBottomSheet && selectedHistoryItem != null) {
+        ModalBottomSheet(
+            onDismissRequest = { showBottomSheet = false },
+            sheetState = sheetState
+        ) {
+            FakeCallSheetContent(
+                contact = Contact(
+                    id = selectedHistoryItem!!.id,
+                    name = selectedHistoryItem!!.name,
+                    number = selectedHistoryItem!!.number
+                ),
+                onStartCall = {
+                    viewModel.onRecall(
+                        Contact(
+                            id = selectedHistoryItem!!.id,
+                            name = selectedHistoryItem!!.name,
+                            number = selectedHistoryItem!!.number
+                        )
+                    )
+                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showBottomSheet = false
+                        }
+                    }
+                }
+            )
+        }
+    }
 }
 
 @Composable
-private fun CallHistoryItem(item: CallHistory) {
+private fun CallHistoryItem(
+    item: CallHistory,
+    onRecall: (CallHistory) -> Unit
+) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
@@ -122,11 +174,29 @@ private fun CallHistoryItem(item: CallHistory) {
                 Text(text = item.name, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
                 Text(text = item.number, style = MaterialTheme.typography.bodyMedium)
             }
-            Text(
-                text = formatTimestamp(item.timestamp),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+
+            // Timestamp
+            Column(
+                horizontalAlignment = Alignment.End
+            ) {
+                // day and month
+                Text(
+                    text = formatTimestamp(item.timestamp).split(" ")[0].split("-").drop(1).joinToString("-"),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                // time
+                Text(
+                    text = formatTimestamp(item.timestamp).split(" ")[1],
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            // icon button recall
+            IconButton(onClick = { onRecall(item) }) {
+                Icon(Icons.Filled.Call, contentDescription = "Recall")
+            }
         }
     }
 }
@@ -135,4 +205,4 @@ private fun formatTimestamp(timestamp: Long): String {
     val instant = Instant.fromEpochMilliseconds(timestamp)
     val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
     return "${localDateTime.date} ${localDateTime.hour.toString().padStart(2, '0')}:${localDateTime.minute.toString().padStart(2, '0')}"
-} 
+}
