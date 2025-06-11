@@ -7,7 +7,7 @@ import com.ruicomp.cmptemplate.features.language_setting.presentation.LanguageSe
 import org.koin.dsl.module
 
 val languageSettingModule = module {
-    single { LanguageDataSource() }
-    single<LanguageRepository> { LanguageRepositoryImpl(get()) }
-    factory { LanguageSettingViewModel(get()) }
+//    single { LanguageDataSource() }
+//    single<LanguageRepository> { LanguageRepositoryImpl(get()) }
+    factory { LanguageSettingViewModel() }
 }

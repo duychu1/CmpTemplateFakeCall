@@ -6,19 +6,19 @@ import kotlinx.serialization.Serializable
 sealed class Route
 
 @Serializable
-data object Home : Route()
+data object HomeRoute : Route()
 
 @Serializable
-data object ScheduleCall : Route()
+data object ScheduleCallRoute : Route()
 
 @Serializable
-data object SavedCaller : Route()
+data object SavedCallerRoute : Route()
 
 @Serializable
-data object CallHistory : Route()
+data object CallHistoryRoute : Route()
 
 @Serializable
-data object Settings : Route()
+data object SettingsRoute : Route()
 
 @Serializable
-data object LanguageSetting : Route()
+data object LanguageSettingRoute : Route()

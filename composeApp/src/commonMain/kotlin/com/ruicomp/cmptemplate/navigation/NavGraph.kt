@@ -10,37 +10,36 @@ import com.ruicomp.cmptemplate.features.saved_caller.presentation.SavedCallerScr
 import com.ruicomp.cmptemplate.features.schedule.presentation.ScheduleCallScreen
 import com.ruicomp.cmptemplate.features.settings.presentation.SettingsScreen
 import com.ruicomp.cmptemplate.features.language_setting.presentation.LanguageSettingScreen
-import com.ruicomp.cmptemplate.features.language_setting.presentation.LanguageSettingViewModel
 
 @Composable
 fun NavGraph() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Home) {
-        composable<Home> {
+    NavHost(navController = navController, startDestination = HomeRoute) {
+        composable<HomeRoute> {
             HomeScreen(
                 onCallNow = { /*TODO*/ },
-                onScheduleCall = { navController.navigate(ScheduleCall) },
-                onSavedCaller = { navController.navigate(SavedCaller) },
-                onCallHistory = { navController.navigate(CallHistory) },
-                onSettingsClick = { navController.navigate(Settings) }
+                onScheduleCall = { navController.navigate(ScheduleCallRoute) },
+                onSavedCaller = { navController.navigate(SavedCallerRoute) },
+                onCallHistory = { navController.navigate(CallHistoryRoute) },
+                onSettingsClick = { navController.navigate(SettingsRoute) }
             )
         }
-        composable<ScheduleCall> {
+        composable<ScheduleCallRoute> {
             ScheduleCallScreen(onBack = { navController.popBackStack() })
         }
-        composable<SavedCaller> {
+        composable<SavedCallerRoute> {
             SavedCallerScreen(onBack = { navController.popBackStack() })
         }
-        composable<CallHistory> {
+        composable<CallHistoryRoute> {
             CallHistoryScreen(onBack = { navController.popBackStack() })
         }
-        composable<Settings> {
+        composable<SettingsRoute> {
             SettingsScreen(
                 onBack = { navController.popBackStack() },
-                onLanguageClick = { navController.navigate(LanguageSetting) }
+                onLanguageClick = { navController.navigate(LanguageSettingRoute) }
             )
         }
-        composable<LanguageSetting> {
+        composable<LanguageSettingRoute> {
             LanguageSettingScreen(
                 onBack = { navController.popBackStack() },
             )

@@ -56,4 +56,7 @@
     <string name="terms_and_conditions">Terms and Conditions</string>
     <string name="rate_us">Rate Us</string>
     <string name="share_app">Share App</string>
+
+    <!-- Language Setting Screen -->   -->
+    <string name="language_setting_title">Language</string>
 </resources> 
