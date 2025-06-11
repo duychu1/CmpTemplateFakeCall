@@ -2,8 +2,8 @@ package com.ruicomp.cmptemplate.features.saved_caller.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ruicomp.cmptemplate.core.database.models.Contact
-import com.ruicomp.cmptemplate.core.domain.repository.CallerRepository
+import com.ruicomp.cmptemplate.core.models.Contact
+import com.ruicomp.cmptemplate.features.saved_caller.domain.repository.CallerRepository
 import com.ruicomp.cmptemplate.features.call_history.domain.repository.CallHistoryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

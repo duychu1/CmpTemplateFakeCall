@@ -1,4 +1,4 @@
-package com.ruicomp.cmptemplate.core.database.models
+package com.ruicomp.cmptemplate.core.models
 
 data class Contact(
     val id: Long = 0,

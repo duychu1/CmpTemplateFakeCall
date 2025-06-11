@@ -1,7 +1,7 @@
-package com.ruicomp.cmptemplate.core.data.repository
+package com.ruicomp.cmptemplate.features.call_history.data.repository
 
-import com.ruicomp.cmptemplate.core.data.datasource.CallHistoryDataSource
-import com.ruicomp.cmptemplate.core.database.models.Contact
+import com.ruicomp.cmptemplate.features.call_history.data.datasource.CallHistoryDataSource
+import com.ruicomp.cmptemplate.core.models.Contact
 import com.ruicomp.cmptemplate.features.call_history.domain.models.CallHistory
 import com.ruicomp.cmptemplate.features.call_history.domain.repository.CallHistoryRepository
 import kotlinx.coroutines.flow.Flow

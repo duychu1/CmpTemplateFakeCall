@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.ruicomp.cmptemplate.core.database.models.Contact
+import com.ruicomp.cmptemplate.core.models.Contact
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable

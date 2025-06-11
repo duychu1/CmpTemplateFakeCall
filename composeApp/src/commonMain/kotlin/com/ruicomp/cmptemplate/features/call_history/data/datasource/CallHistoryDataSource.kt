@@ -1,4 +1,4 @@
-package com.ruicomp.cmptemplate.core.data.datasource
+package com.ruicomp.cmptemplate.features.call_history.data.datasource
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList

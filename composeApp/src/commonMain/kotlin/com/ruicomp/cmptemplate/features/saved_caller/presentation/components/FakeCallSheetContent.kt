@@ -33,7 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ruicomp.cmptemplate.core.database.models.Contact
+import com.ruicomp.cmptemplate.core.models.Contact
 import com.ruicomp.cmptemplate.core.ui.components.ContactAvatar
 import cmptemplate.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource

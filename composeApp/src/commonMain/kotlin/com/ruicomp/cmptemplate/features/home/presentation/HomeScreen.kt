@@ -1,4 +1,4 @@
-package com.ruicomp.cmptemplate.features.home.presentation.screens
+package com.ruicomp.cmptemplate.features.home.presentation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons

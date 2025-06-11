@@ -1,4 +1,4 @@
-package com.ruicomp.cmptemplate.features.saved_caller.presentation.screens
+package com.ruicomp.cmptemplate.features.saved_caller.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,11 +17,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.ruicomp.cmptemplate.core.database.models.Contact
-import com.ruicomp.cmptemplate.features.saved_caller.presentation.SavedCallerViewModel
+import com.ruicomp.cmptemplate.core.models.Contact
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import cmptemplate.composeapp.generated.resources.*
+import com.ruicomp.cmptemplate.features.saved_caller.presentation.components.FakeCallSheetContent
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 

@@ -1,8 +1,8 @@
-package com.ruicomp.cmptemplate.core.data.datasource
+package com.ruicomp.cmptemplate.features.saved_caller.data.datasource
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import com.ruicomp.cmptemplate.core.database.models.Contact
+import com.ruicomp.cmptemplate.core.models.Contact
 import com.ruicomp.cmptemplate.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO

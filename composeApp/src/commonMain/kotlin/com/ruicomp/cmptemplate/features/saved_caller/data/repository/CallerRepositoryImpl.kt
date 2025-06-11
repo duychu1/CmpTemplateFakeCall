@@ -1,8 +1,8 @@
-package com.ruicomp.cmptemplate.core.data.repository
+package com.ruicomp.cmptemplate.features.saved_caller.data.repository
 
-import com.ruicomp.cmptemplate.core.data.datasource.CallerDataSource
-import com.ruicomp.cmptemplate.core.database.models.Contact
-import com.ruicomp.cmptemplate.core.domain.repository.CallerRepository
+import com.ruicomp.cmptemplate.core.models.Contact
+import com.ruicomp.cmptemplate.features.saved_caller.data.datasource.CallerDataSource
+import com.ruicomp.cmptemplate.features.saved_caller.domain.repository.CallerRepository
 import kotlinx.coroutines.flow.Flow
 
 class CallerRepositoryImpl(

@@ -1,4 +1,4 @@
-package com.ruicomp.cmptemplate.features.schedule.presentation.screens
+package com.ruicomp.cmptemplate.features.schedule.presentation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,10 +16,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.ruicomp.cmptemplate.core.database.models.Contact
-import com.ruicomp.cmptemplate.features.schedule.presentation.ScheduleCallViewModel
+import com.ruicomp.cmptemplate.core.models.Contact
 import kotlinx.datetime.*
 import org.koin.compose.koinInject
 import cmptemplate.composeapp.generated.resources.*
@@ -208,7 +208,7 @@ private fun TimePickerDialog(
     onDismissRequest: () -> Unit,
     confirmButton: @Composable () -> Unit,
     dismissButton: @Composable (() -> Unit)? = null,
-    containerColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.surface,
+    containerColor: Color = MaterialTheme.colorScheme.surface,
     content: @Composable () -> Unit,
 ) {
     AlertDialog(

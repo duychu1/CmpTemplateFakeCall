@@ -1,6 +1,6 @@
 package com.ruicomp.cmptemplate.features.schedule.presentation
 
-import com.ruicomp.cmptemplate.core.database.models.Contact
+import com.ruicomp.cmptemplate.core.models.Contact
 
 data class ScheduleCallState(
     val name: String = "",

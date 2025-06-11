@@ -4,16 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ruicomp.cmptemplate.features.call_history.presentation.screens.CallHistoryScreen
-import com.ruicomp.cmptemplate.features.home.presentation.screens.HomeScreen
-import com.ruicomp.cmptemplate.features.saved_caller.presentation.screens.SavedCallerScreen
-import com.ruicomp.cmptemplate.features.schedule.presentation.screens.ScheduleCallScreen
-import com.ruicomp.cmptemplate.features.settings.presentation.screens.SettingsScreen
-import com.ruicomp.cmptemplate.navigation.CallHistory
-import com.ruicomp.cmptemplate.navigation.Home
-import com.ruicomp.cmptemplate.navigation.SavedCaller
-import com.ruicomp.cmptemplate.navigation.ScheduleCall
-import com.ruicomp.cmptemplate.navigation.Settings
+import com.ruicomp.cmptemplate.features.call_history.presentation.CallHistoryScreen
+import com.ruicomp.cmptemplate.features.home.presentation.HomeScreen
+import com.ruicomp.cmptemplate.features.saved_caller.presentation.SavedCallerScreen
+import com.ruicomp.cmptemplate.features.schedule.presentation.ScheduleCallScreen
+import com.ruicomp.cmptemplate.features.settings.presentation.SettingsScreen
 
 @Composable
 fun NavGraph() {

@@ -1,6 +1,6 @@
-package com.ruicomp.cmptemplate.core.domain.repository
+package com.ruicomp.cmptemplate.features.saved_caller.domain.repository
 
-import com.ruicomp.cmptemplate.core.database.models.Contact
+import com.ruicomp.cmptemplate.core.models.Contact
 import kotlinx.coroutines.flow.Flow
 
 interface CallerRepository {

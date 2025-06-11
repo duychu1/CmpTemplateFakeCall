@@ -51,7 +51,10 @@ composeApp/
             models/
             repository/
           presentation/
-            screens/
+            [feature_name]Screen.kt/
+            [feature_name]State.kt/
+            [feature_name]Event.kt/
+            [feature_name]ViewModel.kt/
             components/
           di/
         feature2/
@@ -64,7 +67,12 @@ composeApp/
             models/
             repository/
           presentation/
-            screens/
+            screen1/
+              [screen1]Screen.kt/
+              [screen1]State.kt/
+              [screen1]Event.kt/
+              [screen1]ViewModel.kt/
+            screen2/
             components/
           di/
         ...
