@@ -8,27 +8,31 @@ import com.ruicomp.cmptemplate.features.call_history.presentation.screens.CallHi
 import com.ruicomp.cmptemplate.features.home.presentation.screens.HomeScreen
 import com.ruicomp.cmptemplate.features.saved_caller.presentation.screens.SavedCallerScreen
 import com.ruicomp.cmptemplate.features.schedule.presentation.screens.ScheduleCallScreen
+import com.ruicomp.cmptemplate.navigation.CallHistory
+import com.ruicomp.cmptemplate.navigation.Home
+import com.ruicomp.cmptemplate.navigation.SavedCaller
+import com.ruicomp.cmptemplate.navigation.ScheduleCall
 
 @Composable
 fun NavGraph() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "home") {
-        composable("home") {
+    NavHost(navController = navController, startDestination = Home) {
+        composable<Home> {
             HomeScreen(
                 onCallNow = { /*TODO*/ },
-                onScheduleCall = { navController.navigate("schedule_call") },
-                onSavedCaller = { navController.navigate("saved_caller") },
-                onCallHistory = { navController.navigate("call_history") }
+                onScheduleCall = { navController.navigate(ScheduleCall) },
+                onSavedCaller = { navController.navigate(SavedCaller) },
+                onCallHistory = { navController.navigate(CallHistory) }
             )
         }
-        composable("schedule_call") {
+        composable<ScheduleCall> {
             ScheduleCallScreen(onBack = { navController.popBackStack() })
         }
-        composable("saved_caller") {
+        composable<SavedCaller> {
             SavedCallerScreen(onBack = { navController.popBackStack() })
         }
-        composable("call_history") {
+        composable<CallHistory> {
             CallHistoryScreen(onBack = { navController.popBackStack() })
         }
     }
-} 
+}
