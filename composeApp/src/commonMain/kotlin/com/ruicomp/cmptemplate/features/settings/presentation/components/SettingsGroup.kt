@@ -1,10 +1,14 @@
 package com.ruicomp.cmptemplate.features.settings.presentation.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SettingsGroup(
@@ -34,6 +38,31 @@ fun SettingsGroup(
             Column {
                 content()
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun SettingsGroupPreview() {
+    SettingsGroup(title = "About") {
+        Column {
+            SettingsItem(
+                icon = Icons.Default.Shield,
+                title = "Privacy Policy",
+                onClick = {}
+            )
+            
+            HorizontalDivider(
+                modifier = Modifier.padding(start = 56.dp),
+                color = MaterialTheme.colorScheme.outlineVariant
+            )
+            
+            SettingsItem(
+                icon = Icons.Default.Star,
+                title = "Rate Us",
+                onClick = {}
+            )
         }
     }
 } 

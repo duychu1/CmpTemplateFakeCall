@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.ruicomp.cmptemplate.features.home.presentation.components.FeatureCard
 import cmptemplate.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,4 +61,16 @@ fun HomeScreen(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun HomeScreenPreview() {
+    HomeScreen(
+        onCallNow = {},
+        onScheduleCall = {},
+        onSavedCaller = {},
+        onCallHistory = {},
+        onSettingsClick = {}
+    )
 } 

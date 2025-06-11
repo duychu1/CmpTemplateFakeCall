@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import cmptemplate.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -210,4 +211,10 @@ private fun ContactItem(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun SavedCallerScreenPreview() {
+    SavedCallerScreen(onBack = {})
 } 

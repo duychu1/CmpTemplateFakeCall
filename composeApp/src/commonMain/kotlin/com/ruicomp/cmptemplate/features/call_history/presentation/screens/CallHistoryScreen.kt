@@ -53,6 +53,7 @@ import kotlinx.datetime.toLocalDateTime
 import org.koin.compose.koinInject
 import cmptemplate.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -208,4 +209,10 @@ private fun formatTimestamp(timestamp: Long): String {
     val instant = Instant.fromEpochMilliseconds(timestamp)
     val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
     return "${localDateTime.date} ${localDateTime.hour.toString().padStart(2, '0')}:${localDateTime.minute.toString().padStart(2, '0')}"
+}
+
+@Preview
+@Composable
+fun CallHistoryScreenPreview() {
+    CallHistoryScreen(onBack = {})
 } 

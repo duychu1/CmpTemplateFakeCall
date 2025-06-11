@@ -1,6 +1,8 @@
 package com.ruicomp.cmptemplate.features.home.presentation.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -10,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun FeatureCard(
@@ -31,4 +34,14 @@ internal fun FeatureCard(
             Text(text = text, style = MaterialTheme.typography.bodyLarge)
         }
     }
+}
+
+@Preview
+@Composable
+fun FeatureCardPreview() {
+    FeatureCard(
+        text = "Call Now",
+        icon = Icons.Default.Call,
+        onClick = {}
+    )
 } 

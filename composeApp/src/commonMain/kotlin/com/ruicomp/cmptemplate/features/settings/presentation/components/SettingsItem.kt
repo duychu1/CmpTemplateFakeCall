@@ -3,12 +3,14 @@ package com.ruicomp.cmptemplate.features.settings.presentation.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SettingsItem(
@@ -59,4 +61,25 @@ fun SettingsItem(
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun SettingsItemPreview() {
+    SettingsItem(
+        icon = Icons.Default.Language,
+        title = "Language",
+        subtitle = "English",
+        onClick = {}
+    )
+}
+
+@Preview
+@Composable
+fun SettingsItemNoSubtitlePreview() {
+    SettingsItem(
+        icon = Icons.Default.Language,
+        title = "Language",
+        onClick = {}
+    )
 } 

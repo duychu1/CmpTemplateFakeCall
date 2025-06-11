@@ -74,7 +74,7 @@ fun SettingsScreen(
                     )
                     
                     HorizontalDivider(
-                        modifier = Modifier.padding(start = 56.dp),
+                        modifier = Modifier.padding(start = 56.dp, end = 24.dp),
                         color = MaterialTheme.colorScheme.outlineVariant
                     )
                     
@@ -85,7 +85,7 @@ fun SettingsScreen(
                     )
                     
                     HorizontalDivider(
-                        modifier = Modifier.padding(start = 56.dp),
+                        modifier = Modifier.padding(start = 56.dp, end = 24.dp),
                         color = MaterialTheme.colorScheme.outlineVariant
                     )
                     
@@ -96,7 +96,7 @@ fun SettingsScreen(
                     )
                     
                     HorizontalDivider(
-                        modifier = Modifier.padding(start = 56.dp),
+                        modifier = Modifier.padding(start = 56.dp, end = 24.dp),
                         color = MaterialTheme.colorScheme.outlineVariant
                     )
                     
