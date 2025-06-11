@@ -15,4 +15,7 @@ data object ScheduleCall : Route()
 data object SavedCaller : Route()
 
 @Serializable
-data object CallHistory : Route() 
+data object CallHistory : Route()
+
+@Serializable
+data object Settings : Route() 

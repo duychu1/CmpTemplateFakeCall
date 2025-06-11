@@ -47,4 +47,13 @@
     <!-- Call History Screen -->
     <string name="call_history_title">Call History</string>
     <string name="no_call_history_message">No call history yet.</string>
+    
+    <!-- Settings Screen -->
+    <string name="settings_title">Settings</string>
+    <string name="language_setting">Language</string>
+    <string name="about_group_title">About</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="rate_us">Rate Us</string>
+    <string name="share_app">Share App</string>
 </resources> 

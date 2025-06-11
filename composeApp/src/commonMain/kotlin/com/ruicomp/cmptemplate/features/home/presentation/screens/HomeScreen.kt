@@ -2,10 +2,7 @@ package com.ruicomp.cmptemplate.features.home.presentation.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.People
-import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,11 +18,22 @@ fun HomeScreen(
     onCallNow: () -> Unit,
     onScheduleCall: () -> Unit,
     onSavedCaller: () -> Unit,
-    onCallHistory: () -> Unit
+    onCallHistory: () -> Unit,
+    onSettingsClick: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(stringResource(Res.string.app_name)) })
+            TopAppBar(
+                title = { Text(stringResource(Res.string.app_name)) },
+                actions = {
+                    IconButton(onClick = onSettingsClick) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = stringResource(Res.string.settings_title)
+                        )
+                    }
+                }
+            )
         }
     ) { paddingValues ->
         Column(

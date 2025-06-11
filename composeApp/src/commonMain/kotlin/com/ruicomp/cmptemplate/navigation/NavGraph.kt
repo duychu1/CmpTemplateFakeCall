@@ -8,10 +8,12 @@ import com.ruicomp.cmptemplate.features.call_history.presentation.screens.CallHi
 import com.ruicomp.cmptemplate.features.home.presentation.screens.HomeScreen
 import com.ruicomp.cmptemplate.features.saved_caller.presentation.screens.SavedCallerScreen
 import com.ruicomp.cmptemplate.features.schedule.presentation.screens.ScheduleCallScreen
+import com.ruicomp.cmptemplate.features.settings.presentation.screens.SettingsScreen
 import com.ruicomp.cmptemplate.navigation.CallHistory
 import com.ruicomp.cmptemplate.navigation.Home
 import com.ruicomp.cmptemplate.navigation.SavedCaller
 import com.ruicomp.cmptemplate.navigation.ScheduleCall
+import com.ruicomp.cmptemplate.navigation.Settings
 
 @Composable
 fun NavGraph() {
@@ -22,7 +24,8 @@ fun NavGraph() {
                 onCallNow = { /*TODO*/ },
                 onScheduleCall = { navController.navigate(ScheduleCall) },
                 onSavedCaller = { navController.navigate(SavedCaller) },
-                onCallHistory = { navController.navigate(CallHistory) }
+                onCallHistory = { navController.navigate(CallHistory) },
+                onSettingsClick = { navController.navigate(Settings) }
             )
         }
         composable<ScheduleCall> {
@@ -33,6 +36,9 @@ fun NavGraph() {
         }
         composable<CallHistory> {
             CallHistoryScreen(onBack = { navController.popBackStack() })
+        }
+        composable<Settings> {
+            SettingsScreen(onBack = { navController.popBackStack() })
         }
     }
 }
