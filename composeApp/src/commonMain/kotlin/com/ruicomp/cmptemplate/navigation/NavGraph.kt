@@ -9,6 +9,8 @@ import com.ruicomp.cmptemplate.features.home.presentation.HomeScreen
 import com.ruicomp.cmptemplate.features.saved_caller.presentation.SavedCallerScreen
 import com.ruicomp.cmptemplate.features.schedule.presentation.ScheduleCallScreen
 import com.ruicomp.cmptemplate.features.settings.presentation.SettingsScreen
+import com.ruicomp.cmptemplate.features.language_setting.presentation.LanguageSettingScreen
+import com.ruicomp.cmptemplate.features.language_setting.presentation.LanguageSettingViewModel
 
 @Composable
 fun NavGraph() {
@@ -33,7 +35,15 @@ fun NavGraph() {
             CallHistoryScreen(onBack = { navController.popBackStack() })
         }
         composable<Settings> {
-            SettingsScreen(onBack = { navController.popBackStack() })
+            SettingsScreen(
+                onBack = { navController.popBackStack() },
+                onLanguageClick = { navController.navigate(LanguageSetting) }
+            )
+        }
+        composable<LanguageSetting> {
+            LanguageSettingScreen(
+                onBack = { navController.popBackStack() },
+            )
         }
     }
 }

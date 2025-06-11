@@ -1,0 +1,10 @@
+data class Language(
+    val code: String,
+    val name: String,
+    val flagResId: Int,
+//    val languageToLoad: String,
+    val isSelected: Boolean = false,
+    val colorBackground: String? = null,
+)
+
+base on /call_history complete /language_setting

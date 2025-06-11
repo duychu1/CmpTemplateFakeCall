@@ -18,4 +18,7 @@ data object SavedCaller : Route()
 data object CallHistory : Route()
 
 @Serializable
-data object Settings : Route() 
+data object Settings : Route()
+
+@Serializable
+data object LanguageSetting : Route()
