@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ruicomp.cmptemplate.features.language_setting.domain.models.Language
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun LanguageList(
@@ -25,4 +26,18 @@ fun LanguageList(
             )
         }
     }
+}
+
+
+@Preview
+@Composable
+fun LanguageListPreview() {
+    LanguageList(
+        languages = listOf(
+            Language("en", "English", null, isSelected = true),
+            Language("es", "Spanish", null),
+            Language("fr", "French", null)
+        ),
+        onSelect = {}
+    )
 }

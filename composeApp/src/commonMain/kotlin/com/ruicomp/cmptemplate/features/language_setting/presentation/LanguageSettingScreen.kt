@@ -104,24 +104,4 @@ fun LanguageSettingScreenPreview() {
     )
 }
 
-@Preview
-@Composable
-fun LanguageListPreview() {
-    LanguageList(
-        languages = listOf(
-            Language("en", "English", null, isSelected = true),
-            Language("es", "Spanish", null),
-            Language("fr", "French", null)
-        ),
-        onSelect = {}
-    )
-}
 
-@Preview
-@Composable
-fun LanguageItemPreview() {
-    LanguageItem(
-        language = Language("en", "English", null, isSelected = true),
-        onClick = {}
-    )
-}

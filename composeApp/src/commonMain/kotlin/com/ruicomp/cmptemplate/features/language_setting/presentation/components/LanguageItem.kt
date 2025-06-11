@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ruicomp.cmptemplate.features.language_setting.domain.models.Language
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun LanguageItem(
@@ -35,7 +37,10 @@ fun LanguageItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
-            .clickable { onClick() }
+            .clickable { onClick() },
+        colors = CardDefaults.cardColors(
+            containerColor = if (language.isSelected) MaterialTheme.colorScheme.inversePrimary else Color.Unspecified
+        )
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -45,14 +50,7 @@ fun LanguageItem(
                 modifier = Modifier
                     .size(32.dp)
                     .clip(CircleShape)
-                    .background(
-                        color = if (language.isSelected) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            language.colorBackground?.let { Color(it.toLong(16)) }
-                                ?: MaterialTheme.colorScheme.secondaryContainer
-                        }
-                    ),
+                    .background(MaterialTheme.colorScheme.primary),
                 contentAlignment = Alignment.Center
             ) {
                 if (language.flagResId != null) {
@@ -66,13 +64,32 @@ fun LanguageItem(
                     Text(
                         text = language.code.take(2).uppercase(),
                         style = MaterialTheme.typography.labelSmall,
-                        color = if (language.isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         textAlign = TextAlign.Center
                     )
                 }
             }
             Spacer(modifier = Modifier.width(12.dp))
-            Text(language.name)
+            Text(text = language.name, color = if (language.isSelected) MaterialTheme.colorScheme.onPrimary else Color.Unspecified)
         }
     }
+}
+
+
+@Preview
+@Composable
+fun LanguageItemPreview() {
+    LanguageItem(
+        language = Language("en", "English", null, isSelected = true),
+        onClick = {}
+    )
+}
+
+@Preview
+@Composable
+fun LanguageItemUnselectedPreview() {
+    LanguageItem(
+        language = Language("es", "Español", null, isSelected = false),
+        onClick = {}
+    )
 }
