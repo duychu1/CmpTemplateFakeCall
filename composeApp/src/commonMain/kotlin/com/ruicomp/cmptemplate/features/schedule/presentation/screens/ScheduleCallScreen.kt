@@ -22,6 +22,8 @@ import com.ruicomp.cmptemplate.core.database.models.Contact
 import com.ruicomp.cmptemplate.features.schedule.presentation.ScheduleCallViewModel
 import kotlinx.datetime.*
 import org.koin.compose.koinInject
+import cmptemplate.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,7 +79,7 @@ fun ScheduleCallScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Schedule Call") },
+                title = { Text(stringResource(Res.string.schedule_call_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -93,7 +95,7 @@ fun ScheduleCallScreen(
                     .padding(16.dp),
                 enabled = isFormValid
             ) {
-                Text("Schedule Call")
+                Text(stringResource(Res.string.schedule_call_button))
             }
         }
     ) { paddingValues ->
@@ -132,12 +134,12 @@ fun ScheduleCallScreen(
                     showDatePicker = false
                     selectedDate = datePickerState.selectedDateMillis
                 }) {
-                    Text("OK")
+                    Text(stringResource(Res.string.dialog_ok))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text("Cancel")
+                    Text(stringResource(Res.string.dialog_cancel))
                 }
             }
         ) {
@@ -153,12 +155,12 @@ fun ScheduleCallScreen(
                     showTimePicker = false
                     selectedTime = timePickerState.hour to timePickerState.minute
                 }) {
-                    Text("OK")
+                    Text(stringResource(Res.string.dialog_ok))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showTimePicker = false }) {
-                    Text("Cancel")
+                    Text(stringResource(Res.string.dialog_cancel))
                 }
             }
         ) {
@@ -201,7 +203,7 @@ private fun ContactPickerItem(contact: Contact, onClick: () -> Unit) {
 
 @Composable
 private fun TimePickerDialog(
-    title: String = "Select Time",
+    title: String = stringResource(Res.string.select_time_title),
     onDismissRequest: () -> Unit,
     confirmButton: @Composable () -> Unit,
     dismissButton: @Composable (() -> Unit)? = null,
@@ -231,14 +233,14 @@ private fun ContactInformationSection(
     onNumberChange: (String) -> Unit
 ) {
     Column(horizontalAlignment = Alignment.Start) {
-        Text("Contact Information", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(Res.string.contact_information_title), style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
         Card(elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
             Column(modifier = Modifier.padding(16.dp)) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = onNameChange,
-                    label = { Text("Caller Name") },
+                    label = { Text(stringResource(Res.string.caller_name_label)) },
                     leadingIcon = { Icon(Icons.Default.Person, contentDescription = "Caller Name") },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -251,7 +253,7 @@ private fun ContactInformationSection(
                             onNumberChange(it)
                         }
                     },
-                    label = { Text("Phone Number") },
+                    label = { Text(stringResource(Res.string.phone_number_label)) },
                     leadingIcon = { Icon(Icons.Default.Phone, contentDescription = "Phone Number") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
@@ -262,7 +264,7 @@ private fun ContactInformationSection(
                     modifier = Modifier.fillMaxWidth(),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
                 ) {
-                    Text("Pick from Contacts")
+                    Text(stringResource(Res.string.pick_from_contacts_button))
                 }
             }
         }
@@ -277,14 +279,14 @@ private fun SelectDateTimeSection(
     onTimeSelect: () -> Unit
 ) {
     Column(horizontalAlignment = Alignment.Start) {
-        Text("Select Date & Time", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(Res.string.select_date_time_title), style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
         Card(elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
             Column(modifier = Modifier.padding(16.dp)) {
                 OutlinedTextField(
                     value = date,
                     onValueChange = {},
-                    label = { Text("Date") },
+                    label = { Text(stringResource(Res.string.date_label)) },
                     trailingIcon = {
                         IconButton(onClick = onDateSelect) {
                             Icon(Icons.Default.CalendarToday, contentDescription = "Select Date")
@@ -297,7 +299,7 @@ private fun SelectDateTimeSection(
                 OutlinedTextField(
                     value = time,
                     onValueChange = {},
-                    label = { Text("Time") },
+                    label = { Text(stringResource(Res.string.time_label)) },
                     trailingIcon = {
                         IconButton(onClick = onTimeSelect) {
                             Icon(Icons.Default.CalendarToday, contentDescription = "Select Time")

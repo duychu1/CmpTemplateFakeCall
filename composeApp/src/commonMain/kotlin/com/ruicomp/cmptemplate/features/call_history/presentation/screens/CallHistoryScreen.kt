@@ -51,6 +51,8 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.koin.compose.koinInject
+import cmptemplate.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +69,7 @@ fun CallHistoryScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Call History") },
+                title = { Text(stringResource(Res.string.call_history_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -87,11 +89,11 @@ fun CallHistoryScreen(
                 }
             } else if (uiState.error != null) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Error: ${uiState.error}", color = MaterialTheme.colorScheme.error)
+                    Text(stringResource(Res.string.error_prefix, uiState.error!!), color = MaterialTheme.colorScheme.error)
                 }
             } else if (uiState.history.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("No call history yet.")
+                    Text(stringResource(Res.string.no_call_history_message))
                 }
             } else {
                 LazyColumn(

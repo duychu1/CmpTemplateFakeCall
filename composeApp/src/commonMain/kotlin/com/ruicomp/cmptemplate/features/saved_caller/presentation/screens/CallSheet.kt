@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -38,6 +39,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ruicomp.cmptemplate.core.database.models.Contact
+import cmptemplate.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 // @OptIn(ExperimentalMaterial3Api::class)
 // @Composable
@@ -123,7 +126,7 @@ fun FakeCallSheetContent(
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(Icons.Default.Info, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
-            Text(text = "Selected: $selectedTime", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Medium)
+            Text(text = stringResource(Res.string.selected_time_prefix, selectedTime), color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Medium)
         }
 
         // Time Options
@@ -162,7 +165,7 @@ fun FakeCallSheetContent(
         ) {
             Icon(Icons.Default.Call, contentDescription = null)
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Start Fake Call")
+            Text(stringResource(Res.string.start_fake_call_button))
         }
     }
 } 

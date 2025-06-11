@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ruicomp.cmptemplate.features.home.presentation.components.FeatureCard
+import cmptemplate.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,7 +25,7 @@ fun HomeScreen(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Fake Call") })
+            TopAppBar(title = { Text(stringResource(Res.string.app_name)) })
         }
     ) { paddingValues ->
         Column(
@@ -37,16 +39,16 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                FeatureCard("Call Now", Icons.Default.Call, onCallNow)
-                FeatureCard("Schedule Call", Icons.Default.Schedule, onScheduleCall)
+                FeatureCard(stringResource(Res.string.feature_call_now), Icons.Default.Call, onCallNow)
+                FeatureCard(stringResource(Res.string.feature_schedule_call), Icons.Default.Schedule, onScheduleCall)
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                FeatureCard("Saved Caller", Icons.Default.People, onSavedCaller)
-                FeatureCard("Call History", Icons.Default.History, onCallHistory)
+                FeatureCard(stringResource(Res.string.feature_saved_caller), Icons.Default.People, onSavedCaller)
+                FeatureCard(stringResource(Res.string.feature_call_history), Icons.Default.History, onCallHistory)
             }
         }
     }

@@ -21,6 +21,8 @@ import com.ruicomp.cmptemplate.core.database.models.Contact
 import com.ruicomp.cmptemplate.features.saved_caller.presentation.SavedCallerViewModel
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+import cmptemplate.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,7 +41,7 @@ fun SavedCallerScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Saved Contacts") },
+                title = { Text(stringResource(Res.string.saved_contacts_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -64,7 +66,7 @@ fun SavedCallerScreen(
                 }
             } else if (uiState.error != null) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Error: ${uiState.error}", color = MaterialTheme.colorScheme.error)
+                    Text(stringResource(Res.string.error_prefix, uiState.error!!), color = MaterialTheme.colorScheme.error)
                 }
             } else {
                 LazyColumn(
@@ -127,13 +129,13 @@ private fun AddContactDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add New Contact") },
+        title = { Text(stringResource(Res.string.add_new_contact_title)) },
         text = {
             Column {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Name") }
+                    label = { Text(stringResource(Res.string.name_label)) }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
@@ -144,7 +146,7 @@ private fun AddContactDialog(
                             number = it
                         }
                     },
-                    label = { Text("Number") },
+                    label = { Text(stringResource(Res.string.number_label)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
                 )
             }
@@ -154,12 +156,12 @@ private fun AddContactDialog(
                 onClick = { onConfirm(name, number) },
                 enabled = name.isNotBlank() && number.isNotBlank()
             ) {
-                Text("Add")
+                Text(stringResource(Res.string.dialog_add))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(Res.string.dialog_cancel))
             }
         }
     )

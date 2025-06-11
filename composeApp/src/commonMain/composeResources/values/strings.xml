@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="app_name">Fake Call</string>
+    <string name="feature_call_now">Call Now</string>
+    <string name="feature_schedule_call">Schedule Call</string>
+    <string name="feature_saved_caller">Saved Caller</string>
+    <string name="feature_call_history">Call History</string>
+
+    <!-- Common -->
+    <string name="back_button_description">Back</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_add">Add</string>
+    <string name="error_prefix">Error: %s</string>
+
+    <!-- Schedule Call Screen -->
+    <string name="schedule_call_title">Schedule Call</string>
+    <string name="schedule_call_button">Schedule Call</string>
+    <string name="contact_information_title">Contact Information</string>
+    <string name="caller_name_label">Caller Name</string>
+    <string name="phone_number_label">Phone Number</string>
+    <string name="pick_from_contacts_button">Pick from Contacts</string>
+    <string name="select_date_time_title">Select Date &amp; Time</string>
+    <string name="date_label">Date</string>
+    <string name="select_date_description">Select Date</string>
+    <string name="time_label">Time</string>
+    <string name="select_time_title">Select Time</string>
+
+    <!-- Saved Caller Screen -->
+    <string name="saved_contacts_title">Saved Contacts</string>
+    <string name="add_contact_description">Add Contact</string>
+    <string name="add_new_contact_title">Add New Contact</string>
+    <string name="name_label">Name</string>
+    <string name="number_label">Number</string>
+    <string name="call_button_description">Call</string>
+    <string name="delete_button_description">Delete</string>
+
+    <!-- Call Sheet -->
+    <string name="selected_time_prefix">Selected: %s</string>
+    <string name="time_option_now">Now</string>
+    <string name="time_option_5s">5 Sec</string>
+    <string name="time_option_10s">10 Sec</string>
+    <string name="time_option_15s">15 Sec</string>
+    <string name="selected_description">Selected</string>
+    <string name="start_fake_call_button">Start Fake Call</string>
+
+    <!-- Call History Screen -->
+    <string name="call_history_title">Call History</string>
+    <string name="no_call_history_message">No call history yet.</string>
+</resources> 
