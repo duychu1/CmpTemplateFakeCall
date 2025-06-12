@@ -1,0 +1,29 @@
+
+    - Follow SOLID principles.
+    - Prefer composition over inheritance.
+    - Declare interfaces to define contracts.
+    - Write small classes with a single purpose.
+
+    Complete task below in androidMain/features
+
+    Task 1.1: Create a ConnectionService:
+        Define a class FakeCallConnectionService that extends android.telecom.ConnectionService.
+        Override onCreateIncomingConnection. This is where you will create and return your FakeCallConnection instance.
+        Override onCreateIncomingConnectionFailed for error handling.
+
+    Task 1.2: Create a Connection:
+        Define a class FakeCallConnection that extends android.telecom.Connection.
+        Implement state change callbacks like onShowIncomingCallUi, onAnswer, onDisconnect, and onReject.
+        In onAnswer, set the connection state to STATE_ACTIVE. Use a Handler to automatically call setDisconnected after a few seconds.
+        In onDisconnect or onReject, destroy the connection using destroy().
+
+    Task 1.3: Handle Permissions & PhoneAccount Registration:
+        In your Activity or ViewModel, request the MANAGE_OWN_CALLS permission. This is non-negotiable. Guide the user to the system settings to grant it, as it cannot be requested with a standard runtime dialog.
+        Create a PhoneAccountHandle to identify your app as a call provider.
+        Register the PhoneAccount with the TelecomManager. Do this once when the app starts or when permission is granted.
+
+    Task 1.4: Implement the Call Trigger Logic:
+        Create a method triggerFakeCall(context, callerName, callerNumber, callerAvatarUri).
+        Inside this method, get an instance of TelecomManager.
+        Create a Bundle of extras to pass the caller's name, number, etc.
+        Use telecomManager.addNewIncomingCall(phoneAccountHandle, extras) to trigger the system UI. The extras bundle is how you pass your custom data to the ConnectionService.
