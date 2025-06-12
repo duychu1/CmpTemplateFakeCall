@@ -6,6 +6,9 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ruicomp.cmptemplate.features.settings.presentation.components.SettingsGroup
@@ -22,8 +25,10 @@ fun SettingsScreen(
     onPrivacyPolicyClick: () -> Unit = {},
     onTermsClick: () -> Unit = {},
     onRateUsClick: () -> Unit = {},
-    onShareAppClick: () -> Unit = {}
+    onShareAppClick: () -> Unit = {},
+    viewModel: SettingsViewModel = koinViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -57,7 +62,7 @@ fun SettingsScreen(
                 SettingsItem(
                     icon = Icons.Default.Translate,
                     title = stringResource(Res.string.language_setting),
-                    subtitle = "English", // This would come from actual language setting
+                    subtitle = uiState.language,
                     onClick = onLanguageClick
                 )
             }

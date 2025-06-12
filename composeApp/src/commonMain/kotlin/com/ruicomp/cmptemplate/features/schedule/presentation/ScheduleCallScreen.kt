@@ -21,7 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.ruicomp.cmptemplate.core.models.Contact
 import kotlinx.datetime.*
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 import cmptemplate.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -30,7 +30,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun ScheduleCallScreen(
     onBack: () -> Unit,
-    viewModel: ScheduleCallViewModel = koinInject()
+    viewModel: ScheduleCallViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

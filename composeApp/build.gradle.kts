@@ -47,6 +47,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.datetime)
@@ -54,6 +55,7 @@ kotlin {
             implementation(libs.sqldelight.coroutines.extensions)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.androidx.datastore.preferences.core)
         }

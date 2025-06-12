@@ -19,7 +19,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.ruicomp.cmptemplate.core.models.Contact
 import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 import cmptemplate.composeapp.generated.resources.*
 import com.ruicomp.cmptemplate.features.saved_caller.presentation.components.FakeCallSheetContent
 import org.jetbrains.compose.resources.stringResource
@@ -29,7 +29,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun SavedCallerScreen(
     onBack: () -> Unit,
-    viewModel: SavedCallerViewModel = koinInject()
+    viewModel: SavedCallerViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showAddContactDialog by remember { mutableStateOf(false) }

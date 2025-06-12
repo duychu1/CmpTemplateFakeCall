@@ -36,6 +36,10 @@ class LanguageSettingViewModel(
         println("Loading languages...")
         dataStorePreferences.getAsFlow(DataStoreKeys.LANGUAGE_STRING)
             .collectLatest {
+//                if (currentLanguageCode == it && currentLanguageCode != null) {
+//
+//
+//                }
                 currentLanguageCode = it ?: defaultLanguageCode
                 println("Current language code: $currentLanguageCode")
                 setSelectionLanguage(currentLanguageCode)
@@ -54,6 +58,7 @@ class LanguageSettingViewModel(
 
     fun setSelectionLanguage(code: String?) {
         val selectedCode = code ?: defaultLanguageCode
+        println("setSelectionLanguage: $selectedCode")
         val updatedList = listLanguage.map {
             it.copy(isSelected = it.code == selectedCode)
         }

@@ -48,7 +48,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 import cmptemplate.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -57,7 +57,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun CallHistoryScreen(
     onBack: () -> Unit,
-    viewModel: CallHistoryViewModel = koinInject()
+    viewModel: CallHistoryViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scope = rememberCoroutineScope()

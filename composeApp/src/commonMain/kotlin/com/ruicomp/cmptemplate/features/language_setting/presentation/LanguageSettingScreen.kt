@@ -25,12 +25,13 @@ import com.ruicomp.cmptemplate.features.language_setting.presentation.components
 import com.ruicomp.cmptemplate.features.language_setting.presentation.components.LanguageList
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LanguageSettingScreen(
     onBack: () -> Unit = {},
-    viewModel: LanguageSettingViewModel = koinInject()
+    viewModel: LanguageSettingViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
