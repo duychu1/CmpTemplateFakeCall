@@ -7,8 +7,8 @@ import androidx.datastore.preferences.core.Preferences
 
 private const val DATASTORE_FILE_NAME = "app_settings.preferences_pb"
 
-actual class DataStoreFactory {
-    internal fun createAndroidDataStore(context: Context): DataStore<Preferences> {
+actual class DataStoreFactory (private val context: Context) {
+    actual fun createDataStore(): DataStore<Preferences> {
         return PreferenceDataStoreFactory.create {
             context.filesDir.resolve(DATASTORE_FILE_NAME)
         }

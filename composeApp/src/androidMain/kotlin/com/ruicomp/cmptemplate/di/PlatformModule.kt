@@ -16,7 +16,7 @@ actual val platformModule: Module = module {
     single<SqlDriver> { DatabaseDriverFactory(get()).createDriver() }
 
     single<DataStore<Preferences>> {
-        DataStoreFactory().createAndroidDataStore(get())
+        DataStoreFactory(get()).createDataStore()
     }
 }
 

@@ -9,7 +9,7 @@ import java.io.File
 private const val DATASTORE_FILE_NAME = "app_settings.preferences_pb"
 
 actual class DataStoreFactory {
-    fun createDataStore(): DataStore<Preferences> {
+    actual fun createDataStore(): DataStore<Preferences> {
         return createDesktopDataStore()
     }
 }

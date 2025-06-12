@@ -13,8 +13,8 @@ import platform.Foundation.NSUserDomainMask
 private const val DATASTORE_FILE_NAME = "app_settings.preferences_pb"
 
 actual class DataStoreFactory {
-    fun createDataStore(): DataStore<Preferences> {
-        return createDataStore()
+    actual fun createDataStore(): DataStore<Preferences> {
+        return createIOSDataStore()
     }
 }
 
