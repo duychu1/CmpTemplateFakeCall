@@ -7,6 +7,7 @@ import com.ruicomp.cmptemplate.features.home.di.homeModule
 import com.ruicomp.cmptemplate.features.language_setting.di.languageSettingModule
 import com.ruicomp.cmptemplate.features.saved_caller.di.savedCallerModule
 import com.ruicomp.cmptemplate.features.schedule.di.scheduleModule
+import com.ruicomp.cmptemplate.features.settings.di.settingsModule
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -18,6 +19,7 @@ val appModule = module {
         scheduleModule,
         savedCallerModule,
         callHistoryModule,
+        settingsModule,
         languageSettingModule
     )
 }

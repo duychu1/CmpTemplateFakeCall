@@ -45,7 +45,7 @@ fun SettingsItem(
                     text = title,
                     style = MaterialTheme.typography.bodyLarge
                 )
-                if (subtitle != null) {
+                if (subtitle != null && subtitle.isNotBlank()) {
                     Text(
                         text = subtitle,
                         style = MaterialTheme.typography.bodyMedium,
