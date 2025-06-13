@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
+import com.ruicomp.cmptemplate.core.database.DatabaseDriverFactory
 import com.ruicomp.cmptemplate.core.datastore.DataStoreFactory
 import com.ruicomp.cmptemplate.database.AppDatabase
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -23,7 +24,7 @@ import platform.Foundation.NSUserDomainMask
 actual val platformModule: Module = module {
     //sqldelight
     single<SqlDriver> {
-        NativeSqliteDriver(AppDatabase.Schema, "app.db") // Use NativeSqliteDriver for iOS
+        DatabaseDriverFactory().createDriver()
     }
 
     //datastore

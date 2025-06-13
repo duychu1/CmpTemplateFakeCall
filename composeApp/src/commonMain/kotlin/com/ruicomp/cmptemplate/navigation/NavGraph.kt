@@ -17,7 +17,7 @@ fun NavGraph() {
     NavHost(navController = navController, startDestination = HomeRoute) {
         composable<HomeRoute> {
             HomeScreen(
-                onCallNow = { /*TODO*/ },
+                onCallNow = { },
                 onScheduleCall = { navController.navigate(ScheduleCallRoute) },
                 onSavedCaller = { navController.navigate(SavedCallerRoute) },
                 onCallHistory = { navController.navigate(CallHistoryRoute) },
