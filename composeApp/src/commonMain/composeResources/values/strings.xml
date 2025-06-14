@@ -59,4 +59,13 @@
 
     <!-- Language Setting Screen -->   -->
     <string name="language_setting_title">Language</string>
+    
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Make Own Call Permission -->
+    <string name="permission_required_title">Permission Required</string>
+    <string name="make_own_call_permission_message">This app needs permission to make and manage phone calls to function correctly. This is used to simulate incoming calls.</string>
+
+
 </resources> 

@@ -19,8 +19,8 @@ class FakeCallConnectionService : ConnectionService() {
         request: ConnectionRequest?
     ): Connection {
         val extras = request?.extras
-        val callerName = extras?.getString(FakeCallManager.EXTRA_CALLER_NAME) ?: "Unknown"
-        val callerNumber = extras?.getString(FakeCallManager.EXTRA_CALLER_NUMBER) ?: "Unknown"
+        val callerName = extras?.getString(FakeCallManager.EXTRA_CALLER_NAME) ?: "NameTest"
+        val callerNumber = extras?.getString(FakeCallManager.EXTRA_CALLER_NUMBER) ?: "+test90909"
         val callerAvatarUri = extras?.getString(FakeCallManager.EXTRA_CALLER_AVATAR_URI)
         return FakeCallConnection(callerName, callerNumber, callerAvatarUri)
     }
@@ -47,10 +47,10 @@ class FakeCallConnectionService : ConnectionService() {
 
         override fun onAnswer() {
             setActive()
-            handler.postDelayed({
-                setDisconnected(DisconnectCause(DisconnectCause.LOCAL))
-                destroy()
-            }, 5000) // Auto disconnect after 5 seconds
+//            handler.postDelayed({
+//                setDisconnected(DisconnectCause(DisconnectCause.LOCAL))
+//                destroy()
+//            }, 5000) // Auto disconnect after 5 seconds
         }
 
         override fun onDisconnect() {

@@ -10,11 +10,11 @@ class ActualFakeCallManager(private val context: Context) : IFakeCallManager {
     private val androidFakeCallManager = FakeCallManager()
 
     override fun isPermissionGranted(): Boolean {
-        return androidFakeCallManager.isManageOwnCallsPermissionGranted(context)
+        return androidFakeCallManager.isPhoneAccountEnabled(context)
     }
 
     override fun requestPermission() {
-        androidFakeCallManager.guideUserToGrantPermission(context)
+        androidFakeCallManager.guideUserToEnablePhoneAccount(context)
     }
 
     override fun triggerFakeCall(callerName: String, callerNumber: String, callerAvatarUrl: String?) {

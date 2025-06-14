@@ -5,22 +5,50 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ruicomp.cmptemplate.features.home.presentation.components.FeatureCard
 import cmptemplate.composeapp.generated.resources.*
+import com.ruicomp.cmptemplate.features.home.presentation.components.PermissionRationaleDialog
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     onCallNow: () -> Unit,
     onScheduleCall: () -> Unit,
     onSavedCaller: () -> Unit,
     onCallHistory: () -> Unit,
-    onSettingsClick: () -> Unit = {}
+    onSettingsClick: () -> Unit = {},
+    viewModel: HomeViewModel = koinViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    HomeScreenContent(
+        onScheduleCall = onScheduleCall,
+        onSavedCaller = onSavedCaller,
+        onCallHistory = onCallHistory,
+        onSettingsClick = onSettingsClick,
+        onEvent = viewModel::onEvent,
+        state = uiState
+    )
+
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreenContent(
+    onScheduleCall: () -> Unit,
+    onSavedCaller: () -> Unit,
+    onCallHistory: () -> Unit,
+    onSettingsClick: () -> Unit = {},
+    onEvent: (HomeEvent) -> Unit = {},
+    state: HomeState = HomeState()
 ) {
     Scaffold(
         topBar = {
@@ -48,8 +76,16 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                FeatureCard(stringResource(Res.string.feature_call_now), Icons.Default.Call, onCallNow)
-                FeatureCard(stringResource(Res.string.feature_schedule_call), Icons.Default.Schedule, onScheduleCall)
+                FeatureCard(
+                    stringResource(Res.string.feature_call_now),
+                    Icons.Default.Call,
+                    onClick = { onEvent(HomeEvent.CallNowClicked) }
+                )
+                FeatureCard(
+                    stringResource(Res.string.feature_schedule_call),
+                    Icons.Default.Schedule,
+                    onScheduleCall
+                )
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row(
@@ -59,6 +95,15 @@ fun HomeScreen(
                 FeatureCard(stringResource(Res.string.feature_saved_caller), Icons.Default.People, onSavedCaller)
                 FeatureCard(stringResource(Res.string.feature_call_history), Icons.Default.History, onCallHistory)
             }
+        }
+        if (state.shouldShowPermissionRationaleDialog) {
+            PermissionRationaleDialog(
+                title = stringResource(Res.string.permission_required_title),
+                message = stringResource(Res.string.make_own_call_permission_message),
+                onAgree = { onEvent(HomeEvent.AgreeRationalPermissionDialogClicked) },
+                onCancel = { onEvent(HomeEvent.CancelRationalPermissionDialogClicked) },
+                onDismiss = { onEvent(HomeEvent.RationalPermissionDialogDismissed) }
+            )
         }
     }
 }
