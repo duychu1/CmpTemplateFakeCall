@@ -3,14 +3,27 @@ package com.ruicomp.cmptemplate.features.fakecall
 import android.content.Context
 import com.ruicomp.cmptemplate.IFakeCallManager
 
-// Assuming your FakeCallManager class is in the same package
-// and you have a way to get a Context (e.g., from an Application class or dependency injection)
 
+
+/**
+ * An actual implementation of [IFakeCallManager] that interacts with the Android system's
+ * `FakeCallManager` to manage and trigger fake phone calls.
+ *
+ * This class handles the necessary Android-specific operations, such as checking
+ * if the phone account is enabled, guiding the user to enable it, and initiating
+ * the fake call process.
+ *
+ * @property context The Android [Context] required for interacting with system services.
+ */
 class ActualFakeCallManager(private val context: Context) : IFakeCallManager {
     private val androidFakeCallManager = FakeCallManager()
 
-    override fun isPermissionGranted(): Boolean {
+    override fun isPhoneAccountEnable(): Boolean {
         return androidFakeCallManager.isPhoneAccountEnabled(context)
+    }
+
+    override fun isPhonePermissionGranted(): Boolean {
+        TODO("Not yet implemented")
     }
 
     override fun requestPermission() {
@@ -18,9 +31,12 @@ class ActualFakeCallManager(private val context: Context) : IFakeCallManager {
     }
 
     override fun triggerFakeCall(callerName: String, callerNumber: String, callerAvatarUrl: String?) {
-        // You might need to adjust your Android FakeCallManager to accept a Context
-        // or have a way to access it internally if it doesn't already.
-        androidFakeCallManager.registerPhoneAccount(context) // Ensure account is registered
-        androidFakeCallManager.triggerFakeCall(context, callerName, callerNumber, callerAvatarUrl)
+        androidFakeCallManager.registerPhoneAccount(context)
+        androidFakeCallManager.triggerFakeCall(
+            context,
+            callerName,
+            callerNumber,
+            callerAvatarUrl
+        )
     }
 }

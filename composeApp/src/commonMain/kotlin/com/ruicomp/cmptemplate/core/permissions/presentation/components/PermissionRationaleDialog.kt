@@ -1,4 +1,4 @@
-package com.ruicomp.cmptemplate.features.home.presentation.components
+package com.ruicomp.cmptemplate.core.permissions.presentation.components
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
