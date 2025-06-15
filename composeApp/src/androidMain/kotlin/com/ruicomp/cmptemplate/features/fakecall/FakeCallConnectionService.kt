@@ -24,7 +24,10 @@ class FakeCallConnectionService : ConnectionService() {
         val callerNumber = extras?.getString(FakeCallManager.EXTRA_CALLER_NUMBER) ?: "+65467890909"
         Log.d("FakeCallConnectionSvc", "Incoming call from $callerNumber")
         val callerAvatarUri = extras?.getString(FakeCallManager.EXTRA_CALLER_AVATAR_URI)
-        return FakeCallConnection(callerName, callerNumber, callerAvatarUri)
+        return FakeCallConnection(callerName, callerNumber, callerAvatarUri).apply {
+            setCallerDisplayName(callerName, TelecomManager.PRESENTATION_ALLOWED)
+            setAddress("tel:$callerNumber".toUri(), TelecomManager.PRESENTATION_ALLOWED)
+        }
     }
 
     override fun onCreateIncomingConnectionFailed(
@@ -39,14 +42,6 @@ class FakeCallConnectionService : ConnectionService() {
         private val callerNumber: String,
         private val callerAvatarUri: String?
     ) : Connection() {
-        private val handler = Handler(Looper.getMainLooper())
-
-        override fun onShowIncomingCallUi() {
-            Log.d("FakeCallConnectionSvc", "onShowIncomingCallUi name=$callerName number=$callerNumber")
-            setCallerDisplayName(callerName, TelecomManager.PRESENTATION_ALLOWED)
-            setAddress("tel:$callerNumber".toUri(), TelecomManager.PRESENTATION_ALLOWED)
-            setRinging()
-        }
 
         override fun onAnswer() {
             Log.d("FakeCallConnectionSvc", "onAnswer")

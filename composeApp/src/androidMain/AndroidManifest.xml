@@ -4,8 +4,9 @@
     <uses-feature android:name="android.hardware.telecom" android:required="true" />
     <uses-feature android:name="android.hardware.telephony" android:required="false" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MANAGE_OWN_CALLS" />
-    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" android:minSdkVersion="31" />
 
 
     <application
@@ -18,7 +19,7 @@
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
         <service
             android:name=".features.fakecall.FakeCallConnectionService"
-            android:exported="false"
+            android:exported="true"
             android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE">
             <intent-filter>
                 <action android:name="android.telecom.ConnectionService" />
