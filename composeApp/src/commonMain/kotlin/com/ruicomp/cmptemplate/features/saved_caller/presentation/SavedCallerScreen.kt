@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ruicomp.cmptemplate.core.models.Contact
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
@@ -31,9 +32,20 @@ fun SavedCallerScreen(
     onBack: () -> Unit,
     viewModel: SavedCallerViewModel = koinViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    var showAddContactDialog by remember { mutableStateOf(false) }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    SavedCallerScreenContent(onBack, uiState, viewModel::onEvent)
+
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun SavedCallerScreenContent(
+    onBack: () -> Unit,
+    uiState: SavedCallerState,
+    onEvent: (SavedCallerEvent) -> Unit
+) {
+    var showAddContactDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -67,7 +79,10 @@ fun SavedCallerScreen(
                 }
             } else if (uiState.error != null) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(stringResource(Res.string.error_prefix, uiState.error!!), color = MaterialTheme.colorScheme.error)
+                    Text(
+                        stringResource(Res.string.error_prefix, uiState.error!!),
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
             } else {
                 LazyColumn(
@@ -81,7 +96,7 @@ fun SavedCallerScreen(
                                 selectedContactForCall = contact
                                 showBottomSheet = true
                             },
-                            onDelete = { viewModel.onDeleteContact(contact.id) }
+                            onDelete = { onEvent(SavedCallerEvent.DeleteContact(contact.id)) }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                     }
@@ -94,7 +109,7 @@ fun SavedCallerScreen(
         AddContactDialog(
             onDismiss = { showAddContactDialog = false },
             onConfirm = { name, number ->
-                viewModel.onAddContact(name, number)
+                onEvent(SavedCallerEvent.AddContact(name, number))
                 showAddContactDialog = false
             }
         )
@@ -108,7 +123,7 @@ fun SavedCallerScreen(
             FakeCallSheetContent(
                 contact = selectedContactForCall!!,
                 onStartCall = {
-                    viewModel.onCallContact(selectedContactForCall!!)
+                    onEvent(SavedCallerEvent.CallContact(selectedContactForCall!!))
                     scope.launch { sheetState.hide() }.invokeOnCompletion {
                         if (!sheetState.isVisible) {
                             showBottomSheet = false
@@ -217,4 +232,4 @@ private fun ContactItem(
 @Composable
 fun SavedCallerScreenPreview() {
     SavedCallerScreen(onBack = {})
-} 
+}

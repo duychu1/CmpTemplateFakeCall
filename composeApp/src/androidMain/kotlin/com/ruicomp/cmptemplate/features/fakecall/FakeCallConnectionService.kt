@@ -20,7 +20,9 @@ class FakeCallConnectionService : ConnectionService() {
     ): Connection {
         val extras = request?.extras
         val callerName = extras?.getString(FakeCallManager.EXTRA_CALLER_NAME) ?: "NameTest"
+        Log.d("FakeCallConnectionSvc", "Incoming call from $callerName")
         val callerNumber = extras?.getString(FakeCallManager.EXTRA_CALLER_NUMBER) ?: "+65467890909"
+        Log.d("FakeCallConnectionSvc", "Incoming call from $callerNumber")
         val callerAvatarUri = extras?.getString(FakeCallManager.EXTRA_CALLER_AVATAR_URI)
         return FakeCallConnection(callerName, callerNumber, callerAvatarUri)
     }
@@ -40,12 +42,14 @@ class FakeCallConnectionService : ConnectionService() {
         private val handler = Handler(Looper.getMainLooper())
 
         override fun onShowIncomingCallUi() {
-            setRinging()
+            Log.d("FakeCallConnectionSvc", "onShowIncomingCallUi name=$callerName number=$callerNumber")
             setCallerDisplayName(callerName, TelecomManager.PRESENTATION_ALLOWED)
             setAddress("tel:$callerNumber".toUri(), TelecomManager.PRESENTATION_ALLOWED)
+            setRinging()
         }
 
         override fun onAnswer() {
+            Log.d("FakeCallConnectionSvc", "onAnswer")
             setActive()
 //            handler.postDelayed({
 //                setDisconnected(DisconnectCause(DisconnectCause.LOCAL))
@@ -54,11 +58,13 @@ class FakeCallConnectionService : ConnectionService() {
         }
 
         override fun onDisconnect() {
+            Log.d("FakeCallConnectionSvc", "onDisconnect")
             setDisconnected(DisconnectCause(DisconnectCause.LOCAL))
             destroy()
         }
 
         override fun onReject() {
+            Log.d("FakeCallConnectionSvc", "onReject")
             setDisconnected(DisconnectCause(DisconnectCause.REJECTED))
             destroy()
         }

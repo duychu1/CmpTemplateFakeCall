@@ -65,7 +65,7 @@ class FakeCallManager {
         } catch (e: ActivityNotFoundException) {
             // This might happen if no activity can handle this intent (highly unlikely on most devices)
             // or on very restricted devices. Fallback to general call settings.
-            Toast.makeText(context, "can open change phone account", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Cant open change phone account", Toast.LENGTH_SHORT).show()
 
         }
     }
@@ -88,7 +88,7 @@ class FakeCallManager {
                 val newAccount = PhoneAccount.builder(handle, PHONE_ACCOUNT_LABEL)
                     .setCapabilities(PhoneAccount.CAPABILITY_CALL_PROVIDER)
                     // Add other capabilities or properties as needed
-                    .setIcon(Icon.createWithResource(context, R.drawable.ic_launcher_foreground))
+//                    .setIcon(Icon.createWithResource(context, R.drawable.ic_launcher_foreground))
                     .build()
                 telecomManager.registerPhoneAccount(newAccount)
             } else {

@@ -54,46 +54,6 @@ fun HomeScreen(
         },
         onPermissionResult = { isGranted, shouldShowRationale -> // Pass events up
             viewModel.onPermissionResult(isGranted, shouldShowRationale)
-        },
-        grantedContent = {
-            // This UI is unchanged
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Phone number permission granted! (From ViewModel)", textAlign = TextAlign.Center)
-            }
-        },
-        rationaleContent = { onRequestPermission ->
-            // This UI is unchanged
-            Column(
-                modifier = Modifier.fillMaxSize().padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    "To automatically fill your phone number, we need permission to read it. Please grant the permission.",
-                    textAlign = TextAlign.Center
-                )
-                Spacer(Modifier.height(8.dp))
-                Button(onClick = onRequestPermission) {
-                    Text("Request Permission")
-                }
-            }
-        },
-        permanentlyDeniedContent = { onOpenSettings ->
-            // This UI is unchanged
-            Column(
-                modifier = Modifier.fillMaxSize().padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    "Phone number permission was permanently denied. Please enable it in the app settings.",
-                    textAlign = TextAlign.Center
-                )
-                Spacer(Modifier.height(8.dp))
-                Button(onClick = onOpenSettings) {
-                    Text("Open Settings")
-                }
-            }
         }
     )
 
@@ -158,6 +118,7 @@ fun HomeScreenContent(
         }
         if (state.shouldShowPermissionRationaleDialog) {
             PermissionRationaleDialog(
+                agreeText = stringResource(Res.string.settings_title),
                 title = stringResource(Res.string.permission_required_title),
                 message = stringResource(Res.string.make_own_call_permission_message),
                 onAgree = { onEvent(HomeEvent.AgreeRationalPermissionDialogClicked) },

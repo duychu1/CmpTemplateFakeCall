@@ -27,11 +27,13 @@ class ActualFakeCallManager(private val context: Context) : IFakeCallManager {
     }
 
     override fun requestPermission() {
+        androidFakeCallManager.registerPhoneAccount(context)
         androidFakeCallManager.guideUserToEnablePhoneAccount(context)
     }
 
     override fun triggerFakeCall(callerName: String, callerNumber: String, callerAvatarUrl: String?) {
-        androidFakeCallManager.registerPhoneAccount(context)
+        //todo handle exception
+//        androidFakeCallManager.registerPhoneAccount(context)
         androidFakeCallManager.triggerFakeCall(
             context,
             callerName,
