@@ -86,7 +86,7 @@ class FakeCallManager {
             if (existingAccount == null) {
                 println("PhoneAccount not found. Registering a new one.")
                 val newAccount = PhoneAccount.builder(handle, PHONE_ACCOUNT_LABEL)
-                    .setCapabilities(PhoneAccount.CAPABILITY_SELF_MANAGED or PhoneAccount.CAPABILITY_CALL_PROVIDER)
+                    .setCapabilities(PhoneAccount.CAPABILITY_CALL_PROVIDER)
                     // Add other capabilities or properties as needed
                     .setIcon(Icon.createWithResource(context, R.drawable.ic_launcher_foreground))
                     .build()
