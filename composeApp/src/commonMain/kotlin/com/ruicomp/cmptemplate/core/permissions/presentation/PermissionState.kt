@@ -2,7 +2,7 @@ package com.ruicomp.cmptemplate.core.permissions.presentation
 
 // --- State Model ---
 sealed interface PermissionState {
-    data object Initial : PermissionState
+    data object NotGranted : PermissionState
     data object Granted : PermissionState
     data object RationaleRequired : PermissionState
     data object PermanentlyDenied : PermissionState

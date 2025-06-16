@@ -24,8 +24,6 @@ class MainActivity : ComponentActivity() {
             // Key logic: We want dark icons when the theme is NOT dark
             val useDarkIcons = !isDarkTheme
 
-            // Use DisposableEffect to set the status bar icons
-            // It will be cleaned up when the composable leaves the composition
             DisposableEffect(useDarkIcons) {
                 val window = (this@MainActivity).window
                 val insetsController = WindowCompat.getInsetsController(window, window.decorView)

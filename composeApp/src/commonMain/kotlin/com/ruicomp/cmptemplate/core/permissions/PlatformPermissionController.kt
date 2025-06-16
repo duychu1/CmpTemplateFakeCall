@@ -18,7 +18,7 @@ interface PlatformPermissionController {
 @Composable
 expect fun rememberPlatformPermissionController(
     permission: String,
-    onResult: (isGranted: Boolean, shouldShowRationale: Boolean) -> Unit
+    onResult: (PermissionStatus) -> Unit
 ): PlatformPermissionController
 
 /**
@@ -26,4 +26,4 @@ expect fun rememberPlatformPermissionController(
  * This is a Composable to ensure it can access platform-specific context if needed.
  */
 @Composable
-expect fun getInitialPermissionStatus(permission: String): PermissionStatus
+expect fun checkPermissionStatus(permission: String): PermissionStatus

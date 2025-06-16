@@ -8,13 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ruicomp.cmptemplate.features.home.presentation.components.FeatureCard
 import cmptemplate.composeapp.generated.resources.*
+import com.ruicomp.cmptemplate.core.permissions.presentation.components.CustomAlertDialog
 import com.ruicomp.cmptemplate.core.permissions.presentation.components.PermissionAware
-import com.ruicomp.cmptemplate.core.permissions.presentation.components.PermissionRationaleDialog
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -39,23 +38,16 @@ fun HomeScreen(
         state = uiState
     )
 
-    // This is the Android permission constant
-    val phoneNumberPermission = "android.permission.READ_PHONE_NUMBERS"
 
-    // Observe the state from the ViewModel
-    val uiPermissionState by viewModel.uiPermissionState.collectAsStateWithLifecycle()
-
-    PermissionAware(
-        permission = phoneNumberPermission,
-        permissionNameDialog = "Phone",
-        permissionState = uiPermissionState, // Pass the state down
-        onPermissionStatusChecked = { status -> // Pass events up to the ViewModel
-            viewModel.onPermissionStatusChecked(phoneNumberPermission, status)
-        },
-        onPermissionResult = { isGranted, shouldShowRationale -> // Pass events up
-            viewModel.onPermissionResult(isGranted, shouldShowRationale)
-        }
-    )
+    if (uiState.showPermissionAwarePhone) {
+        PermissionAware(
+            permission = HomeViewModel.READ_PHONE_NUMBERS,
+            permissionNameDialog = "PHONE",
+            onShowPermissionAwareChange = viewModel::onShowPermissionAwareChange,
+            onPermissionStatusChecked = viewModel::onPermissionStatusChecked,
+            onPermissionResult = viewModel::onPermissionResult,
+        )
+    }
 
 }
 
@@ -112,12 +104,20 @@ fun HomeScreenContent(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                FeatureCard(stringResource(Res.string.feature_saved_caller), Icons.Default.People, onSavedCaller)
-                FeatureCard(stringResource(Res.string.feature_call_history), Icons.Default.History, onCallHistory)
+                FeatureCard(
+                    stringResource(Res.string.feature_saved_caller),
+                    Icons.Default.People,
+                    onSavedCaller
+                )
+                FeatureCard(
+                    stringResource(Res.string.feature_call_history),
+                    Icons.Default.History,
+                    onCallHistory
+                )
             }
         }
-        if (state.shouldShowPermissionRationaleDialog) {
-            PermissionRationaleDialog(
+        if (state.showPhoneAccountPermissionRationaleDialog) {
+            CustomAlertDialog(
                 agreeText = stringResource(Res.string.settings_title),
                 title = stringResource(Res.string.permission_required_title),
                 message = stringResource(Res.string.make_own_call_permission_message),

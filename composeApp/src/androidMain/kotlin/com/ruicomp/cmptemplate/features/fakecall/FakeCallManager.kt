@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.telecom.PhoneAccount
 import android.telecom.PhoneAccountHandle
 import android.telecom.TelecomManager
+import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.ruicomp.cmptemplate.R
@@ -21,6 +22,7 @@ class FakeCallManager {
         const val EXTRA_CALLER_NAME = "EXTRA_CALLER_NAME"
         const val EXTRA_CALLER_NUMBER = "EXTRA_CALLER_NUMBER"
         const val EXTRA_CALLER_AVATAR_URI = "EXTRA_CALLER_AVATAR_URI"
+        private const val TAG = "FakeCallManager"
     }
 
     fun isManageOwnCallsPermissionGranted(context: Context): Boolean {
@@ -32,7 +34,7 @@ class FakeCallManager {
 
     fun isPhoneAccountEnabled(context: Context): Boolean {
         if (!isManageOwnCallsPermissionGranted(context)) {
-            println("MANAGE_OWN_CALLS permission not granted. Cannot check PhoneAccount status.")
+            Log.d(TAG, "MANAGE_OWN_CALLS permission not granted. Cannot check PhoneAccount status.")
             return false
         }
 
@@ -43,7 +45,7 @@ class FakeCallManager {
             val account: PhoneAccount? = telecomManager.getPhoneAccount(handle)
             account != null && account.isEnabled
         } catch (e: SecurityException) {
-            println("isPhoneAccountEnabled: SecurityException while checking PhoneAccount status: ${e.message}")
+            Log.d(TAG, "isPhoneAccountEnabled: SecurityException while checking PhoneAccount status: ${e.message}")
             false
         }
     }
@@ -66,7 +68,6 @@ class FakeCallManager {
             // This might happen if no activity can handle this intent (highly unlikely on most devices)
             // or on very restricted devices. Fallback to general call settings.
             Toast.makeText(context, "Cant open change phone account", Toast.LENGTH_SHORT).show()
-
         }
     }
 
@@ -84,7 +85,7 @@ class FakeCallManager {
         try {
             val existingAccount = telecomManager.getPhoneAccount(handle)
             if (existingAccount == null) {
-                println("PhoneAccount not found. Registering a new one.")
+                Log.d(TAG, "PhoneAccount not found. Registering a new one.")
                 val newAccount = PhoneAccount.builder(handle, PHONE_ACCOUNT_LABEL)
                     .setCapabilities(PhoneAccount.CAPABILITY_CALL_PROVIDER)
                     // Add other capabilities or properties as needed
@@ -95,11 +96,11 @@ class FakeCallManager {
                 // Optional: You could check if properties need updating, e.g., if the user
                 // changed the app's language and you want to update the label.
                 // For most cases, this else block can be empty.
-                println("PhoneAccount already registered.")
+                Log.d(TAG, "PhoneAccount already registered.")
             }
 
         } catch (e: SecurityException) {
-            println("registerPhoneAccount: SecurityException while registering PhoneAccount: ${e.message}")
+            Log.d(TAG, "registerPhoneAccount: SecurityException while registering PhoneAccount: ${e.message}")
         }
     }
 

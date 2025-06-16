@@ -3,38 +3,64 @@ package com.ruicomp.cmptemplate.features.home.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ruicomp.cmptemplate.IFakeCallManager
-import com.ruicomp.cmptemplate.core.permissions.PermissionHandler
-import com.ruicomp.cmptemplate.core.permissions.presentation.PermissionState
 import com.ruicomp.cmptemplate.core.permissions.presentation.PermissionStatus
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val fakeCallManager: IFakeCallManager,
-    private val permissionHandler: PermissionHandler
 ) : ViewModel() {
+
+    companion object {
+        const val READ_PHONE_NUMBERS = "android.permission.READ_PHONE_NUMBERS"
+    }
+
+    var isPhoneAccountEnable: Boolean = false
+    var isPhonePermissionGranted: Boolean = false
 
     private val _uiState = MutableStateFlow(HomeState())
     val uiState = _uiState.asStateFlow()
 
-    // Expose the permission state directly from the handler
-    val uiPermissionState: StateFlow<PermissionState> = permissionHandler.permissionState
+    fun onShowPermissionAwareChange(show: Boolean) {
+        _uiState.update { it.copy(showPermissionAwarePhone = show) }
+    }
 
     /**
      * Event from the UI: The initial check for the permission status is complete.
      */
-    fun onPermissionStatusChecked(permission: String, status: PermissionStatus) {
-        permissionHandler.onPermissionStatus(permission, status)
+    fun onPermissionStatusChecked(status: PermissionStatus) {
+        when (status) {
+            is PermissionStatus.Granted -> {
+                handlePhonePermissionGranted()
+                handleCallNow()
+            }
+            is PermissionStatus.NotApplicable -> { }
+            is PermissionStatus.NotGranted -> { }
+            is PermissionStatus.RationaleNeeded -> { }
+            is PermissionStatus.PermanentlyDenied -> { }
+        }
+//        permissionHandler.onPermissionStatus(permission, status)
     }
 
     /**
      * Event from the UI: The user has responded to the permission request dialog.
      */
-    fun onPermissionResult(isGranted: Boolean, shouldShowRationale: Boolean) {
-        permissionHandler.onPermissionResult(isGranted, shouldShowRationale)
+    fun onPermissionResult(status: PermissionStatus) {
+        when (status) {
+            is PermissionStatus.Granted -> { handlePhonePermissionGranted() }
+            is PermissionStatus.NotApplicable -> { }
+            is PermissionStatus.NotGranted -> { }
+            is PermissionStatus.RationaleNeeded -> { }
+            is PermissionStatus.PermanentlyDenied -> { }
+        }
+//        permissionHandler.onPermissionResult(status)
+    }
+
+    private fun handlePhonePermissionGranted() {
+        isPhonePermissionGranted = true
+        _uiState.update { it.copy(showPermissionAwarePhone = false) }
     }
 
     fun onEvent(event: HomeEvent) {
@@ -43,7 +69,7 @@ class HomeViewModel(
             HomeEvent.AgreeRationalPermissionDialogClicked -> {
                 _uiState.update {
                     it.copy(
-                        shouldShowPermissionRationaleDialog = false
+                        showPhoneAccountPermissionRationaleDialog = false
                     )
                 }
                 requestFakeCallPermission()
@@ -52,21 +78,20 @@ class HomeViewModel(
             HomeEvent.CancelRationalPermissionDialogClicked -> {
                 _uiState.update {
                     it.copy(
-                        shouldShowPermissionRationaleDialog = false
+                        showPhoneAccountPermissionRationaleDialog = false
                     )
                 }
             }
 
             HomeEvent.RationalPermissionDialogDismissed -> {
-                _uiState.update { it.copy(shouldShowPermissionRationaleDialog = false) }
+                _uiState.update { it.copy(showPhoneAccountPermissionRationaleDialog = false) }
             }
 
         }
     }
 
-    private fun checkFakeCallPermission() {
-        val isGranted = fakeCallManager.isPhoneAccountEnable()
-        _uiState.update { it.copy(isMakeCallPermissionGranted = isGranted) }
+    private fun checkPhoneAccountPermission() {
+        isPhoneAccountEnable = fakeCallManager.isPhoneAccountEnable()
     }
 
     private fun requestFakeCallPermission() {
@@ -74,12 +99,15 @@ class HomeViewModel(
     }
 
     private fun handleCallNow() {
-        checkFakeCallPermission() // Re-check before attempting to call
-//        requestFakeCallPermission()
-        if (_uiState.value.isMakeCallPermissionGranted) {
+        if (!_uiState.value.showPermissionAwarePhone && !isPhonePermissionGranted) {
+            _uiState.update { it.copy(showPermissionAwarePhone = true) }
+            return
+        }
+        checkPhoneAccountPermission() // Re-check before attempting to call
+        if (isPhoneAccountEnable) {
             triggerFakeCallFlow()
         } else {
-            _uiState.update { it.copy(shouldShowPermissionRationaleDialog = true) }
+            _uiState.update { it.copy(showPhoneAccountPermissionRationaleDialog = true) }
         }
     }
 

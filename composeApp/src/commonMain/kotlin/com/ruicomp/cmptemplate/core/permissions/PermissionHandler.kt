@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.StateFlow
 interface PermissionHandler {
     val permissionState: StateFlow<PermissionState>
     fun onPermissionStatus(permission: String, status: PermissionStatus)
-    fun onPermissionResult(isGranted: Boolean, shouldShowRationale: Boolean)
+    fun onPermissionResult(status: PermissionStatus)
 }

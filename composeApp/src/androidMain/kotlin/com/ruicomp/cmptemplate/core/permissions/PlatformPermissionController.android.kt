@@ -3,8 +3,10 @@ package com.ruicomp.cmptemplate.core.permissions
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.net.Uri
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
@@ -36,7 +38,7 @@ private class AndroidPermissionController(
 @Composable
 actual fun rememberPlatformPermissionController(
     permission: String,
-    onResult: (isGranted: Boolean, shouldShowRationale: Boolean) -> Unit
+    onResult: (PermissionStatus) -> Unit
 ): PlatformPermissionController {
     val context = LocalContext.current
     val activity = context as androidx.activity.ComponentActivity
@@ -44,7 +46,15 @@ actual fun rememberPlatformPermissionController(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
-            onResult(isGranted, activity.shouldShowRequestPermissionRationale(permission))
+            val status = if (isGranted) {
+                PermissionStatus.Granted
+            } else if (activity.shouldShowRequestPermissionRationale(permission)) {
+                PermissionStatus.RationaleNeeded
+            } else {
+                PermissionStatus.PermanentlyDenied
+            }
+            Log.d("PermissionController", "Launcher onResult status: $status")
+            onResult(status)
         }
     )
 
@@ -54,16 +64,18 @@ actual fun rememberPlatformPermissionController(
 }
 
 @Composable
-actual fun getInitialPermissionStatus(permission: String): PermissionStatus {
+actual fun checkPermissionStatus(permission: String): PermissionStatus {
     val context = LocalContext.current
     val activity = context as? androidx.activity.ComponentActivity
-
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) { // API level 31
+        return PermissionStatus.Granted
+    }
     return when {
         ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED ->
             PermissionStatus.Granted
         activity?.shouldShowRequestPermissionRationale(permission) == true ->
-            PermissionStatus.RationaleNeeded(permission)
+            PermissionStatus.RationaleNeeded
         else ->
-            PermissionStatus.Denied
+            PermissionStatus.NotGranted
     }
 }

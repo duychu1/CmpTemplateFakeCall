@@ -1,66 +1,104 @@
 package com.ruicomp.cmptemplate.core.permissions.presentation.components
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.ruicomp.cmptemplate.core.permissions.presentation.PermissionState
 import com.ruicomp.cmptemplate.core.permissions.presentation.PermissionStatus
-import com.ruicomp.cmptemplate.core.permissions.getInitialPermissionStatus
+import com.ruicomp.cmptemplate.core.permissions.checkPermissionStatus
 import com.ruicomp.cmptemplate.core.permissions.rememberPlatformPermissionController
 
 @Composable
 fun PermissionAware(
     permission: String,
     permissionNameDialog: String,
-    // NEW: Receive state from the outside
-    permissionState: PermissionState,
-    // NEW: Callbacks for events
+    onShowPermissionAwareChange: (Boolean) -> Unit = {},
     onPermissionStatusChecked: (PermissionStatus) -> Unit,
-    onPermissionResult: (isGranted: Boolean, shouldShowRationale: Boolean) -> Unit,
-    // Content lambdas remain the same
-    grantedContent: @Composable () -> Unit = { },
-    rationaleContent: @Composable (onRequestPermission: () -> Unit) -> Unit = { DefaultRationaleContent(permissionNameDialog, it) },
-    permanentlyDeniedContent: @Composable (onOpenSettings: () -> Unit) -> Unit = { DefaultPermanentlyDeniedContent(permissionNameDialog, it) },
-    notApplicableContent: @Composable () -> Unit = grantedContent
+    onPermissionResult: (PermissionStatus) -> Unit,
 ) {
 
-    // 1. Get the platform-specific controller, which now calls the provided lambda.
+    var isShowRationale by remember { mutableStateOf(true) }
+
+    val tmpPermissionStatus = checkPermissionStatus(permission)
+
+    var permissionStatus: PermissionStatus by remember { mutableStateOf(tmpPermissionStatus) } // Now it's Compose State
+//    permissionStatus = tmpPermissionStatus
+    LaunchedEffect(permissionStatus) {
+        onPermissionStatusChecked(permissionStatus)
+    }
+    println("PermissionAware: Initial permission status for $permission is $permissionStatus")
+
     val controller = rememberPlatformPermissionController(
         permission = permission,
-        onResult = onPermissionResult // Pass the callback directly
+        onResult = {
+            println("PermissionAware: Permission result for $permission is $it")
+            permissionStatus = it
+            onPermissionResult(it)
+        } // Pass the callback directly
     )
 
     // 2. Check the initial status and report it up via the callback.
-    val initialStatus = getInitialPermissionStatus(permission)
-    LaunchedEffect(initialStatus) {
-        onPermissionStatusChecked(initialStatus)
+    when (permissionStatus) {
+        is PermissionStatus.Granted -> { }
+        PermissionStatus.NotApplicable -> { }
+        PermissionStatus.NotGranted -> {
+//            CustomAlertDialog(
+//                title = "Permission Required",
+//                message = "$permissionNameDialog permission has been permanently denied. Please enable it in app settings to use this feature.",
+//                onAgree = controller::openAppSettings,
+//                agreeText = "Settings",
+//                onDismiss = { onShowPermissionAwareChange(false) },
+//                onCancel = { onShowPermissionAwareChange(false) },
+//            )
+            LaunchedEffect(Unit) { // LaunchedEffect to call suspend function
+                controller.requestPermission()
+            }
+        }
+        PermissionStatus.PermanentlyDenied -> {
+            CustomAlertDialog(
+                title = "Permission Required",
+                message = "$permissionNameDialog permission has been permanently denied. Please enable it in app settings to use this feature.",
+                onAgree = controller::openAppSettings,
+                agreeText = "Settings",
+                onDismiss = { onShowPermissionAwareChange(false) },
+                onCancel = { onShowPermissionAwareChange(false) },
+            )
+        }
+        PermissionStatus.RationaleNeeded -> {
+            if (isShowRationale) {
+                CustomAlertDialog(
+                    title = "Permission Required",
+                    message = "$permissionNameDialog permission is required to app run correctly.",
+                    onAgree = {
+                        controller.requestPermission()
+                        isShowRationale = false
+                    },
+                    onDismiss = { onShowPermissionAwareChange(false) },
+                    onCancel = { onShowPermissionAwareChange(false) },
+                )
+            }
+        }
     }
 
-    // 3. Render UI based on the INJECTED state.
-    when (permissionState) {
-        is PermissionState.Granted -> grantedContent()
-        is PermissionState.Initial, is PermissionState.RationaleRequired -> {
-            rationaleContent { controller.requestPermission() }
-        }
-        is PermissionState.PermanentlyDenied -> {
-            permanentlyDeniedContent { controller.openAppSettings() }
-        }
-        is PermissionState.NotApplicable -> notApplicableContent()
-    }
 }
 
 // Default rationale content that can be overridden
 @Composable
 internal fun DefaultRationaleContent(
     permissionNameDialog: String,
-    onRequestPermission: () -> Unit
+    onRequestPermission: () -> Unit,
+    onDismiss: () -> Unit,
+    onCancel: () -> Unit,
 ) {
-    PermissionRationaleDialog(
+    CustomAlertDialog(
         title = "Permission Required",
         message = "$permissionNameDialog permission is required to provide relevant information.",
         onAgree = onRequestPermission,
-        onCancel = {},
-        onDismiss = {}
+        onCancel = onCancel,
+        onDismiss = onDismiss,
     )
 }
 
@@ -68,14 +106,16 @@ internal fun DefaultRationaleContent(
 @Composable
 internal fun DefaultPermanentlyDeniedContent(
     permissionNameDialog: String,
-    onOpenSettings: () -> Unit
+    onOpenSettings: () -> Unit,
+    onDismiss: () -> Unit,
+    onCancel: () -> Unit,
 ) {
-    PermissionRationaleDialog(
+    CustomAlertDialog(
         title = "Permission Required",
         message = "$permissionNameDialog permission has been permanently denied. Please enable it in app settings to use this feature.",
         onAgree = onOpenSettings,
         agreeText = "Settings",
-        onCancel = {},
-        onDismiss = {}
+        onCancel = onCancel,
+        onDismiss = onDismiss,
     )
 }

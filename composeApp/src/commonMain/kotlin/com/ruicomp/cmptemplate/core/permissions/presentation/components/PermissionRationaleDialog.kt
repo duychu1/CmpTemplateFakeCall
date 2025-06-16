@@ -12,7 +12,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun PermissionRationaleDialog(
+fun CustomAlertDialog(
     title: String,
     message: String,
     agreeText: String = stringResource( Res.string.ok),
@@ -41,7 +41,7 @@ fun PermissionRationaleDialog(
 @Preview
 @Composable
 fun PermissionRationaleDialogPreview() {
-    PermissionRationaleDialog(
+    CustomAlertDialog(
         title = "Permission Required",
         message = "This app needs access to your location to provide relevant information.",
         onAgree = {},
