@@ -6,10 +6,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import cmptemplate.composeapp.generated.resources.Res
+import cmptemplate.composeapp.generated.resources.permission_permanently_denied_message
+import cmptemplate.composeapp.generated.resources.permission_rationale_message
+import cmptemplate.composeapp.generated.resources.permission_required_title
+import cmptemplate.composeapp.generated.resources.settings_title
 import com.ruicomp.cmptemplate.core.permissions.presentation.PermissionState
 import com.ruicomp.cmptemplate.core.permissions.presentation.PermissionStatus
 import com.ruicomp.cmptemplate.core.permissions.checkPermissionStatus
 import com.ruicomp.cmptemplate.core.permissions.rememberPlatformPermissionController
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun PermissionAware(
@@ -59,10 +65,10 @@ fun PermissionAware(
         }
         PermissionStatus.PermanentlyDenied -> {
             CustomAlertDialog(
-                title = "Permission Required",
-                message = "$permissionNameDialog permission has been permanently denied. Please enable it in app settings to use this feature.",
+                title = stringResource(Res.string.permission_required_title),
+                message = stringResource(Res.string.permission_permanently_denied_message, permissionNameDialog),
                 onAgree = controller::openAppSettings,
-                agreeText = "Settings",
+                agreeText = stringResource(Res.string.settings_title),
                 onDismiss = { onShowPermissionAwareChange(false) },
                 onCancel = { onShowPermissionAwareChange(false) },
             )
@@ -70,8 +76,8 @@ fun PermissionAware(
         PermissionStatus.RationaleNeeded -> {
             if (isShowRationale) {
                 CustomAlertDialog(
-                    title = "Permission Required",
-                    message = "$permissionNameDialog permission is required to app run correctly.",
+                    title = stringResource(Res.string.permission_required_title),
+                    message = stringResource(Res.string.permission_rationale_message, permissionNameDialog),
                     onAgree = {
                         controller.requestPermission()
                         isShowRationale = false
@@ -83,39 +89,4 @@ fun PermissionAware(
         }
     }
 
-}
-
-// Default rationale content that can be overridden
-@Composable
-internal fun DefaultRationaleContent(
-    permissionNameDialog: String,
-    onRequestPermission: () -> Unit,
-    onDismiss: () -> Unit,
-    onCancel: () -> Unit,
-) {
-    CustomAlertDialog(
-        title = "Permission Required",
-        message = "$permissionNameDialog permission is required to provide relevant information.",
-        onAgree = onRequestPermission,
-        onCancel = onCancel,
-        onDismiss = onDismiss,
-    )
-}
-
-// Default permanently denied content that can be overridden
-@Composable
-internal fun DefaultPermanentlyDeniedContent(
-    permissionNameDialog: String,
-    onOpenSettings: () -> Unit,
-    onDismiss: () -> Unit,
-    onCancel: () -> Unit,
-) {
-    CustomAlertDialog(
-        title = "Permission Required",
-        message = "$permissionNameDialog permission has been permanently denied. Please enable it in app settings to use this feature.",
-        onAgree = onOpenSettings,
-        agreeText = "Settings",
-        onCancel = onCancel,
-        onDismiss = onDismiss,
-    )
 }

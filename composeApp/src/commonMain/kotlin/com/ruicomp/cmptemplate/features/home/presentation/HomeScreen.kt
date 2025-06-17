@@ -42,7 +42,7 @@ fun HomeScreen(
     if (uiState.showPermissionAwarePhone) {
         PermissionAware(
             permission = HomeViewModel.READ_PHONE_NUMBERS,
-            permissionNameDialog = "PHONE",
+            permissionNameDialog = stringResource(Res.string.PHONE),
             onShowPermissionAwareChange = viewModel::onShowPermissionAwareChange,
             onPermissionStatusChecked = viewModel::onPermissionStatusChecked,
             onPermissionResult = viewModel::onPermissionResult,
