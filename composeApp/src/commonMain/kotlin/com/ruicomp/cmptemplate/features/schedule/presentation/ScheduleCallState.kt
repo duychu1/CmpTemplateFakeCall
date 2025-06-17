@@ -13,5 +13,7 @@ data class ScheduleCallState(
     val isContactSheetVisible: Boolean = false,
     val selectedDateMillis: Long? = null,
     val selectedHour: Int? = null,
-    val selectedMinute: Int? = null
+    val selectedMinute: Int? = null,
+    val formattedDate: String = "",
+    val formattedTime: String = ""
 )

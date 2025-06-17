@@ -53,17 +53,6 @@ private fun ScheduleCallScreenContent(
     )
     var showDatePicker by remember { mutableStateOf(false) }
 
-    val formattedDate by remember(uiState.selectedDateMillis) {
-        derivedStateOf {
-            uiState.selectedDateMillis?.let {
-                val instant = Instant.fromEpochMilliseconds(it)
-                val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
-                val monthName = localDate.month.name.lowercase().take(3).replaceFirstChar { char -> char.uppercase() }
-                "${monthName} ${localDate.dayOfMonth.toString().padStart(2, '0')}, ${localDate.year}"
-            } ?: ""
-        }
-    }
-
     var showTimePicker by remember { mutableStateOf(false) }
 
     val currentTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
@@ -71,23 +60,14 @@ private fun ScheduleCallScreenContent(
         initialHour = uiState.selectedHour ?: currentTime.hour,
         initialMinute = uiState.selectedMinute ?: currentTime.minute
     )
-    val formattedTime by remember(uiState.selectedHour, uiState.selectedMinute) {
-        derivedStateOf {
-            val hour = uiState.selectedHour
-            val minute = uiState.selectedMinute
-            if (hour != null && minute != null) {
-                val amPm = if (hour < 12) "AM" else "PM"
-                val displayHour = when {
-                    hour == 0 -> 12
-                    hour > 12 -> hour - 12
-                    else -> hour
-                }
-                "${displayHour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} $amPm"
-            } else ""
-        }
-    }
 
-    val isFormValid by remember(uiState.name, uiState.number, uiState.selectedDateMillis, uiState.selectedHour, uiState.selectedMinute) {
+    val isFormValid by remember(
+        uiState.name,
+        uiState.number,
+        uiState.selectedDateMillis,
+        uiState.selectedHour,
+        uiState.selectedMinute
+    ) {
         derivedStateOf {
             uiState.name.isNotBlank() && uiState.number.isNotBlank() &&
                     uiState.selectedDateMillis != null && uiState.selectedHour != null && uiState.selectedMinute != null
@@ -107,7 +87,7 @@ private fun ScheduleCallScreenContent(
         },
         bottomBar = {
             Button(
-                onClick = { onEvent(ScheduleCallEvent.Schedule("$formattedDate at $formattedTime")) },
+                onClick = { onEvent(ScheduleCallEvent.Schedule("${uiState.formattedDate} at ${uiState.formattedTime}")) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
@@ -136,9 +116,9 @@ private fun ScheduleCallScreenContent(
             )
             Spacer(modifier = Modifier.height(24.dp))
             SelectDateTimeSection(
-                date = formattedDate,
+                date = uiState.formattedDate,
                 onDateSelect = { showDatePicker = true },
-                time = formattedTime,
+                time = uiState.formattedTime,
                 onTimeSelect = { showTimePicker = true }
             )
             Spacer(modifier = Modifier.height(16.dp))

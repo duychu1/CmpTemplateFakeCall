@@ -7,11 +7,33 @@ import com.ruicomp.cmptemplate.features.saved_caller.domain.repository.CallerRep
 import com.ruicomp.cmptemplate.features.call_history.domain.repository.CallHistoryRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.datetime.*
 
 class ScheduleCallViewModel(
     private val callHistoryRepository: CallHistoryRepository,
     private val callerRepository: CallerRepository
 ) : ViewModel() {
+
+    private fun formatDate(millis: Long?): String {
+        return millis?.let {
+            val instant = Instant.fromEpochMilliseconds(it)
+            val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+            val monthName = localDate.month.name.lowercase().take(3).replaceFirstChar { char -> char.uppercase() }
+            "$monthName ${localDate.dayOfMonth.toString().padStart(2, '0')}, ${localDate.year}"
+        } ?: ""
+    }
+
+    private fun formatTime(hour: Int?, minute: Int?): String {
+        return if (hour != null && minute != null) {
+            val amPm = if (hour < 12) "AM" else "PM"
+            val displayHour = when {
+                hour == 0 -> 12
+                hour > 12 -> hour - 12
+                else -> hour
+            }
+            "${displayHour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} $amPm"
+        } else ""
+    }
 
     private val _uiState = MutableStateFlow(ScheduleCallState())
     val uiState = _uiState.asStateFlow()
@@ -42,10 +64,12 @@ class ScheduleCallViewModel(
                 _uiState.update { it.copy(number = event.number) }
             }
             is ScheduleCallEvent.DateSelected -> {
-                _uiState.update { it.copy(selectedDateMillis = event.millis) }
+                val formatted = formatDate(event.millis)
+                _uiState.update { it.copy(selectedDateMillis = event.millis, formattedDate = formatted) }
             }
             is ScheduleCallEvent.TimeSelected -> {
-                _uiState.update { it.copy(selectedHour = event.hour, selectedMinute = event.minute) }
+                val formatted = formatTime(event.hour, event.minute)
+                _uiState.update { it.copy(selectedHour = event.hour, selectedMinute = event.minute, formattedTime = formatted) }
             }
             is ScheduleCallEvent.SelectContact -> {
                 _uiState.update {
