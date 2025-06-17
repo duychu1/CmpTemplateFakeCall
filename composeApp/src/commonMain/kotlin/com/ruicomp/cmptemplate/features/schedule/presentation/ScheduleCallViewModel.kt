@@ -17,62 +17,66 @@ class ScheduleCallViewModel(
     val uiState = _uiState.asStateFlow()
 
     init {
-        loadContacts()
+        onEvent(ScheduleCallEvent.LoadContacts)
     }
 
-    private fun loadContacts() {
-        callerRepository.getContacts().onEach { callers ->
-            _uiState.update {
-                it.copy(contacts = callers.map { c ->
-                    Contact(
-                        id = c.id,
-                        name = c.name,
-                        number = c.number
-                    )
-                })
+    fun onEvent(event: ScheduleCallEvent) {
+        when (event) {
+            is ScheduleCallEvent.LoadContacts -> {
+                callerRepository.getContacts().onEach { callers ->
+                    _uiState.update {
+                        it.copy(contacts = callers.map { c ->
+                            Contact(
+                                id = c.id,
+                                name = c.name,
+                                number = c.number
+                            )
+                        })
+                    }
+                }.launchIn(viewModelScope)
             }
-        }.launchIn(viewModelScope)
-    }
-
-    fun onContactSelected(contact: Contact) {
-        _uiState.update {
-            it.copy(
-                name = contact.name,
-                number = contact.number,
-                isContactSheetVisible = false
-            )
-        }
-    }
-
-    fun onNameChange(name: String) {
-        _uiState.update { it.copy(name = name) }
-    }
-
-    fun onNumberChange(number: String) {
-        _uiState.update { it.copy(number = number) }
-    }
-
-    fun showContactSheet() {
-        _uiState.update { it.copy(isContactSheetVisible = true) }
-    }
-
-    fun hideContactSheet() {
-        _uiState.update { it.copy(isContactSheetVisible = false) }
-    }
-
-    fun onScheduleCall(time: String) {
-        val currentState = _uiState.value
-        if (currentState.name.isNotBlank() && currentState.number.isNotBlank()) {
-            val contactToSchedule = Contact(id = 0L, name = currentState.name, number = currentState.number)
-            viewModelScope.launch {
-                _uiState.update { it.copy(isScheduling = true, error = null) }
-                try {
-                    callHistoryRepository.addCallToHistory(contactToSchedule)
-                    _uiState.update { it.copy(isScheduling = false, scheduledTime = time) }
-                } catch (e: Exception) {
-                    _uiState.update { it.copy(isScheduling = false, error = e.message) }
+            is ScheduleCallEvent.NameChanged -> {
+                _uiState.update { it.copy(name = event.name) }
+            }
+            is ScheduleCallEvent.NumberChanged -> {
+                _uiState.update { it.copy(number = event.number) }
+            }
+            is ScheduleCallEvent.DateSelected -> {
+                _uiState.update { it.copy(selectedDateMillis = event.millis) }
+            }
+            is ScheduleCallEvent.TimeSelected -> {
+                _uiState.update { it.copy(selectedHour = event.hour, selectedMinute = event.minute) }
+            }
+            is ScheduleCallEvent.SelectContact -> {
+                _uiState.update {
+                    it.copy(
+                        name = event.contact.name,
+                        number = event.contact.number,
+                        isContactSheetVisible = false
+                    )
+                }
+            }
+            is ScheduleCallEvent.ShowContactSheet -> {
+                _uiState.update { it.copy(isContactSheetVisible = true) }
+            }
+            is ScheduleCallEvent.HideContactSheet -> {
+                _uiState.update { it.copy(isContactSheetVisible = false) }
+            }
+            is ScheduleCallEvent.Schedule -> {
+                val currentState = _uiState.value
+                if (currentState.name.isNotBlank() && currentState.number.isNotBlank()) {
+                    val contactToSchedule = Contact(id = 0L, name = currentState.name, number = currentState.number)
+                    viewModelScope.launch {
+                        _uiState.update { it.copy(isScheduling = true, error = null) }
+                        try {
+                            callHistoryRepository.addCallToHistory(contactToSchedule)
+                            _uiState.update { it.copy(isScheduling = false, scheduledTime = event.time) }
+                        } catch (e: Exception) {
+                            _uiState.update { it.copy(isScheduling = false, error = e.message) }
+                        }
+                    }
                 }
             }
         }
     }
-} 
+}

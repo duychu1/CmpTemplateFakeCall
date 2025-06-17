@@ -34,7 +34,11 @@ fun SavedCallerScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    SavedCallerScreenContent(onBack, uiState, viewModel::onEvent)
+    SavedCallerScreenContent(
+        onBack,
+        uiState,
+        viewModel::onEvent
+    )
 
 }
 

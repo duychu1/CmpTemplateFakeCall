@@ -1,6 +1,7 @@
 package com.ruicomp.cmptemplate.features.schedule.presentation
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -33,24 +34,28 @@ fun ScheduleCallScreen(
     viewModel: ScheduleCallViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    ScheduleCallScreenContent(
+        onBack = onBack,
+        uiState = uiState,
+        onEvent = viewModel::onEvent
+    )
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ScheduleCallScreenContent(
+    onBack: () -> Unit,
+    uiState: ScheduleCallState,
+    onEvent: (ScheduleCallEvent) -> Unit
+) {
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds()
+        initialSelectedDateMillis = uiState.selectedDateMillis ?: Clock.System.now().toEpochMilliseconds()
     )
     var showDatePicker by remember { mutableStateOf(false) }
-    var selectedDate by remember { mutableStateOf<Long?>(null) }
 
-    val currentTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-    val timePickerState = rememberTimePickerState(
-        initialHour = currentTime.hour,
-        initialMinute = currentTime.minute
-    )
-    var showTimePicker by remember { mutableStateOf(false) }
-    var selectedTime by remember { mutableStateOf<Pair<Int, Int>?>(null) }
-
-    val formattedDate by remember(selectedDate) {
+    val formattedDate by remember(uiState.selectedDateMillis) {
         derivedStateOf {
-            selectedDate?.let {
+            uiState.selectedDateMillis?.let {
                 val instant = Instant.fromEpochMilliseconds(it)
                 val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
                 val monthName = localDate.month.name.lowercase().take(3).replaceFirstChar { char -> char.uppercase() }
@@ -59,9 +64,18 @@ fun ScheduleCallScreen(
         }
     }
 
-    val formattedTime by remember(selectedTime) {
+    var showTimePicker by remember { mutableStateOf(false) }
+
+    val currentTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+    val timePickerState = rememberTimePickerState(
+        initialHour = uiState.selectedHour ?: currentTime.hour,
+        initialMinute = uiState.selectedMinute ?: currentTime.minute
+    )
+    val formattedTime by remember(uiState.selectedHour, uiState.selectedMinute) {
         derivedStateOf {
-            selectedTime?.let { (hour, minute) ->
+            val hour = uiState.selectedHour
+            val minute = uiState.selectedMinute
+            if (hour != null && minute != null) {
                 val amPm = if (hour < 12) "AM" else "PM"
                 val displayHour = when {
                     hour == 0 -> 12
@@ -69,12 +83,15 @@ fun ScheduleCallScreen(
                     else -> hour
                 }
                 "${displayHour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} $amPm"
-            } ?: ""
+            } else ""
         }
     }
 
-    val isFormValid by derivedStateOf {
-        uiState.name.isNotBlank() && uiState.number.isNotBlank() && selectedDate != null && selectedTime != null
+    val isFormValid by remember(uiState.name, uiState.number, uiState.selectedDateMillis, uiState.selectedHour, uiState.selectedMinute) {
+        derivedStateOf {
+            uiState.name.isNotBlank() && uiState.number.isNotBlank() &&
+                    uiState.selectedDateMillis != null && uiState.selectedHour != null && uiState.selectedMinute != null
+        }
     }
 
     Scaffold(
@@ -90,11 +107,11 @@ fun ScheduleCallScreen(
         },
         bottomBar = {
             Button(
-                onClick = { viewModel.onScheduleCall("$formattedDate at $formattedTime") },
+                onClick = { onEvent(ScheduleCallEvent.Schedule("$formattedDate at $formattedTime")) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                enabled = isFormValid
+                enabled = isFormValid && !uiState.isScheduling
             ) {
                 Text(stringResource(Res.string.schedule_call_button))
             }
@@ -109,12 +126,13 @@ fun ScheduleCallScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(16.dp))
+
             ContactInformationSection(
                 name = uiState.name,
                 number = uiState.number,
-                onPickContact = { viewModel.showContactSheet() },
-                onNameChange = { viewModel.onNameChange(it) },
-                onNumberChange = { viewModel.onNumberChange(it) }
+                onPickContact = { onEvent(ScheduleCallEvent.ShowContactSheet) },
+                onNameChange = { onEvent(ScheduleCallEvent.NameChanged(it)) },
+                onNumberChange = { onEvent(ScheduleCallEvent.NumberChanged(it)) }
             )
             Spacer(modifier = Modifier.height(24.dp))
             SelectDateTimeSection(
@@ -124,6 +142,7 @@ fun ScheduleCallScreen(
                 onTimeSelect = { showTimePicker = true }
             )
             Spacer(modifier = Modifier.height(16.dp))
+
         }
     }
 
@@ -133,7 +152,9 @@ fun ScheduleCallScreen(
             confirmButton = {
                 TextButton(onClick = {
                     showDatePicker = false
-                    selectedDate = datePickerState.selectedDateMillis
+                    datePickerState.selectedDateMillis?.let {
+                        onEvent(ScheduleCallEvent.DateSelected(it))
+                    }
                 }) {
                     Text(stringResource(Res.string.dialog_ok))
                 }
@@ -154,7 +175,7 @@ fun ScheduleCallScreen(
             confirmButton = {
                 TextButton(onClick = {
                     showTimePicker = false
-                    selectedTime = timePickerState.hour to timePickerState.minute
+                    onEvent(ScheduleCallEvent.TimeSelected(timePickerState.hour, timePickerState.minute))
                 }) {
                     Text(stringResource(Res.string.dialog_ok))
                 }
@@ -170,7 +191,7 @@ fun ScheduleCallScreen(
     }
 
     if (uiState.isContactSheetVisible) {
-        ModalBottomSheet(onDismissRequest = { viewModel.hideContactSheet() }) {
+        ModalBottomSheet(onDismissRequest = { onEvent(ScheduleCallEvent.HideContactSheet) }) {
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(16.dp)
@@ -178,7 +199,7 @@ fun ScheduleCallScreen(
                 items(uiState.contacts) { contact ->
                     ContactPickerItem(
                         contact = contact,
-                        onClick = { viewModel.onContactSelected(contact) }
+                        onClick = { onEvent(ScheduleCallEvent.SelectContact(contact)) }
                     )
                 }
             }
@@ -284,31 +305,48 @@ private fun SelectDateTimeSection(
         Spacer(modifier = Modifier.height(8.dp))
         Card(elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
             Column(modifier = Modifier.padding(16.dp)) {
-                OutlinedTextField(
-                    value = date,
-                    onValueChange = {},
-                    label = { Text(stringResource(Res.string.date_label)) },
-                    trailingIcon = {
-                        IconButton(onClick = onDateSelect) {
-                            Icon(Icons.Default.CalendarToday, contentDescription = "Select Date")
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    readOnly = true
-                )
+                Box {
+                    OutlinedTextField(
+                        value = date,
+                        onValueChange = {},
+                        label = { Text(stringResource(Res.string.date_label)) },
+                        trailingIcon = {
+                            IconButton(onClick = onDateSelect) {
+                                Icon(Icons.Default.CalendarToday, contentDescription = "Select Date")
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        readOnly = true,
+                        
+                    )
+                    // This Box will intercept the click and prevent the OutlinedTextField from gaining focus
+                    Box(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .clickable(onClick = onDateSelect, indication = null, interactionSource = remember { MutableInteractionSource() })
+                    )
+                }
                 Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
-                    value = time,
-                    onValueChange = {},
-                    label = { Text(stringResource(Res.string.time_label)) },
-                    trailingIcon = {
-                        IconButton(onClick = onTimeSelect) {
-                            Icon(Icons.Default.CalendarToday, contentDescription = "Select Time")
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    readOnly = true
-                )
+                Box {
+                    OutlinedTextField(
+                        value = time,
+                        onValueChange = {},
+                        label = { Text(stringResource(Res.string.time_label)) },
+                        trailingIcon = {
+                            IconButton(onClick = onTimeSelect) {
+                                Icon(Icons.Default.CalendarToday, contentDescription = "Select Time") // Consider Icons.Default.AccessTime
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        readOnly = true,
+                    )
+                    // This Box will intercept the click and prevent the OutlinedTextField from gaining focus
+                    Box(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .clickable(onClick = onTimeSelect, indication = null, interactionSource = remember { MutableInteractionSource() })
+                    )
+                }
             }
         }
     }
@@ -317,5 +355,9 @@ private fun SelectDateTimeSection(
 @Preview
 @Composable
 fun ScheduleCallScreenPreview() {
-    ScheduleCallScreen(onBack = {})
-} 
+    ScheduleCallScreenContent(
+        onBack = {},
+        uiState = ScheduleCallState(),
+        onEvent = {}
+    )
+}
