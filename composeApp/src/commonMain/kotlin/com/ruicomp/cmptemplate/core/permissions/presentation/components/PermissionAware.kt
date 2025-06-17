@@ -27,6 +27,7 @@ fun PermissionAware(
 ) {
 
     var isShowRationale by remember { mutableStateOf(true) }
+    var isShowPermanentlyDenied by remember { mutableStateOf(true) }
 
     val tmpPermissionStatus = checkPermissionStatus(permission)
 
@@ -66,26 +67,30 @@ fun PermissionAware(
         PermissionStatus.PermanentlyDenied -> {
             CustomAlertDialog(
                 title = stringResource(Res.string.permission_required_title),
-                message = stringResource(Res.string.permission_permanently_denied_message, permissionNameDialog),
-                onAgree = controller::openAppSettings,
+                message = stringResource(
+                    Res.string.permission_permanently_denied_message,
+                    permissionNameDialog
+                ),
+                onAgree = {
+                    controller.openAppSettings()
+                    onShowPermissionAwareChange(false)
+                },
                 agreeText = stringResource(Res.string.settings_title),
                 onDismiss = { onShowPermissionAwareChange(false) },
                 onCancel = { onShowPermissionAwareChange(false) },
             )
         }
         PermissionStatus.RationaleNeeded -> {
-            if (isShowRationale) {
-                CustomAlertDialog(
-                    title = stringResource(Res.string.permission_required_title),
-                    message = stringResource(Res.string.permission_rationale_message, permissionNameDialog),
-                    onAgree = {
-                        controller.requestPermission()
-                        isShowRationale = false
-                    },
-                    onDismiss = { onShowPermissionAwareChange(false) },
-                    onCancel = { onShowPermissionAwareChange(false) },
-                )
-            }
+            CustomAlertDialog(
+                title = stringResource(Res.string.permission_required_title),
+                message = stringResource(Res.string.permission_rationale_message, permissionNameDialog),
+                onAgree = {
+                    controller.requestPermission()
+                    onShowPermissionAwareChange(false)
+                },
+                onDismiss = { onShowPermissionAwareChange(false) },
+                onCancel = { onShowPermissionAwareChange(false) },
+            )
         }
     }
 
