@@ -26,7 +26,7 @@ class ActualFakeCallManager(private val context: Context) : IFakeCallManager {
         TODO("Not yet implemented")
     }
 
-    override fun requestPermission() {
+    override fun requestEnablePhoneAccount() {
         androidFakeCallManager.registerPhoneAccount(context)
         androidFakeCallManager.guideUserToEnablePhoneAccount(context)
     }

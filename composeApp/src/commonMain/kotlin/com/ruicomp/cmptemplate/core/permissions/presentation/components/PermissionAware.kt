@@ -17,6 +17,19 @@ import com.ruicomp.cmptemplate.core.permissions.checkPermissionStatus
 import com.ruicomp.cmptemplate.core.permissions.rememberPlatformPermissionController
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * A Composable function that handles permission requests and updates the UI accordingly.
+ * It checks the initial permission status, requests permission if not granted,
+ * and shows appropriate dialogs for rationale or permanently denied states.
+ *
+ * @param permission The permission string (e.g., `android.permission.CAMERA`).
+ * @param permissionNameDialog The user-friendly name of the permission to be displayed in dialogs.
+ * @param onShowPermissionAwareChange Callback invoked when the visibility of the permission-aware component should change.
+ *                                   Typically used to dismiss the component after a user interaction.
+ * @param onPermissionStatusChecked Callback invoked with the initial or updated [PermissionStatus].
+ *                                  This allows the caller to react to the current permission state.
+ * @param onPermissionResult Callback invoked with the [PermissionStatus] after a permission request has been processed.
+ */
 @Composable
 fun PermissionAware(
     permission: String,
@@ -52,14 +65,6 @@ fun PermissionAware(
         is PermissionStatus.Granted -> { }
         PermissionStatus.NotApplicable -> { }
         PermissionStatus.NotGranted -> {
-//            CustomAlertDialog(
-//                title = "Permission Required",
-//                message = "$permissionNameDialog permission has been permanently denied. Please enable it in app settings to use this feature.",
-//                onAgree = controller::openAppSettings,
-//                agreeText = "Settings",
-//                onDismiss = { onShowPermissionAwareChange(false) },
-//                onCancel = { onShowPermissionAwareChange(false) },
-//            )
             LaunchedEffect(Unit) { // LaunchedEffect to call suspend function
                 controller.requestPermission()
             }
