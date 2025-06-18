@@ -44,12 +44,18 @@ class SavedCallerViewModel(
             is SavedCallerEvent.LoadContacts -> {
                 loadContacts()
             }
-            is SavedCallerEvent.AddContact -> {
+            is SavedCallerEvent.AddContact -> { // Changed: Now uses name and number from uiState
                 viewModelScope.launch {
                     _uiState.update { it.copy(isLoading = true, error = null) }
                     try {
-                        callerRepository.insertCaller(event.name, event.number)
-                        _uiState.update { it.copy(isLoading = false) }
+                        val name = _uiState.value.addContactName
+                        val number = _uiState.value.addContactNumber
+                        if (name.isNotBlank() && number.isNotBlank()) {
+                            callerRepository.insertCaller(name, number)
+                            _uiState.update { it.copy(isLoading = false, addContactName = "", addContactNumber = "") } // Clear fields
+                        } else {
+                            _uiState.update { it.copy(isLoading = false, error = "Name and number cannot be empty.") } // Or handle specific error
+                        }
                     } catch (e: Exception) {
                         _uiState.update { it.copy(isLoading = false, error = e.message) }
                     }
@@ -67,14 +73,34 @@ class SavedCallerViewModel(
                 }
             }
             is SavedCallerEvent.CallContact -> {
-                viewModelScope.launch {
-                    fakeCallManager.triggerFakeCall(
-                        callerName = event.contact.name,
-                        callerNumber = event.contact.number,
-                        callerAvatarUrl = null
-                    )
-                    callHistoryRepository.addCallToHistory(event.contact)
+                event.contact?.let { contact ->
+                    viewModelScope.launch {
+                        fakeCallManager.triggerFakeCall(
+                            callerName = contact.name,
+                            callerNumber = contact.number,
+                            callerAvatarUrl = null
+                        )
+                        callHistoryRepository.addCallToHistory(contact)
+                    }
                 }
+            }
+            is SavedCallerEvent.ShowAddContactDialog -> {
+                _uiState.update { it.copy(showAddContactDialog = event.show) }
+                if (!event.show) { // Clear fields when dialog is dismissed
+                    _uiState.update { it.copy(addContactName = "", addContactNumber = "") }
+                }
+            }
+            is SavedCallerEvent.ShowBottomSheet -> {
+                _uiState.update { it.copy(showBottomSheet = event.show) }
+            }
+            is SavedCallerEvent.SelectContactForCall -> {
+                _uiState.update { it.copy(selectedContactForCall = event.contact) }
+            }
+            is SavedCallerEvent.UpdateAddContactName -> { // New
+                _uiState.update { it.copy(addContactName = event.name) }
+            }
+            is SavedCallerEvent.UpdateAddContactNumber -> { // New
+                _uiState.update { it.copy(addContactNumber = event.number) }
             }
         }
     }

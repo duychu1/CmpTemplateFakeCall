@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ruicomp.cmptemplate.features.settings.presentation.components.SettingsGroup
 import com.ruicomp.cmptemplate.features.settings.presentation.components.SettingsItem
 import cmptemplate.composeapp.generated.resources.*
@@ -28,7 +29,29 @@ fun SettingsScreen(
     onShareAppClick: () -> Unit = {},
     viewModel: SettingsViewModel = koinViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    SettingsScreenContent(
+        onBack = onBack,
+        uiState = uiState,
+        onLanguageClick = onLanguageClick,
+        onPrivacyPolicyClick = onPrivacyPolicyClick,
+        onTermsClick = onTermsClick,
+        onRateUsClick = onRateUsClick,
+        onShareAppClick = onShareAppClick
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SettingsScreenContent(
+    onBack: () -> Unit,
+    uiState: SettingsState,
+    onLanguageClick: () -> Unit = {},
+    onPrivacyPolicyClick: () -> Unit = {},
+    onTermsClick: () -> Unit = {},
+    onRateUsClick: () -> Unit = {},
+    onShareAppClick: () -> Unit = {}
+) {
     Scaffold(
         topBar = {
             TopAppBar(

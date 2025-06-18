@@ -18,13 +18,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ruicomp.cmptemplate.core.models.Contact
-import kotlinx.coroutines.launch
-import org.koin.compose.viewmodel.koinViewModel
 import cmptemplate.composeapp.generated.resources.*
+import com.ruicomp.cmptemplate.core.models.Contact
 import com.ruicomp.cmptemplate.features.saved_caller.presentation.components.FakeCallSheetContent
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,9 +36,9 @@ fun SavedCallerScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     SavedCallerScreenContent(
-        onBack,
-        uiState,
-        viewModel::onEvent
+        onBack = onBack,
+        uiState = uiState,
+        onEvent = viewModel::onEvent
     )
 
 }
@@ -49,11 +50,8 @@ private fun SavedCallerScreenContent(
     uiState: SavedCallerState,
     onEvent: (SavedCallerEvent) -> Unit
 ) {
-    var showAddContactDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    var showBottomSheet by remember { mutableStateOf(false) }
-    var selectedContactForCall by remember { mutableStateOf<Contact?>(null) }
 
     Scaffold(
         topBar = {
@@ -67,7 +65,7 @@ private fun SavedCallerScreenContent(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { showAddContactDialog = true }) {
+            FloatingActionButton(onClick = { onEvent(SavedCallerEvent.ShowAddContactDialog(true)) }) {
                 Icon(Icons.Default.Add, contentDescription = "Add Contact")
             }
         }
@@ -97,8 +95,8 @@ private fun SavedCallerScreenContent(
                         ContactItem(
                             contact = contact,
                             onCall = {
-                                selectedContactForCall = contact
-                                showBottomSheet = true
+                                onEvent(SavedCallerEvent.SelectContactForCall(contact))
+                                onEvent(SavedCallerEvent.ShowBottomSheet(true))
                             },
                             onDelete = { onEvent(SavedCallerEvent.DeleteContact(contact.id)) }
                         )
@@ -109,28 +107,32 @@ private fun SavedCallerScreenContent(
         }
     }
 
-    if (showAddContactDialog) {
+    if (uiState.showAddContactDialog) {
         AddContactDialog(
-            onDismiss = { showAddContactDialog = false },
-            onConfirm = { name, number ->
-                onEvent(SavedCallerEvent.AddContact(name, number))
-                showAddContactDialog = false
+            name = uiState.addContactName,
+            number = uiState.addContactNumber,
+            onNameChange = { onEvent(SavedCallerEvent.UpdateAddContactName(it)) },
+            onNumberChange = { onEvent(SavedCallerEvent.UpdateAddContactNumber(it)) },
+            onDismiss = { onEvent(SavedCallerEvent.ShowAddContactDialog(false)) },
+            onConfirm = {
+                onEvent(SavedCallerEvent.AddContact)
+                onEvent(SavedCallerEvent.ShowAddContactDialog(false))
             }
         )
     }
 
-    if (showBottomSheet && selectedContactForCall != null) {
+    if (uiState.showBottomSheet && uiState.selectedContactForCall != null) {
         ModalBottomSheet(
-            onDismissRequest = { showBottomSheet = false },
+            onDismissRequest = { onEvent(SavedCallerEvent.ShowBottomSheet(false)) },
             sheetState = sheetState,
         ) {
             FakeCallSheetContent(
-                contact = selectedContactForCall!!,
+                contact = uiState.selectedContactForCall,
                 onStartCall = {
-                    onEvent(SavedCallerEvent.CallContact(selectedContactForCall!!))
+                    onEvent(SavedCallerEvent.CallContact(uiState.selectedContactForCall))
                     scope.launch { sheetState.hide() }.invokeOnCompletion {
                         if (!sheetState.isVisible) {
-                            showBottomSheet = false
+                            onEvent(SavedCallerEvent.ShowBottomSheet(false))
                         }
                     }
                 }
@@ -141,12 +143,13 @@ private fun SavedCallerScreenContent(
 
 @Composable
 private fun AddContactDialog(
+    name: String,
+    number: String,
+    onNameChange: (String) -> Unit,
+    onNumberChange: (String) -> Unit,
     onDismiss: () -> Unit,
-    onConfirm: (String, String) -> Unit
+    onConfirm: () -> Unit
 ) {
-    var name by remember { mutableStateOf("") }
-    var number by remember { mutableStateOf("") }
-
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(Res.string.add_new_contact_title)) },
@@ -154,7 +157,7 @@ private fun AddContactDialog(
             Column {
                 OutlinedTextField(
                     value = name,
-                    onValueChange = { name = it },
+                    onValueChange = onNameChange,
                     label = { Text(stringResource(Res.string.name_label)) }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -163,7 +166,7 @@ private fun AddContactDialog(
                     onValueChange = {
                         val allowedChars = "0123456789+ -()#"
                         if (it.all { char -> allowedChars.contains(char) }) {
-                            number = it
+                            onNumberChange(it)
                         }
                     },
                     label = { Text(stringResource(Res.string.number_label)) },
@@ -173,7 +176,7 @@ private fun AddContactDialog(
         },
         confirmButton = {
             Button(
-                onClick = { onConfirm(name, number) },
+                onClick = onConfirm,
                 enabled = name.isNotBlank() && number.isNotBlank()
             ) {
                 Text(stringResource(Res.string.dialog_add))
@@ -217,7 +220,11 @@ private fun ContactItem(
             Spacer(modifier = Modifier.width(12.dp))
 
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = contact.name, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = contact.name,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.SemiBold
+                )
                 Text(text = contact.number, style = MaterialTheme.typography.bodyMedium)
             }
             Row {
@@ -234,6 +241,15 @@ private fun ContactItem(
 
 @Preview
 @Composable
-fun SavedCallerScreenPreview() {
-    SavedCallerScreen(onBack = {})
+@OptIn(ExperimentalMaterial3Api::class)
+private fun SavedCallerScreenContentPreview() {
+    val uiState = SavedCallerState(
+        contacts = listOf(
+            Contact(id = 1, name = "John Doe", number = "123-456-7890"),
+            Contact(id = 2, name = "Jane Smith", number = "098-765-4321")
+        ),
+        isLoading = false,
+        error = null
+    )
+    SavedCallerScreenContent(onBack = {}, uiState = uiState, onEvent = {})
 }

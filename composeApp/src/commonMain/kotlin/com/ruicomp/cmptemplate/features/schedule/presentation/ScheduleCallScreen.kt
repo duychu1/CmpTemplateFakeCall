@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ruicomp.cmptemplate.core.models.Contact
 import kotlinx.datetime.*
 import org.koin.compose.viewmodel.koinViewModel
@@ -33,7 +34,7 @@ fun ScheduleCallScreen(
     onBack: () -> Unit,
     viewModel: ScheduleCallViewModel = koinViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     ScheduleCallScreenContent(
         onBack = onBack,
         uiState = uiState,
