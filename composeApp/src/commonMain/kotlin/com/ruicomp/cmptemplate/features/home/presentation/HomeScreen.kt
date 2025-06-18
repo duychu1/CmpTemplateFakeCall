@@ -27,7 +27,8 @@ fun HomeScreen(
     onSettingsClick: () -> Unit = {},
     viewModel: HomeViewModel = koinViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiHomeState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiBasePermissionState by viewModel.uiBasePermissionState.collectAsStateWithLifecycle()
 
     HomeScreenContent(
         onScheduleCall = onScheduleCall,
@@ -35,17 +36,18 @@ fun HomeScreen(
         onCallHistory = onCallHistory,
         onSettingsClick = onSettingsClick,
         onEvent = viewModel::onEvent,
-        state = uiState
+        state = uiHomeState
     )
 
 
-    if (uiState.showPermissionAwarePhone) {
+    val phonePermission = HomeViewModel.READ_PHONE_NUMBERS_PERMISSION
+    if (uiBasePermissionState.permissionAwareStates[phonePermission] == true) {
         PermissionAware(
-            permission = HomeViewModel.READ_PHONE_NUMBERS,
-            permissionNameDialog = stringResource(Res.string.PHONE),
-            onShowPermissionAwareChange = viewModel::onShowPermissionAwareChange,
-            onPermissionStatusChecked = viewModel::onPermissionStatusChecked,
-            onPermissionResult = viewModel::onPermissionResult,
+            permission = phonePermission, // Pass the specific permission string
+            permissionNameDialog = stringResource(Res.string.PHONE), // This could also be made dynamic
+            onShowPermissionAwareChange = { show -> viewModel.onShowPermissionAwareChange(phonePermission, show) },
+            onPermissionStatusChecked = { status -> viewModel.onPermissionStatusChecked(phonePermission, status) },
+            onPermissionResult = { status -> viewModel.onPermissionResult(phonePermission, status) },
         )
     }
 
