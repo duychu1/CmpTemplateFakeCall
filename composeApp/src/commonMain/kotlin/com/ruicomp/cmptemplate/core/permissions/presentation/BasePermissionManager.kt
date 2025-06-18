@@ -1,11 +1,10 @@
 package com.ruicomp.cmptemplate.core.permissions.presentation
 
-import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-abstract class BasePermissionViewModel : ViewModel() {
+class BasePermissionManager {
 
     private val _uiBasePermissionState = MutableStateFlow(BasePermissionState())
     val uiBasePermissionState = _uiBasePermissionState.asStateFlow()
@@ -29,7 +28,7 @@ abstract class BasePermissionViewModel : ViewModel() {
      * Returns true if the awareness UI was shown (and the caller should potentially return),
      * false otherwise.
      */
-    protected fun checkAndShowPermissionAwareness(permission: String): Boolean {
+     fun checkAndShowPermissionAwareness(permission: String): Boolean {
         val isAwarenessShown = _uiBasePermissionState.value.permissionAwareStates[permission] ?: false
         val isPermissionGranted = _uiBasePermissionState.value.permissionStatuses[permission] == PermissionStatus.Granted
 
@@ -93,7 +92,7 @@ abstract class BasePermissionViewModel : ViewModel() {
     /**
      * Utility function to check if a specific permission is granted.
      */
-    protected fun isPermissionGranted(permission: String): Boolean {
+    fun isPermissionGranted(permission: String): Boolean {
         return _uiBasePermissionState.value.permissionStatuses[permission] == PermissionStatus.Granted
     }
 }

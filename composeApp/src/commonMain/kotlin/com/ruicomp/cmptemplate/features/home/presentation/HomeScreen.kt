@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ruicomp.cmptemplate.features.home.presentation.components.FeatureCard
 import cmptemplate.composeapp.generated.resources.*
+import com.ruicomp.cmptemplate.core.permissions.phoneaccount.PhoneAccountPermissionEvent
 import com.ruicomp.cmptemplate.core.permissions.presentation.components.CustomAlertDialog
 import com.ruicomp.cmptemplate.core.permissions.presentation.components.PermissionAware
 import org.jetbrains.compose.resources.stringResource
@@ -28,7 +29,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel()
 ) {
     val uiHomeState by viewModel.uiState.collectAsStateWithLifecycle()
-    val uiBasePermissionState by viewModel.uiBasePermissionState.collectAsStateWithLifecycle()
+    val uiBasePermissionState by viewModel.basePermissionManager.uiBasePermissionState.collectAsStateWithLifecycle()
+    val uiPhoneAccountPermissionState by viewModel.phoneAccountPermissionManager.permissionState.collectAsStateWithLifecycle()
 
     HomeScreenContent(
         onScheduleCall = onScheduleCall,
@@ -45,12 +47,22 @@ fun HomeScreen(
         PermissionAware(
             permission = phonePermission, // Pass the specific permission string
             permissionNameDialog = stringResource(Res.string.PHONE), // This could also be made dynamic
-            onShowPermissionAwareChange = { show -> viewModel.onShowPermissionAwareChange(phonePermission, show) },
-            onPermissionStatusChecked = { status -> viewModel.onPermissionStatusChecked(phonePermission, status) },
-            onPermissionResult = { status -> viewModel.onPermissionResult(phonePermission, status) },
+            onShowPermissionAwareChange = { show -> viewModel.basePermissionManager.onShowPermissionAwareChange(phonePermission, show) },
+            onPermissionStatusChecked = { status -> viewModel.basePermissionManager.onPermissionStatusChecked(phonePermission, status) },
+            onPermissionResult = { status -> viewModel.basePermissionManager.onPermissionResult(phonePermission, status) },
         )
     }
 
+    if (uiPhoneAccountPermissionState.showPhoneAccountRationaleSetting) {
+        CustomAlertDialog(
+            agreeText = stringResource(Res.string.settings_title),
+            title = stringResource(Res.string.permission_required_title),
+            message = stringResource(Res.string.make_own_call_permission_message),
+            onAgree = { viewModel.phoneAccountPermissionManager.onEvent(PhoneAccountPermissionEvent.AgreeRationalPermissionDialogClicked) },
+            onCancel = { viewModel.phoneAccountPermissionManager.onEvent(PhoneAccountPermissionEvent.CancelRationalPermissionDialogClicked) },
+            onDismiss = { viewModel.phoneAccountPermissionManager.onEvent(PhoneAccountPermissionEvent.RationalPermissionDialogDismissed) }
+        )
+    }
 }
 
 
@@ -118,16 +130,7 @@ fun HomeScreenContent(
                 )
             }
         }
-        if (state.showPhoneAccountPermissionRationaleDialog) {
-            CustomAlertDialog(
-                agreeText = stringResource(Res.string.settings_title),
-                title = stringResource(Res.string.permission_required_title),
-                message = stringResource(Res.string.make_own_call_permission_message),
-                onAgree = { onEvent(HomeEvent.AgreeRationalPermissionDialogClicked) },
-                onCancel = { onEvent(HomeEvent.CancelRationalPermissionDialogClicked) },
-                onDismiss = { onEvent(HomeEvent.RationalPermissionDialogDismissed) }
-            )
-        }
+
     }
 }
 
