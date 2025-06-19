@@ -1,4 +1,4 @@
-package com.ruicomp.cmptemplate.features.saved_caller.presentation.components
+package com.ruicomp.cmptemplate.core.ui.prepare_call
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,7 +40,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun FakeCallSheetContent(
+fun PrepareCallSheetContent(
     contact: Contact,
     onStartCall: () -> Unit,
 ) {
@@ -104,7 +104,7 @@ fun FakeCallSheetContent(
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(Icons.Default.Info, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
-            Text(text = stringResource(Res.string.selected_time_prefix, selectedTime), color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Medium)
+            Text(text = stringResource(Res.string.selected_time_prefix) + selectedTime, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Medium)
         }
 
         // Time Options
@@ -155,7 +155,7 @@ fun FakeCallSheetContent(
 @Preview
 @Composable
 fun FakeCallSheetContentPreview() {
-    FakeCallSheetContent(
+    PrepareCallSheetContent(
         contact = Contact(
             id = 1,
             name = "John Doe",

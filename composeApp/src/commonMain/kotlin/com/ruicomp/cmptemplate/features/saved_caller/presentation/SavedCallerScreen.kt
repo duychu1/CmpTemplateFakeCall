@@ -20,12 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmptemplate.composeapp.generated.resources.*
 import com.ruicomp.cmptemplate.core.models.Contact
-import com.ruicomp.cmptemplate.features.saved_caller.presentation.components.FakeCallSheetContent
+import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallSheetContent
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,13 +78,6 @@ private fun SavedCallerScreenContent(
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
-            } else if (uiState.error != null) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(
-                        stringResource(Res.string.error_prefix, uiState.error!!),
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
             } else {
                 LazyColumn(
                     modifier = Modifier.weight(1f),
@@ -126,7 +118,7 @@ private fun SavedCallerScreenContent(
             onDismissRequest = { onEvent(SavedCallerEvent.ShowBottomSheet(false)) },
             sheetState = sheetState,
         ) {
-            FakeCallSheetContent(
+            PrepareCallSheetContent(
                 contact = uiState.selectedContactForCall,
                 onStartCall = {
                     onEvent(SavedCallerEvent.CallContact(uiState.selectedContactForCall))

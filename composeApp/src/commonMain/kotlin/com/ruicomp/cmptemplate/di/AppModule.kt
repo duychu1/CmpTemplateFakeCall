@@ -3,6 +3,7 @@ package com.ruicomp.cmptemplate.di
 import com.ruicomp.cmptemplate.core.database.di.databaseModule
 import com.ruicomp.cmptemplate.core.datastore.di.dataStoreModule
 import com.ruicomp.cmptemplate.core.permissions.permissionModule
+import com.ruicomp.cmptemplate.core.ui.prepare_call.prepareCallModule
 import com.ruicomp.cmptemplate.features.call_history.di.callHistoryModule
 import com.ruicomp.cmptemplate.features.home.di.homeModule
 import com.ruicomp.cmptemplate.features.language_setting.di.languageSettingModule
@@ -17,6 +18,7 @@ val appModule = module {
         databaseModule,
         dataStoreModule,
         permissionModule,
+        prepareCallModule,
         homeModule,
         scheduleModule,
         savedCallerModule,

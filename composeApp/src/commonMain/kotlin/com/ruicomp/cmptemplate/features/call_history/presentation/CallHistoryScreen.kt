@@ -43,7 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ruicomp.cmptemplate.core.models.Contact
 import com.ruicomp.cmptemplate.features.call_history.domain.models.CallHistory
-import com.ruicomp.cmptemplate.features.saved_caller.presentation.components.FakeCallSheetContent
+import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallSheetContent
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -119,7 +119,7 @@ fun CallHistoryScreen(
             onDismissRequest = { showBottomSheet = false },
             sheetState = sheetState
         ) {
-            FakeCallSheetContent(
+            PrepareCallSheetContent(
                 contact = Contact(
                     id = selectedHistoryItem!!.id,
                     name = selectedHistoryItem!!.name,

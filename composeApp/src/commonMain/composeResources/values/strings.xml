@@ -36,7 +36,7 @@
     <string name="delete_button_description">Delete</string>
 
     <!-- Call Sheet -->
-    <string name="selected_time_prefix">Selected: %s</string>
+    <string name="selected_time_prefix">Selected: </string>
     <string name="time_option_now">Now</string>
     <string name="time_option_5s">5 Sec</string>
     <string name="time_option_10s">10 Sec</string>
