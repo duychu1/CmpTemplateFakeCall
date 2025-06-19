@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ruicomp.cmptemplate.core.models.Contact
 import com.ruicomp.cmptemplate.features.call_history.domain.models.CallHistory
 import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallSheetContent
@@ -50,6 +51,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
 import cmptemplate.composeapp.generated.resources.*
+import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallBottomSheet
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -59,12 +61,29 @@ fun CallHistoryScreen(
     onBack: () -> Unit,
     viewModel: CallHistoryViewModel = koinViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val scope = rememberCoroutineScope()
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    var showBottomSheet by remember { mutableStateOf(false) }
-    var selectedHistoryItem by remember { mutableStateOf<CallHistory?>(null) }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiPrepareCallState by viewModel.prepareCallManager.uiState.collectAsStateWithLifecycle()
 
+    CallHistoryScreenContent(
+        onBack = onBack,
+        uiState = uiState,
+        onEvent = viewModel::onEvent
+    )
+
+    // Prepare call bottom sheet
+    PrepareCallBottomSheet(
+        prepareCallUiState = uiPrepareCallState,
+        onPrepareCallEvent = viewModel.prepareCallManager::onEvent
+    )
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun CallHistoryScreenContent(
+    onBack: () -> Unit,
+    uiState: CallHistoryState,
+    onEvent: (CallHistoryEvent) -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -86,10 +105,6 @@ fun CallHistoryScreen(
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
-            } else if (uiState.error != null) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(stringResource(Res.string.error_prefix, uiState.error!!), color = MaterialTheme.colorScheme.error)
-                }
             } else if (uiState.history.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(stringResource(Res.string.no_call_history_message))
@@ -103,43 +118,13 @@ fun CallHistoryScreen(
                         CallHistoryItem(
                             item = historyItem,
                             onRecall = {
-                                selectedHistoryItem = it
-                                showBottomSheet = true
+                                onEvent(CallHistoryEvent.SelectHistoryForRecall(historyItem))
                             }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
             }
-        }
-    }
-
-    if (showBottomSheet && selectedHistoryItem != null) {
-        ModalBottomSheet(
-            onDismissRequest = { showBottomSheet = false },
-            sheetState = sheetState
-        ) {
-            PrepareCallSheetContent(
-                contact = Contact(
-                    id = selectedHistoryItem!!.id,
-                    name = selectedHistoryItem!!.name,
-                    number = selectedHistoryItem!!.number
-                ),
-                onStartCall = {
-                    viewModel.onRecall(
-                        Contact(
-                            id = selectedHistoryItem!!.id,
-                            name = selectedHistoryItem!!.name,
-                            number = selectedHistoryItem!!.number
-                        )
-                    )
-                    scope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            showBottomSheet = false
-                        }
-                    }
-                }
-            )
         }
     }
 }

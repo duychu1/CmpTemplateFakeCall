@@ -3,6 +3,8 @@ package com.ruicomp.cmptemplate.features.call_history.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ruicomp.cmptemplate.core.models.Contact
+import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallEvent
+import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallManager
 import com.ruicomp.cmptemplate.features.call_history.domain.repository.CallHistoryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,19 +14,31 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CallHistoryViewModel(
-    private val callHistoryRepository: CallHistoryRepository
+    private val callHistoryRepository: CallHistoryRepository,
+    val prepareCallManager: PrepareCallManager,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CallHistoryState())
     val uiState = _uiState.asStateFlow()
 
     init {
-        loadHistory()
+        onEvent(CallHistoryEvent.LoadHistory)
     }
 
-    fun onRecall(contact: Contact) {
-        viewModelScope.launch {
-            callHistoryRepository.addCallToHistory(contact)
+    fun onEvent(event: CallHistoryEvent) {
+        when (event) {
+            is CallHistoryEvent.LoadHistory -> {
+                loadHistory()
+            }
+            is CallHistoryEvent.SelectHistoryForRecall -> {
+                _uiState.update { it.copy(selectedHistoryForRecall = event.history) }
+                onEvent(CallHistoryEvent.TriggerShowBottomSheet)
+            }
+            is CallHistoryEvent.TriggerShowBottomSheet -> {
+                _uiState.value.selectedHistoryForRecall?.let { history ->
+                    prepareCallManager.onEvent(PrepareCallEvent.ShowSheet(history.asContact()))
+                }
+            }
         }
     }
 
@@ -40,4 +54,10 @@ class CallHistoryViewModel(
             }
         }.launchIn(viewModelScope)
     }
-} 
+
+    override fun onCleared() {
+        super.onCleared()
+        prepareCallManager.clear()
+    }
+}
+
