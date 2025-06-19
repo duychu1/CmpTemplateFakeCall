@@ -22,3 +22,6 @@ data object SettingsRoute : Route()
 
 @Serializable
 data object LanguageSettingRoute : Route()
+
+@Serializable
+data class WebViewRoute(val url: String, val title: String? = null) : Route()

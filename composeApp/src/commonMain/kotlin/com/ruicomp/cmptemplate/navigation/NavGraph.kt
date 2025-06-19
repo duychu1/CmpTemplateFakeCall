@@ -4,12 +4,15 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import com.ruicomp.cmptemplate.app.CommonConstants
 import com.ruicomp.cmptemplate.features.call_history.presentation.CallHistoryScreen
 import com.ruicomp.cmptemplate.features.home.presentation.HomeScreen
 import com.ruicomp.cmptemplate.features.saved_caller.presentation.SavedCallerScreen
 import com.ruicomp.cmptemplate.features.schedule.presentation.ScheduleCallScreen
 import com.ruicomp.cmptemplate.features.settings.presentation.SettingsScreen
 import com.ruicomp.cmptemplate.features.language_setting.presentation.LanguageSettingScreen
+import com.ruicomp.cmptemplate.features.settings.presentation.webview.WebViewScreen
 
 @Composable
 fun NavGraph() {
@@ -36,12 +39,21 @@ fun NavGraph() {
         composable<SettingsRoute> {
             SettingsScreen(
                 onBack = { navController.popBackStack() },
-                onLanguageClick = { navController.navigate(LanguageSettingRoute) }
+                onLanguageClick = { navController.navigate(LanguageSettingRoute) },
+                onPrivacyPolicyClick = { navController.navigate(WebViewRoute(CommonConstants.POLICY_URL)) },
+                onTermsClick = { navController.navigate(WebViewRoute(CommonConstants.TERMS_URL)) }
             )
         }
         composable<LanguageSettingRoute> {
             LanguageSettingScreen(
                 onBack = { navController.popBackStack() },
+            )
+        }
+        composable<WebViewRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<WebViewRoute>()
+            WebViewScreen(
+                url = route.url,
+                onBack = { navController.popBackStack() }
             )
         }
     }
