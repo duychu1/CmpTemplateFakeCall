@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmptemplate.composeapp.generated.resources.*
 import com.ruicomp.cmptemplate.core.models.Contact
+import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallBottomSheet
 import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallSheetContent
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -33,11 +34,18 @@ fun SavedCallerScreen(
     viewModel: SavedCallerViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiPrepareCallState by viewModel.prepareCallManager.uiState.collectAsStateWithLifecycle()
 
     SavedCallerScreenContent(
         onBack = onBack,
         uiState = uiState,
         onEvent = viewModel::onEvent
+    )
+
+    //prepare call bottom sheet
+    PrepareCallBottomSheet(
+        prepareCallUiState = uiPrepareCallState,
+        onPrepareCallEvent = viewModel.prepareCallManager::onEvent
     )
 
 }
@@ -88,7 +96,6 @@ private fun SavedCallerScreenContent(
                             contact = contact,
                             onCall = {
                                 onEvent(SavedCallerEvent.SelectContactForCall(contact))
-                                onEvent(SavedCallerEvent.ShowBottomSheet(true))
                             },
                             onDelete = { onEvent(SavedCallerEvent.DeleteContact(contact.id)) }
                         )
@@ -113,24 +120,6 @@ private fun SavedCallerScreenContent(
         )
     }
 
-    if (uiState.showBottomSheet && uiState.selectedContactForCall != null) {
-        ModalBottomSheet(
-            onDismissRequest = { onEvent(SavedCallerEvent.ShowBottomSheet(false)) },
-            sheetState = sheetState,
-        ) {
-            PrepareCallSheetContent(
-                contact = uiState.selectedContactForCall,
-                onStartCall = {
-                    onEvent(SavedCallerEvent.CallContact(uiState.selectedContactForCall))
-                    scope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            onEvent(SavedCallerEvent.ShowBottomSheet(false))
-                        }
-                    }
-                }
-            )
-        }
-    }
 }
 
 @Composable

@@ -22,10 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,15 +39,20 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun PrepareCallSheetContent(
     contact: Contact,
+    delayOptions: List<Int>,
+    selectedDelayInSeconds: Int,
+    onDelaySelected: (Int) -> Unit,
     onStartCall: () -> Unit,
 ) {
-    var selectedTime by remember { mutableStateOf("Now") }
-    val timeOptions = listOf(
-        stringResource(Res.string.time_option_now),
-        stringResource(Res.string.time_option_5s),
-        stringResource(Res.string.time_option_10s),
-        stringResource(Res.string.time_option_15s)
-    )
+    val timeOptions = delayOptions.map {
+        when (it) {
+            0 -> stringResource(Res.string.time_option_now)
+            5 -> stringResource(Res.string.time_option_5s)
+            10 -> stringResource(Res.string.time_option_10s)
+            15 -> stringResource(Res.string.time_option_15s)
+            else -> "${it}s"
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -104,17 +106,24 @@ fun PrepareCallSheetContent(
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(Icons.Default.Info, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
-            Text(text = stringResource(Res.string.selected_time_prefix) + selectedTime, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Medium)
+            val selectedIndex = delayOptions.indexOf(selectedDelayInSeconds).takeIf { it >= 0 } ?: 0
+            val selectedTimeLabel = timeOptions.getOrNull(selectedIndex) ?: "${selectedDelayInSeconds}s"
+            Text(
+                text = stringResource(Res.string.selected_time_prefix) + selectedTimeLabel,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Medium
+            )
         }
 
         // Time Options
-        timeOptions.forEach { time ->
+        delayOptions.forEachIndexed { idx, delay ->
+            val time = timeOptions[idx]
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
-                    .background(if (selectedTime == time) MaterialTheme.colorScheme.primaryContainer else Color.Transparent)
-                    .clickable { selectedTime = time }
+                    .background(if (selectedDelayInSeconds == delay) MaterialTheme.colorScheme.primaryContainer else Color.Transparent)
+                    .clickable { onDelaySelected(delay) }
                     .padding(8.dp)
             ) {
                 Row(
@@ -122,7 +131,7 @@ fun PrepareCallSheetContent(
                     horizontalArrangement = Arrangement.Center,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    if (selectedTime == time) {
+                    if (selectedDelayInSeconds == delay) {
                         Icon(
                             Icons.Default.Check,
                             contentDescription = stringResource(Res.string.selected_description),
@@ -132,8 +141,8 @@ fun PrepareCallSheetContent(
                     }
                     Text(
                         text = time,
-                        color = if (selectedTime == time) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-                        fontWeight = if (selectedTime == time) FontWeight.Bold else FontWeight.Normal
+                        color = if (selectedDelayInSeconds == delay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                        fontWeight = if (selectedDelayInSeconds == delay) FontWeight.Bold else FontWeight.Normal
                     )
                 }
             }
@@ -161,6 +170,9 @@ fun FakeCallSheetContentPreview() {
             name = "John Doe",
             number = "+1 234 567 890"
         ),
-        onStartCall = {}
+        delayOptions = listOf(0, 5, 10, 15),
+        selectedDelayInSeconds = 0,
+        onDelaySelected = {},
+        onStartCall = {},
     )
-} 
+}

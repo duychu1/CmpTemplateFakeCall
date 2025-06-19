@@ -38,9 +38,9 @@
     <!-- Call Sheet -->
     <string name="selected_time_prefix">Selected: </string>
     <string name="time_option_now">Now</string>
-    <string name="time_option_5s">5 Sec</string>
-    <string name="time_option_10s">10 Sec</string>
-    <string name="time_option_15s">15 Sec</string>
+    <string name="time_option_5s">5 sec</string>
+    <string name="time_option_10s">10 sec</string>
+    <string name="time_option_15s">15 sec</string>
     <string name="selected_description">Selected</string>
     <string name="start_fake_call_button">Start Fake Call</string>
 

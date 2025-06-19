@@ -34,7 +34,7 @@ class PrepareCallManager(
                     it.copy(
                         showBottomSheet = true,
                         selectedContact = event.contact,
-                        selectedTimeInSeconds = 0 // Reset time
+                        selectedDelayInSeconds = 0 // Reset time
                     )
                 }
             }
@@ -49,11 +49,11 @@ class PrepareCallManager(
                 }
             }
             is PrepareCallEvent.SelectTime -> {
-                _uiState.update { it.copy(selectedTimeInSeconds = event.timeInSeconds) }
+                _uiState.update { it.copy(selectedDelayInSeconds = event.timeInSeconds) }
             }
             is PrepareCallEvent.StartCall -> {
                 val contactToCall = _uiState.value.selectedContact
-                val delay = _uiState.value.selectedTimeInSeconds
+                val delay = _uiState.value.selectedDelayInSeconds
 
                 if (contactToCall != null) {
                     managerScope.launch {
