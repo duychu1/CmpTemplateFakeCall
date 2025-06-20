@@ -36,8 +36,8 @@ fun SettingsScreen(
         onLanguageClick = onLanguageClick,
         onPrivacyPolicyClick = onPrivacyPolicyClick,
         onTermsClick = onTermsClick,
-        onRateUsClick = onRateUsClick,
-        onShareAppClick = onShareAppClick
+        onRateUsClick = { viewModel.onEvent(SettingsEvent.RateUsClick) },
+        onShareAppClick = { viewModel.onEvent(SettingsEvent.ShareAppClick) }
     )
 }
 

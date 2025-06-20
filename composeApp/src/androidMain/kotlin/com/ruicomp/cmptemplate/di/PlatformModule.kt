@@ -8,6 +8,7 @@ import app.cash.sqldelight.db.SqlDriver
 import com.ruicomp.cmptemplate.IFakeCallManager
 import com.ruicomp.cmptemplate.core.database.DatabaseDriverFactory
 import com.ruicomp.cmptemplate.core.datastore.DataStoreFactory
+import com.ruicomp.cmptemplate.core.utils.ShareUtils
 import com.ruicomp.cmptemplate.features.fakecall.ActualFakeCallManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.Module
@@ -20,6 +21,8 @@ actual val platformModule: Module = module {
     single<DataStore<Preferences>> {
         DataStoreFactory(androidContext()).createDataStore()
     }
+
+    single { ShareUtils(get()) }
     
     single<IFakeCallManager> { ActualFakeCallManager(androidContext()) }
 }

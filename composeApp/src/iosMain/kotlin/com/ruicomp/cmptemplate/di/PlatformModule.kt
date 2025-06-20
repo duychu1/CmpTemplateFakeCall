@@ -9,6 +9,7 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import com.ruicomp.cmptemplate.core.database.DatabaseDriverFactory
 import com.ruicomp.cmptemplate.core.datastore.DataStoreFactory
+import com.ruicomp.cmptemplate.core.utils.ShareUtils
 import com.ruicomp.cmptemplate.database.AppDatabase
 import kotlinx.cinterop.ExperimentalForeignApi
 import okio.Path.Companion.toPath
@@ -31,5 +32,7 @@ actual val platformModule: Module = module {
     single<DataStore<Preferences>> {
         DataStoreFactory().createDataStore()
     }
+
+    single { ShareUtils() }
 }
 
