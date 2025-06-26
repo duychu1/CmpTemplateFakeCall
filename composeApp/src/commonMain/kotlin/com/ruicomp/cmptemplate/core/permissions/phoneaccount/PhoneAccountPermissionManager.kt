@@ -15,20 +15,21 @@ class PhoneAccountPermissionManager(
     fun onEvent(event: PhoneAccountPermissionEvent) {
         when (event) {
             is PhoneAccountPermissionEvent.AgreeRationalPermissionDialogClicked -> {
-                _permissionState.update { it.copy(showPhoneAccountRationaleSetting = false) }
+                showRationaleDialog(false)
                 // Trigger permission request here if needed
+                requestFakeCallPermission()
             }
             is PhoneAccountPermissionEvent.CancelRationalPermissionDialogClicked -> {
-                _permissionState.update { it.copy(showPhoneAccountRationaleSetting = false) }
+                showRationaleDialog(false)
             }
             is PhoneAccountPermissionEvent.RationalPermissionDialogDismissed -> {
-                _permissionState.update { it.copy(showPhoneAccountRationaleSetting = false) }
+                showRationaleDialog(false)
             }
         }
     }
 
-    fun showRationaleDialog() {
-        _permissionState.update { it.copy(showPhoneAccountRationaleSetting = true) }
+    fun showRationaleDialog(isShow: Boolean) {
+        _permissionState.update { it.copy(showPhoneAccountRationaleSetting = isShow) }
     }
 
     fun requestFakeCallPermission() {
@@ -36,8 +37,8 @@ class PhoneAccountPermissionManager(
     }
 
     fun checkAndShowRational(): Boolean {
-        if (!fakeCallManager.isPhonePermissionGranted()) {
-            _permissionState.update { it.copy(showPhoneAccountRationaleSetting = true) }
+        if (!fakeCallManager.isPhoneAccountEnable()) {
+            showRationaleDialog(true)
             return true
         }
         return false
