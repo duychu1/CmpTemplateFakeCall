@@ -1,6 +1,8 @@
 package com.ruicomp.cmptemplate.features.fakecall
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import com.ruicomp.cmptemplate.IFakeCallManager
 
 
@@ -22,23 +24,26 @@ class ActualFakeCallManager(private val context: Context) : IFakeCallManager {
         return androidFakeCallManager.isPhoneAccountEnabled(context)
     }
 
-    override fun isPhonePermissionGranted(): Boolean {
-        TODO("Not yet implemented")
-    }
-
     override fun requestEnablePhoneAccount() {
         androidFakeCallManager.registerPhoneAccount(context)
         androidFakeCallManager.guideUserToEnablePhoneAccount(context)
     }
 
-    override fun triggerFakeCall(callerName: String, callerNumber: String, callerAvatarUrl: String?) {
+    override fun triggerFakeCall(callerName: String, callerNumber: String, callerAvatarUrl: String?, delayMillis: Long) {
         //todo handle exception
-//        androidFakeCallManager.registerPhoneAccount(context)
+
+        // Send the app to the background
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_HOME)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        context.startActivity(intent)
+
         androidFakeCallManager.triggerFakeCall(
             context,
             callerName,
             callerNumber,
             callerAvatarUrl
         )
+
     }
 }

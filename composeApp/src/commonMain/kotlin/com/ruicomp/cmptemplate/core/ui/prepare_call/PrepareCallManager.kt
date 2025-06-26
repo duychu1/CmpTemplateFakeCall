@@ -6,7 +6,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -53,16 +52,16 @@ class PrepareCallManager(
             }
             is PrepareCallEvent.StartCall -> {
                 val contactToCall = _uiState.value.selectedContact
-                val delay = _uiState.value.selectedDelayInSeconds
+                val delayMillis = _uiState.value.selectedDelayInSeconds * 1000L
 
                 if (contactToCall != null) {
                     managerScope.launch {
                         // 1. Trigger the fake call
-                        delay(delay * 1000L)
                         fakeCallManager.triggerFakeCall(
                             callerName = contactToCall.name,
                             callerNumber = contactToCall.number,
                             callerAvatarUrl = null, // Or get from contact if available
+                            delayMillis = delayMillis
                         )
 
                         // 2. Add to call history

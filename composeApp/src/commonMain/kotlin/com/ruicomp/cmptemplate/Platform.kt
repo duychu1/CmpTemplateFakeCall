@@ -9,7 +9,6 @@ expect fun getPlatform(): Platform
 
 interface IFakeCallManager {
     fun isPhoneAccountEnable(): Boolean
-    fun isPhonePermissionGranted(): Boolean
     fun requestEnablePhoneAccount()
-    fun triggerFakeCall(callerName: String, callerNumber: String, callerAvatarUrl: String?)
+    fun triggerFakeCall(callerName: String, callerNumber: String, callerAvatarUrl: String?, delayMillis:Long = 1000L)
 }
