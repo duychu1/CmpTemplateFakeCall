@@ -3,6 +3,8 @@ package com.ruicomp.cmptemplate.features.fakecall
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Handler // Added import
+import android.os.Looper  // Added import
 import com.ruicomp.cmptemplate.IFakeCallManager
 
 
@@ -33,17 +35,18 @@ class ActualFakeCallManager(private val context: Context) : IFakeCallManager {
         //todo handle exception
 
         // Send the app to the background
-        val intent = Intent(Intent.ACTION_MAIN)
-        intent.addCategory(Intent.CATEGORY_HOME)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        context.startActivity(intent)
+        val homeIntent = Intent(Intent.ACTION_MAIN)
+        homeIntent.addCategory(Intent.CATEGORY_HOME)
+        homeIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        context.startActivity(homeIntent)
 
-        androidFakeCallManager.triggerFakeCall(
-            context,
-            callerName,
-            callerNumber,
-            callerAvatarUrl
-        )
-
+        Handler(Looper.getMainLooper()).postDelayed({
+            androidFakeCallManager.triggerFakeCall(
+                context,
+                callerName,
+                callerNumber,
+                callerAvatarUrl
+            )
+        }, delayMillis)
     }
 }
