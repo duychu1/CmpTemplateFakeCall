@@ -23,12 +23,13 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun AddContactDialog(
+    name: String,
+    number: String,
+    onNameChange: (String) -> Unit,
+    onNumberChange: (String) -> Unit,
     onDismiss: () -> Unit,
-    onConfirm: (String, String) -> Unit
+    onConfirm: () -> Unit
 ) {
-    var name by remember { mutableStateOf("") }
-    var number by remember { mutableStateOf("") }
-
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(Res.string.add_new_contact_title)) },
@@ -36,7 +37,7 @@ fun AddContactDialog(
             Column {
                 OutlinedTextField(
                     value = name,
-                    onValueChange = { name = it },
+                    onValueChange = onNameChange,
                     label = { Text(stringResource(Res.string.name_label)) }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -45,7 +46,7 @@ fun AddContactDialog(
                     onValueChange = {
                         val allowedChars = "0123456789+ -()#"
                         if (it.all { char -> allowedChars.contains(char) }) {
-                            number = it
+                            onNumberChange(it)
                         }
                     },
                     label = { Text(stringResource(Res.string.number_label)) },
@@ -55,7 +56,7 @@ fun AddContactDialog(
         },
         confirmButton = {
             Button(
-                onClick = { onConfirm(name, number) },
+                onClick = onConfirm,
                 enabled = name.isNotBlank() && number.isNotBlank()
             ) {
                 Text(stringResource(Res.string.dialog_add))
@@ -71,9 +72,17 @@ fun AddContactDialog(
 
 @Preview
 @Composable
-fun AddContactDialogPreview() {
+private fun AddContactDialogPreview() {
+    var name by remember { mutableStateOf("John Doe") }
+    var number by remember { mutableStateOf("+1234567890") }
+
     AddContactDialog(
+        name = name,
+        number = number,
+        onNameChange = { name = it },
+        onNumberChange = { number = it },
         onDismiss = {},
-        onConfirm = { _, _ -> }
+        onConfirm = {}
     )
-} 
+}
+

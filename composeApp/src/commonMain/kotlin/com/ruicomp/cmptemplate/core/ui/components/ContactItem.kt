@@ -25,8 +25,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun ContactItem(
     contact: Contact,
-    onCall: ((Contact) -> Unit)? = null,
-    onDelete: ((Contact) -> Unit)? = null,
     actions: @Composable (() -> Unit)? = null
 ) {
     Card(modifier = Modifier.fillMaxWidth()) {
@@ -54,19 +52,6 @@ fun ContactItem(
 
             if (actions != null) {
                 actions()
-            } else {
-                Row {
-                    if (onCall != null) {
-                        IconButton(onClick = { onCall(contact) }) {
-                            Icon(Icons.Default.Call, contentDescription = "Call")
-                        }
-                    }
-                    if (onDelete != null) {
-                        IconButton(onClick = { onDelete(contact) }) {
-                            Icon(Icons.Default.Delete, contentDescription = "Delete")
-                        }
-                    }
-                }
             }
         }
     }
@@ -75,14 +60,23 @@ fun ContactItem(
 @Preview
 @Composable
 fun ContactItemPreview() {
+    val contact = Contact(
+        id = 1,
+        name = "John Doe",
+        number = "+1 234 567 890"
+    )
     ContactItem(
-        contact = Contact(
-            id = 1,
-            name = "John Doe",
-            number = "+1 234 567 890"
-        ),
-        onCall = {},
-        onDelete = {}
+        contact = contact,
+        actions = {
+            Row {
+                IconButton(onClick = { /* Handle Call */ }) {
+                    Icon(Icons.Default.Call, contentDescription = "Call")
+                }
+                IconButton(onClick = { /* Handle Delete */ }) {
+                    Icon(Icons.Default.Delete, contentDescription = "Delete")
+                }
+            }
+        }
     )
 }
 
@@ -96,4 +90,4 @@ fun ContactItemNoActionsPreview() {
             number = "+1 234 567 890"
         )
     )
-} 
+}

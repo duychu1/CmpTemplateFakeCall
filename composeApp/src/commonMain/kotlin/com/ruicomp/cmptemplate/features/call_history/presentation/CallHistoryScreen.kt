@@ -52,6 +52,7 @@ import kotlinx.datetime.toLocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
 import cmptemplate.composeapp.generated.resources.*
 import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallBottomSheet
+import com.ruicomp.cmptemplate.features.call_history.presentation.components.CallHistoryItem
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -129,64 +130,26 @@ private fun CallHistoryScreenContent(
     }
 }
 
+@Preview
 @Composable
-private fun CallHistoryItem(
-    item: CallHistory,
-    onRecall: (CallHistory) -> Unit
-) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier
-                .padding(start = 12.dp, end = 4.dp, top = 8.dp, bottom = 8.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.secondaryContainer),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = item.name.firstOrNull()?.toString()?.uppercase() ?: "",
-                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = item.name, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
-                Text(text = item.number, style = MaterialTheme.typography.bodyMedium)
-            }
-
-            // Timestamp
-            Column(
-                horizontalAlignment = Alignment.End
-            ) {
-                // day and month
-                Text(
-                    text = formatTimestamp(item.timestamp).split(" ")[0].split("-").drop(1).joinToString("-"),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                // time
-                Text(
-                    text = formatTimestamp(item.timestamp).split(" ")[1],
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            // icon button recall
-            IconButton(onClick = { onRecall(item) }) {
-                Icon(Icons.Filled.Call, contentDescription = "Recall")
-            }
-        }
-    }
+@OptIn(ExperimentalMaterial3Api::class)
+private fun CallHistoryScreenContentPreview() {
+    CallHistoryScreenContent(
+        onBack = {},
+        uiState = CallHistoryState(
+            history = listOf(
+                CallHistory(id = 1, name = "John Doe", number = "123456789", timestamp = 1678886400000L),
+                CallHistory(id = 2, name = "Jane Smith", number = "987654321", timestamp = 1678886400000L)
+            ),
+            isLoading = false,
+            error = null,
+            showBottomSheet = false,
+            selectedHistoryForRecall = null
+        ),
+        onEvent = {}
+    )
 }
+
 
 private fun formatTimestamp(timestamp: Long): String {
     val instant = Instant.fromEpochMilliseconds(timestamp)
@@ -194,8 +157,3 @@ private fun formatTimestamp(timestamp: Long): String {
     return "${localDateTime.date} ${localDateTime.hour.toString().padStart(2, '0')}:${localDateTime.minute.toString().padStart(2, '0')}"
 }
 
-@Preview
-@Composable
-fun CallHistoryScreenPreview() {
-    CallHistoryScreen(onBack = {})
-} 

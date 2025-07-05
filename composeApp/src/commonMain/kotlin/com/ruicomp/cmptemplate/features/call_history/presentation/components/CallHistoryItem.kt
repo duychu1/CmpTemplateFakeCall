@@ -2,24 +2,18 @@ package com.ruicomp.cmptemplate.features.call_history.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
-import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import com.ruicomp.cmptemplate.core.ui.components.ContactAvatar
+import com.ruicomp.cmptemplate.core.ui.components.ContactItem
 import com.ruicomp.cmptemplate.features.call_history.domain.models.CallHistory
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -30,49 +24,40 @@ fun CallHistoryItem(
     item: CallHistory,
     onRecall: (CallHistory) -> Unit
 ) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier
-                .padding(start = 12.dp, end = 4.dp, top = 8.dp, bottom = 8.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            ContactAvatar(
-                name = item.name,
-                backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
-                textColor = MaterialTheme.colorScheme.onSecondaryContainer
-            )
+    ContactItem(
+        contact = item.asContact(),
+        actions = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                // Timestamp
+                TimeStamp(item)
 
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = item.name, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
-                Text(text = item.number, style = MaterialTheme.typography.bodyMedium)
-            }
-
-            // Timestamp
-            Column(
-                horizontalAlignment = Alignment.End
-            ) {
-                // day and month
-                Text(
-                    text = formatTimestamp(item.timestamp).split(" ")[0].split("-").drop(1).joinToString("-"),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                // time
-                Text(
-                    text = formatTimestamp(item.timestamp).split(" ")[1],
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            // icon button recall
-            IconButton(onClick = { onRecall(item) }) {
-                Icon(Icons.Filled.Call, contentDescription = "Recall")
+                // icon button recall
+                IconButton(onClick = { onRecall(item) }) {
+                    Icon(Icons.Filled.Call, contentDescription = "Recall")
+                }
             }
         }
+    )
+}
+
+@Composable
+private fun RowScope.TimeStamp(item: CallHistory) {
+    Column(
+        horizontalAlignment = Alignment.End
+    ) {
+        // day and month
+        Text(
+            text = formatTimestamp(item.timestamp).split(" ")[0].split("-").drop(1)
+                .joinToString("-"),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        // time
+        Text(
+            text = formatTimestamp(item.timestamp).split(" ")[1],
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
@@ -90,8 +75,8 @@ fun CallHistoryItemPreview() {
             id = 1,
             name = "John Doe",
             number = "+1 234 567 890",
-            timestamp = System.currentTimeMillis()
+            timestamp = Clock.System.now().toEpochMilliseconds()
         ),
         onRecall = {}
     )
-} 
+}
