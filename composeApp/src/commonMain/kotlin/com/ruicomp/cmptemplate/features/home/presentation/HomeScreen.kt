@@ -136,12 +136,13 @@ fun HomeScreenContent(
 
 @Preview
 @Composable
-fun HomeScreenPreview() {
-    HomeScreen(
-        onCallNow = {},
+fun HomeScreenContentPreview() {
+    HomeScreenContent(
         onScheduleCall = {},
         onSavedCaller = {},
         onCallHistory = {},
-        onSettingsClick = {}
+        onSettingsClick = {},
+        onEvent = {},
+        state = HomeState()
     )
-} 
+}
