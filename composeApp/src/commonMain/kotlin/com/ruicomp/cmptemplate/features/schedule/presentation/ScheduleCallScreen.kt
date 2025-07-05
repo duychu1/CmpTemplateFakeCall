@@ -25,6 +25,7 @@ import com.ruicomp.cmptemplate.core.models.Contact
 import kotlinx.datetime.*
 import org.koin.compose.viewmodel.koinViewModel
 import cmptemplate.composeapp.generated.resources.*
+import com.ruicomp.cmptemplate.core.ui.components.ContactInputFields
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -240,26 +241,12 @@ private fun ContactInformationSection(
         Spacer(modifier = Modifier.height(8.dp))
         Card(elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
             Column(modifier = Modifier.padding(16.dp)) {
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = onNameChange,
-                    label = { Text(stringResource(Res.string.caller_name_label)) },
-                    leadingIcon = { Icon(Icons.Default.Person, contentDescription = "Caller Name") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
-                    value = number,
-                    onValueChange = {
-                        val allowedChars = "0123456789+ -()#"
-                        if (it.all { char -> allowedChars.contains(char) }) {
-                            onNumberChange(it)
-                        }
-                    },
-                    label = { Text(stringResource(Res.string.phone_number_label)) },
-                    leadingIcon = { Icon(Icons.Default.Phone, contentDescription = "Phone Number") },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+                ContactInputFields(
+                    name = name,
+                    number = number,
+                    onNameChange = onNameChange,
+                    onNumberChange = onNumberChange,
+
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
