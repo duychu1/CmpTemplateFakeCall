@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ruicomp.cmptemplate.core.datastore.DataStoreKeys
 import com.ruicomp.cmptemplate.core.datastore.DataStorePreferences
+import com.ruicomp.cmptemplate.core.utils.Localization
 import com.ruicomp.cmptemplate.features.language_setting.data.provider.LanguageProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 
 class LanguageSettingViewModel(
     private val dataStorePreferences: DataStorePreferences,
+    private val localization: Localization,
 ) : ViewModel() {
 
     private var currentLanguageCode: String? = null
@@ -49,6 +51,7 @@ class LanguageSettingViewModel(
     fun onEvent(event: LanguageSettingEvent) {
         when (event) {
             is LanguageSettingEvent.SelectLanguage -> {
+                localization.applyLanguage(event.code)
                 viewModelScope.launch {
                     saveLanguage(event.code)
                 }

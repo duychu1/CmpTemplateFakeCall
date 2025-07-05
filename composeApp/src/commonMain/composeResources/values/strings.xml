@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
-    <string name="app_name">Fake Call</string>
+    <string name="app_name" translatable="false">Fake Call</string>
     <string name="feature_call_now">Call Now</string>
     <string name="feature_schedule_call">Schedule Call</string>
     <string name="feature_saved_caller">Saved Caller</string>

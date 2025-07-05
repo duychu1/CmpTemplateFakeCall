@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="app_name">Fake Call</string>
+    <string name="feature_call_now">Chiama Ora</string>
+    <string name="feature_schedule_call">Programma Chiamata</string>
+    <string name="feature_saved_caller">Contatti Salvati</string>
+    <string name="feature_call_history">Cronologia Chiamate</string>
+
+    <!-- Common -->
+    <string name="back_button_description">Indietro</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Annulla</string>
+    <string name="dialog_add">Aggiungi</string>
+    <string name="error_prefix">Errore: %s</string>
+
+    <!-- Schedule Call Screen -->
+    <string name="schedule_call_title">Programma Chiamata</string>
+    <string name="schedule_call_button">Programma Chiamata</string>
+    <string name="contact_information_title">Informazioni Contatto</string>
+    <string name="caller_name_label">Nome Chiamante</string>
+    <string name="phone_number_label">Numero di Telefono</string>
+    <string name="pick_from_contacts_button">Scegli dai Contatti</string>
+    <string name="select_date_time_title">Seleziona Data e Ora</string>
+    <string name="date_label">Data</string>
+    <string name="select_date_description">Seleziona Data</string>
+    <string name="time_label">Ora</string>
+    <string name="select_time_title">Seleziona Ora</string>
+
+    <!-- Saved Caller Screen -->
+    <string name="saved_contacts_title">Contatti Salvati</string>
+    <string name="add_contact_description">Aggiungi Contatto</string>
+    <string name="add_new_contact_title">Aggiungi Nuovo Contatto</string>
+    <string name="name_label">Nome</string>
+    <string name="number_label">Numero</string>
+    <string name="call_button_description">Chiama</string>
+    <string name="delete_button_description">Elimina</string>
+
+    <!-- Call Sheet -->
+    <string name="selected_time_prefix">Selezionato: </string>
+    <string name="time_option_now">Adesso</string>
+    <string name="time_option_5s">5 sec</string>
+    <string name="time_option_10s">10 sec</string>
+    <string name="time_option_15s">15 sec</string>
+    <string name="selected_description">Selezionato</string>
+    <string name="start_fake_call_button">Inizia Chiamata Finta</string>
+
+    <!-- Call History Screen -->
+    <string name="call_history_title">Cronologia Chiamate</string>
+    <string name="no_call_history_message">Nessuna cronologia chiamate.</string>
+    
+    <!-- Settings Screen -->
+    <string name="settings_title">Impostazioni</string>
+    <string name="language_setting">Lingua</string>
+    <string name="about_group_title">Informazioni</string>
+    <string name="privacy_policy">Informativa sulla Privacy</string>
+    <string name="terms_and_conditions">Termini e Condizioni</string>
+    <string name="rate_us">Valutaci</string>
+    <string name="share_app">Condividi App</string>
+
+    <!-- Language Setting Screen -->
+    <string name="language_setting_title">Lingua</string>
+    
+    <string name="ok">OK</string>
+    <string name="cancel">Annulla</string>
+
+    <!-- Make Own Call Permission -->
+    <string name="permission_required_title">Autorizzazione Richiesta</string>
+    <string name="make_own_call_permission_message">Questa app necessita dell\'abilitazione dell\'Account di Chiamata per effettuare e gestire le telefonate correttamente. Questo è usato per simulare chiamate in arrivo.</string>
+    <string name="PHONE">TELEFONO</string>
+    <string name="permission_rationale_message">L\'autorizzazione %1$s è richiesta per il corretto funzionamento dell\'app.</string>
+    <string name="permission_permanently_denied_message">L\'autorizzazione %1$s è stata negata in modo permanente. Abilitala nelle impostazioni dell\'app per utilizzare questa funzionalità.</string>
+
+</resources>
