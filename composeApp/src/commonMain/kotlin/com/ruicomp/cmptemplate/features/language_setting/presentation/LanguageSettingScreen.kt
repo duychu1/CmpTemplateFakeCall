@@ -3,6 +3,7 @@ package com.ruicomp.cmptemplate.features.language_setting.presentation
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -57,7 +58,15 @@ fun LanguageSettingScreenContent(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(Res.string.back_button_description)
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.Filled.Check,
+                            contentDescription = "Save" // Replace with actual string resource
                         )
                     }
                 }
@@ -104,5 +113,4 @@ fun LanguageSettingScreenPreview() {
         event = {}
     )
 }
-
 
