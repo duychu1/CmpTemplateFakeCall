@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1096815020338",
+    "project_id": "cmpfakecall",
+    "storage_bucket": "cmpfakecall.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1096815020338:android:6d7d273c9d3e2eb0e2ef2b",
+        "android_client_info": {
+          "package_name": "com.ruicomp.cmptemplate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYefnAGFyVXxn5cDnod1K6fVnk2uewzP4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

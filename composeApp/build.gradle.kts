@@ -1,3 +1,5 @@
+
+
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -9,6 +11,8 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.googleServices) // Added Google Services plugin
+    alias(libs.plugins.firebase.crashlytics.gradle) // Added Crashlytics plugin
 }
 
 kotlin {
@@ -60,6 +64,13 @@ kotlin {
             implementation(libs.androidx.datastore.preferences.core)
             //third party webview
             implementation(libs.compose.webview.multiplatform)
+
+            // Firebase SDKs
+//            implementation(project.dependencies.platform(libs.firebase.bom)) // BOM for Firebase Kotlin SDK
+            implementation(libs.firebase.analytics)
+            implementation(libs.firebase.crashlytics)
+            implementation(libs.firebase.config)
+            implementation(libs.firebase.messaging)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -102,10 +113,13 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
+
+        isCoreLibraryDesugaringEnabled = true
     }
 }
 
 dependencies {
+    coreLibraryDesugaring(libs.desugar.jdk.libs) // Added this line
     debugImplementation(compose.uiTooling)
 }
 
@@ -128,3 +142,4 @@ compose.desktop {
         }
     }
 }
+

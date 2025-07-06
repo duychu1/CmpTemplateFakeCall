@@ -22,6 +22,10 @@ sqldelight = "2.1.0"
 koin = "4.1.0"
 navigationCompose = "2.9.0-beta02"
 datastore = "1.1.7"
+gitLiveFirebase = "2.1.0"
+googleServicesPlugin = "4.4.1"
+desugarJdkLibs = "2.1.5" # Added this line
+firebaseCrashlyticsPlugin = "3.0.4" # Added Crashlytics plugin version
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
@@ -46,6 +50,12 @@ koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+#firebase-bom = { group = "dev.gitlive", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-analytics = { group = "dev.gitlive", name = "firebase-analytics", version.ref = "gitLiveFirebase" }
+firebase-crashlytics = { group = "dev.gitlive", name = "firebase-crashlytics", version.ref = "gitLiveFirebase" }
+firebase-config = { group = "dev.gitlive", name = "firebase-config", version.ref = "gitLiveFirebase" }
+firebase-messaging = { group = "dev.gitlive", name = "firebase-messaging", version.ref = "gitLiveFirebase" }
+desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugarJdkLibs" } # Added this line
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -56,3 +66,5 @@ composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "k
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
+googleServices = { id = "com.google.gms.google-services", version.ref = "googleServicesPlugin" }
+firebase-crashlytics-gradle = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" } # Added Crashlytics plugin
