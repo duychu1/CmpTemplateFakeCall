@@ -11,5 +11,6 @@ data class HomeState(
     ),
     val showInputContactDialog: Boolean = false,
     val nameTmp: String = "",
-    val numberTmp: String = ""
+    val numberTmp: String = "",
+    val selectedDelaySeconds: Int = 0
 )

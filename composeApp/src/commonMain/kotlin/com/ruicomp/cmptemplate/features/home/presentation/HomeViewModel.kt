@@ -6,6 +6,7 @@ import com.ruicomp.cmptemplate.core.datastore.DataStoreKeys
 import com.ruicomp.cmptemplate.core.datastore.DataStorePreferences
 import com.ruicomp.cmptemplate.core.permissions.presentation.BasePermissionManager
 import com.ruicomp.cmptemplate.core.permissions.phoneaccount.PhoneAccountPermissionManager
+import com.ruicomp.cmptemplate.features.call_history.domain.repository.CallHistoryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     val basePermissionManager: BasePermissionManager,
     val phoneAccountPermissionManager: PhoneAccountPermissionManager,
-    private val dataStorePreferences: DataStorePreferences
+    private val dataStorePreferences: DataStorePreferences,
+    private val callHistoryRepository: CallHistoryRepository
 ) : ViewModel() {
 
     companion object {
@@ -25,21 +27,22 @@ class HomeViewModel(
     val uiState = _uiState.asStateFlow()
 
     init {
-        loadContactDetails()
+        loadInitialData()
     }
 
-    private fun loadContactDetails() {
+    private fun loadInitialData() {
         viewModelScope.launch {
             val name = dataStorePreferences.getString(DataStoreKeys.CONTACT_NAME)
             val number = dataStorePreferences.getString(DataStoreKeys.CONTACT_NUMBER)
-            if (name != null && number != null) {
-                _uiState.update {
-                    it.copy(
-                        contact = it.contact.copy(name = name, number = number),
-                        nameTmp = name, // Also update tmp fields if needed or manage dialog opening separately
-                        numberTmp = number
-                    )
-                }
+            val selectedDelay = dataStorePreferences.getInt(DataStoreKeys.SELECTED_DELAY)
+
+            _uiState.update {
+                it.copy(
+                    contact = if (name != null && number != null) it.contact.copy(name = name, number = number) else it.contact,
+                    nameTmp = name ?: it.contact.name,
+                    numberTmp = number ?: it.contact.number,
+                    selectedDelaySeconds = selectedDelay ?: it.selectedDelaySeconds // Use loaded delay or default
+                )
             }
         }
     }
@@ -79,6 +82,12 @@ class HomeViewModel(
                     dataStorePreferences.saveString(DataStoreKeys.CONTACT_NUMBER, newNumber)
                 }
             }
+            is HomeEvent.DelayItemSelected -> {
+                _uiState.update { it.copy(selectedDelaySeconds = event.delay) }
+                viewModelScope.launch {
+                    dataStorePreferences.saveInt(DataStoreKeys.SELECTED_DELAY, event.delay)
+                }
+            }
         }
     }
 
@@ -90,7 +99,18 @@ class HomeViewModel(
             return
         }
         viewModelScope.launch {
-            phoneAccountPermissionManager.triggerFakeCall()
+            val contactToCall = _uiState.value.contact
+            val delayMillis = _uiState.value.selectedDelaySeconds * 1000L
+
+            phoneAccountPermissionManager.triggerFakeCall(
+                callerName = contactToCall.name,
+                callerNumber = contactToCall.number,
+                callerAvatarUrl = null, // Or get from contact if available
+                delayMillis = delayMillis
+            )
+
+            // 2. Add to call history
+            callHistoryRepository.addCallToHistory(contactToCall)
         }
     }
 }

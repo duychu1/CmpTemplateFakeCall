@@ -44,11 +44,17 @@ class PhoneAccountPermissionManager(
         return false
     }
 
-    fun triggerFakeCall() {
-        fakeCallManager.triggerFakeCall(
-            callerName = "TestName",
-            callerNumber = "01234567890",
-            callerAvatarUrl = null
+    fun triggerFakeCall(
+        callerName: String,
+        callerNumber: String,
+        callerAvatarUrl: String?,
+        delayMillis: Long = 1000L
+    ) {
+    fakeCallManager.triggerFakeCall(
+            callerName = callerName,
+            callerNumber = callerNumber,
+            callerAvatarUrl = null,
+            delayMillis = delayMillis
         )
     }
 

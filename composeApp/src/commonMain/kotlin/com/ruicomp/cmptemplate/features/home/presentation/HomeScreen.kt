@@ -16,7 +16,6 @@ import com.ruicomp.cmptemplate.core.permissions.phoneaccount.PhoneAccountPermiss
 import com.ruicomp.cmptemplate.core.permissions.presentation.components.CustomAlertDialog
 import com.ruicomp.cmptemplate.core.permissions.presentation.components.PermissionAware
 import com.ruicomp.cmptemplate.features.home.presentation.components.HomeContactItem
-import com.ruicomp.cmptemplate.features.saved_caller.presentation.SavedCallerEvent
 import com.ruicomp.cmptemplate.features.saved_caller.presentation.components.InputContactDialog
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -104,7 +103,9 @@ fun HomeScreenContent(
             HomeContactItem(
                 contact = state.contact,
                 onEdit = { onEvent(HomeEvent.ShowTmpContactDialog(true)) },
-                onCall = { onEvent(HomeEvent.CallNowClicked) }
+                onCall = { onEvent(HomeEvent.CallNowClicked) },
+                onDelaySelected = { delay -> onEvent(HomeEvent.DelayItemSelected(delay))},
+                selectedDelay = state.selectedDelaySeconds,
             )
             Spacer(modifier = Modifier.height(16.dp))
 

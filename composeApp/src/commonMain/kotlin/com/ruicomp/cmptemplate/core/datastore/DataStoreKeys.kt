@@ -20,6 +20,7 @@ object DataStoreKeys {
 
     val CONTACT_NAME = stringPreferencesKey("contact_name")
     val CONTACT_NUMBER = stringPreferencesKey("contact_number")
+    val SELECTED_DELAY = intPreferencesKey("selected_delay")
     
 
 }

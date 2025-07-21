@@ -1,6 +1,7 @@
 package com.ruicomp.cmptemplate.features.home.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.DropdownMenu
@@ -89,7 +91,22 @@ fun HomeContactItem(
 
         // Dropdown for delay selection
         Column(modifier = Modifier.align(Alignment.CenterVertically)) {
-            Text(text = "$selectedDelay s", color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier.clickable { expanded = true }
+            ) {
+                Text(
+                    text = "$selectedDelay s",
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = null,
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
+            }
 
             DropdownMenu(
                 expanded = expanded,

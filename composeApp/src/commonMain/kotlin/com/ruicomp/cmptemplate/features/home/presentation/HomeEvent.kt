@@ -9,5 +9,6 @@ sealed class HomeEvent {
     data class UpdateTmpContactName(val name: String) : HomeEvent() // New
     data class UpdateTmpContactNumber(val number: String) : HomeEvent() // New
     object UpdateContact : HomeEvent()
+    data class DelayItemSelected(val delay: Int) : HomeEvent()
     
 }
