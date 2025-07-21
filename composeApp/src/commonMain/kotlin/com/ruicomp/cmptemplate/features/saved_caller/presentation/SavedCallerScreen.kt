@@ -15,7 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmptemplate.composeapp.generated.resources.*
 import com.ruicomp.cmptemplate.core.models.Contact
 import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallBottomSheet
-import com.ruicomp.cmptemplate.features.saved_caller.presentation.components.AddContactDialog
+import com.ruicomp.cmptemplate.features.saved_caller.presentation.components.InputContactDialog
 import com.ruicomp.cmptemplate.features.saved_caller.presentation.components.SaveCallerItem
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -99,7 +99,7 @@ private fun SavedCallerScreenContent(
     }
 
     if (uiState.showAddContactDialog) {
-        AddContactDialog(
+        InputContactDialog(
             name = uiState.addContactName,
             number = uiState.addContactNumber,
             onNameChange = { onEvent(SavedCallerEvent.UpdateAddContactName(it)) },

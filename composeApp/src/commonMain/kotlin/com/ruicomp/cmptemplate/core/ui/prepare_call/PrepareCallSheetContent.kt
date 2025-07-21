@@ -20,6 +20,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import com.ruicomp.cmptemplate.core.models.Contact
 import com.ruicomp.cmptemplate.core.ui.components.ContactAvatar
 import cmptemplate.composeapp.generated.resources.*
+import com.ruicomp.cmptemplate.core.ui.components.ContactItemBig
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -62,43 +64,7 @@ fun PrepareCallSheetContent(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         // Avatar and Contact Info
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            ContactAvatar(
-                name = contact.name,
-                size = 80,
-                fontSize = 32.sp,
-                backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
-                textColor = MaterialTheme.colorScheme.onSecondaryContainer
-            )
-
-            Spacer(modifier = Modifier.width(16.dp))
-            // Name and Number
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Text(
-                    text = contact.name,
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(50))
-                        .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f))
-                        .padding(horizontal = 12.dp, vertical = 6.dp)
-                ) {
-                    Icon(Icons.Default.Call, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
-                    Text(text = contact.number, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Medium)
-                }
-            }
-        }
+        ContactItemBig(contact = contact)
 
         // Selected Time
         Row(
@@ -164,15 +130,17 @@ fun PrepareCallSheetContent(
 @Preview
 @Composable
 fun FakeCallSheetContentPreview() {
-    PrepareCallSheetContent(
-        contact = Contact(
-            id = 1,
-            name = "John Doe",
-            number = "+1 234 567 890"
-        ),
-        delayOptions = listOf(0, 5, 10, 15),
-        selectedDelayInSeconds = 0,
-        onDelaySelected = {},
-        onStartCall = {},
-    )
+    Surface {
+        PrepareCallSheetContent(
+            contact = Contact(
+                id = 1,
+                name = "John Doe",
+                number = "+1 234 567 890"
+            ),
+            delayOptions = listOf(0, 5, 10, 15),
+            selectedDelayInSeconds = 0,
+            onDelaySelected = {},
+            onStartCall = {},
+        )
+    }
 }

@@ -15,6 +15,9 @@ import cmptemplate.composeapp.generated.resources.*
 import com.ruicomp.cmptemplate.core.permissions.phoneaccount.PhoneAccountPermissionEvent
 import com.ruicomp.cmptemplate.core.permissions.presentation.components.CustomAlertDialog
 import com.ruicomp.cmptemplate.core.permissions.presentation.components.PermissionAware
+import com.ruicomp.cmptemplate.features.home.presentation.components.HomeContactItem
+import com.ruicomp.cmptemplate.features.saved_caller.presentation.SavedCallerEvent
+import com.ruicomp.cmptemplate.features.saved_caller.presentation.components.InputContactDialog
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -98,6 +101,13 @@ fun HomeScreenContent(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            HomeContactItem(
+                contact = state.contact,
+                onEdit = { onEvent(HomeEvent.ShowTmpContactDialog(true)) },
+                onCall = { onEvent(HomeEvent.CallNowClicked) }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -113,6 +123,7 @@ fun HomeScreenContent(
                     onScheduleCall
                 )
             }
+
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -129,6 +140,21 @@ fun HomeScreenContent(
                     onCallHistory
                 )
             }
+        }
+
+        if (state.showInputContactDialog) {
+            InputContactDialog(
+                name = state.nameTmp,
+                number = state.numberTmp,
+                confirmText = stringResource(Res.string.save),
+                onNameChange = { onEvent(HomeEvent.UpdateTmpContactName(it)) },
+                onNumberChange = { onEvent(HomeEvent.UpdateTmpContactNumber(it)) },
+                onDismiss = { onEvent(HomeEvent.ShowTmpContactDialog(false)) },
+                onConfirm = {
+                    onEvent(HomeEvent.UpdateContact)
+                    onEvent(HomeEvent.ShowTmpContactDialog(false))
+                }
+            )
         }
 
     }
