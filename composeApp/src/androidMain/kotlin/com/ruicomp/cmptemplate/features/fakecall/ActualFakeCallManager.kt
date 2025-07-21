@@ -21,6 +21,8 @@ import com.ruicomp.cmptemplate.IFakeCallManager
  */
 class ActualFakeCallManager(private val context: Context) : IFakeCallManager {
     private val androidFakeCallManager = FakeCallManager()
+    private var handler: Handler? = null
+    private var fakeCallRunnable: Runnable? = null
 
     override fun isPhoneAccountEnable(): Boolean {
         return androidFakeCallManager.isPhoneAccountEnabled(context)
@@ -40,13 +42,26 @@ class ActualFakeCallManager(private val context: Context) : IFakeCallManager {
         homeIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         context.startActivity(homeIntent)
 
-        Handler(Looper.getMainLooper()).postDelayed({
+        handler = Handler(Looper.getMainLooper())
+        fakeCallRunnable = Runnable {
             androidFakeCallManager.triggerFakeCall(
                 context,
                 callerName,
                 callerNumber,
                 callerAvatarUrl
             )
-        }, delayMillis)
+        }
+        if (handler != null && fakeCallRunnable != null) {
+            handler!!.postDelayed(fakeCallRunnable!!, delayMillis)
+        }
+        // Store `handler` and `fakeCallRunnable` as properties if you want to cancel later
+    }
+
+    override fun cancelCall() {
+        try {
+            handler?.removeCallbacks(fakeCallRunnable!!)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
