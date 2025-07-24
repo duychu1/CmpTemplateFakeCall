@@ -10,5 +10,6 @@ data class SavedCallerState(
     val showBottomSheet: Boolean = false,
     val selectedContactForCall: Contact? = null,
     val addContactName: String = "",
-    val addContactNumber: String = ""
+    val addContactNumber: String = "",
+    val triggerContactPickerLaunch: Boolean = false // Added for Composable Contact Picker
 )

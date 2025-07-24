@@ -8,8 +8,6 @@ import com.ruicomp.cmptemplate.core.permissions.presentation.BasePermissionManag
 import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallEvent
 import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallManager
 import com.ruicomp.cmptemplate.features.saved_caller.domain.repository.CallerRepository
-import com.ruicomp.cmptemplate.features.call_history.domain.repository.CallHistoryRepository
-import com.ruicomp.cmptemplate.core.utils.launchSystemContactPicker // Added import
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -103,27 +101,27 @@ class SavedCallerViewModel(
                     prepareCallManager.onEvent(PrepareCallEvent.ShowSheet(contact))
                 }
             }
-            is SavedCallerEvent.ImportContactsFromSystemClicked -> { // Modified
+            is SavedCallerEvent.ImportContactsFromSystemClicked -> {
+                // First, check/request permission. If granted, trigger the picker launch.
                 if (!basePermissionManager.checkAndShowPermissionAwareness(READ_CONTACTS_PERMISSION)) {
-
-
-                    // Permission is already granted or not needed to be shown explicitly by PermissionAware
-                    viewModelScope.launch {
-                        val pickedContact = launchSystemContactPicker() // Call the expect function
-                        if (pickedContact != null) {
-                            try {
-                                callerRepository.insertCaller(pickedContact.name ?: "", pickedContact.phoneNumber ?: "")
-                                _uiState.update { it.copy(isLoading = false, addContactName = "", addContactNumber = "") } // Clear fields
-                            } catch (e: Exception) {
-                                _uiState.update { it.copy(isLoading = false, error = e.message) }
-                            }
-                        } else {
-                            // Handle case where no contact was picked, or an error occurred
-                            // You might want to show a message to the user
-                            _uiState.update { it.copy(error = "No contact selected or error during picking.") }
-                        }
+                    // Permission is already granted or no rationale needed, proceed to trigger picker
+                    _uiState.update { it.copy(triggerContactPickerLaunch = true) }
+                }
+            }
+            is SavedCallerEvent.ContactPicked -> {
+                event.contact?.let { pickedContact ->
+                    _uiState.update {
+                        it.copy(
+                            addContactName = pickedContact.name ?: "",
+                            addContactNumber = pickedContact.phoneNumber ?: "",
+                            showAddContactDialog = true // Show dialog pre-filled
+                        )
                     }
                 }
+                _uiState.update { it.copy(triggerContactPickerLaunch = false) } // Reset trigger
+            }
+            is SavedCallerEvent.ResetContactPickerLaunchTrigger -> {
+                _uiState.update { it.copy(triggerContactPickerLaunch = false) }
             }
         }
     }

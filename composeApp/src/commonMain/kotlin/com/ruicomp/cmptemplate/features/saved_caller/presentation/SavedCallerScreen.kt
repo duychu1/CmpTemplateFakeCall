@@ -14,8 +14,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmptemplate.composeapp.generated.resources.*
 import com.ruicomp.cmptemplate.core.models.Contact
-import com.ruicomp.cmptemplate.core.permissions.presentation.components.PermissionAware // Added
+import com.ruicomp.cmptemplate.core.permissions.presentation.components.PermissionAware
 import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallBottomSheet
+// Add this import
+import com.ruicomp.cmptemplate.core.utils.ContactPicker
 import com.ruicomp.cmptemplate.features.saved_caller.presentation.components.InputContactDialog
 import com.ruicomp.cmptemplate.features.saved_caller.presentation.components.SaveCallerItem
 import org.jetbrains.compose.resources.stringResource
@@ -30,7 +32,20 @@ fun SavedCallerScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val uiPrepareCallState by viewModel.prepareCallManager.uiState.collectAsStateWithLifecycle()
-    val uiBasePermissionState by viewModel.uiBasePermissionState.collectAsStateWithLifecycle() // Added
+    val uiBasePermissionState by viewModel.uiBasePermissionState.collectAsStateWithLifecycle()
+
+    // 1. Register the contact picker and get a launcher function
+    val launchPicker = ContactPicker.RegisterPicker { pickedContact ->
+        viewModel.onEvent(SavedCallerEvent.ContactPicked(pickedContact))
+    }
+
+    // 2. Effect to launch the picker when the ViewModel signals
+    LaunchedEffect(uiState.triggerContactPickerLaunch) {
+        if (uiState.triggerContactPickerLaunch) {
+            launchPicker() // Call the launcher function obtained from RegisterPicker
+            viewModel.onEvent(SavedCallerEvent.ResetContactPickerLaunchTrigger) // Reset the trigger
+        }
+    }
 
     SavedCallerScreenContent(
         onBack = onBack,
@@ -44,7 +59,7 @@ fun SavedCallerScreen(
         onPrepareCallEvent = viewModel.prepareCallManager::onEvent
     )
 
-    // Permission Handling for READ_CONTACTS // Added
+    // Permission Handling for READ_CONTACTS
     val contactsPermission = SavedCallerViewModel.READ_CONTACTS_PERMISSION
     if (uiBasePermissionState.permissionAwareStates[contactsPermission] == true) {
         PermissionAware(
@@ -103,12 +118,13 @@ private fun SavedCallerScreenContent(
                         ) {
                             Icon(Icons.Default.ContactPhone, contentDescription = "Import Contacts")
                             Spacer(modifier = Modifier.width(8.dp))
+                            // Ensure Res.string.add_contact_from_system exists
                             Text(stringResource(Res.string.add_contact_from_system))
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                     }
-                    
-                    
+
+
                     items(uiState.contacts) { contact ->
                         SaveCallerItem(
                             contact = contact,
@@ -133,6 +149,7 @@ private fun SavedCallerScreenContent(
             onDismiss = { onEvent(SavedCallerEvent.ShowAddContactDialog(false)) },
             onConfirm = {
                 onEvent(SavedCallerEvent.AddContact)
+                // Close dialog after confirming
                 onEvent(SavedCallerEvent.ShowAddContactDialog(false))
             }
         )

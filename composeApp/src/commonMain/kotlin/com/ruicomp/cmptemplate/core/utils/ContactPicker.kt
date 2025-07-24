@@ -16,5 +16,5 @@ expect object ContactPicker {
      * @return A lambda function that, when invoked, will launch the system contact picker.
      */
     @Composable
-    expect fun RegisterPicker(onContactPicked: (PickedContact?) -> Unit): () -> Unit
+    fun RegisterPicker(onContactPicked: (PickedContact?) -> Unit): () -> Unit
 }
