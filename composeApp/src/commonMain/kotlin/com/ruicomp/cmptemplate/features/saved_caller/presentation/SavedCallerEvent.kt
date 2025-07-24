@@ -13,4 +13,5 @@ sealed class SavedCallerEvent {
     object AddContact : SavedCallerEvent()
 
     object TriggerShowBottomSheet : SavedCallerEvent()
+    object ImportContactsFromSystemClicked : SavedCallerEvent()
 }

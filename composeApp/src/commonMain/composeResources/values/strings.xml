@@ -71,4 +71,5 @@
     <string name="permission_permanently_denied_message">%1$s permission has been permanently denied. Please enable it in app settings to use this feature.</string>
 
     <string name="save">Save</string>
+    <string name="add_contact_from_system">Add contact from system</string>
 </resources> 

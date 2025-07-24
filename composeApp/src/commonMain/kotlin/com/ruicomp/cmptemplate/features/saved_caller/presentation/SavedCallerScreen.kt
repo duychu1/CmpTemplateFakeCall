@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmptemplate.composeapp.generated.resources.*
 import com.ruicomp.cmptemplate.core.models.Contact
+import com.ruicomp.cmptemplate.core.permissions.presentation.components.PermissionAware // Added
 import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallBottomSheet
 import com.ruicomp.cmptemplate.features.saved_caller.presentation.components.InputContactDialog
 import com.ruicomp.cmptemplate.features.saved_caller.presentation.components.SaveCallerItem
@@ -29,6 +30,7 @@ fun SavedCallerScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val uiPrepareCallState by viewModel.prepareCallManager.uiState.collectAsStateWithLifecycle()
+    val uiBasePermissionState by viewModel.uiBasePermissionState.collectAsStateWithLifecycle() // Added
 
     SavedCallerScreenContent(
         onBack = onBack,
@@ -42,6 +44,17 @@ fun SavedCallerScreen(
         onPrepareCallEvent = viewModel.prepareCallManager::onEvent
     )
 
+    // Permission Handling for READ_CONTACTS // Added
+    val contactsPermission = SavedCallerViewModel.READ_CONTACTS_PERMISSION
+    if (uiBasePermissionState.permissionAwareStates[contactsPermission] == true) {
+        PermissionAware(
+            permission = contactsPermission,
+            permissionNameDialog = stringResource(Res.string.contacts_permission_name), // Ensure this string exists
+            onShowPermissionAwareChange = { show -> viewModel.basePermissionManager.onShowPermissionAwareChange(contactsPermission, show) },
+            onPermissionStatusChecked = { status -> viewModel.basePermissionManager.onPermissionStatusChecked(contactsPermission, status) },
+            onPermissionResult = { status -> viewModel.basePermissionManager.onPermissionResult(contactsPermission, status) },
+        )
+    }
 }
 
 @Composable
@@ -83,6 +96,19 @@ private fun SavedCallerScreenContent(
                     modifier = Modifier.weight(1f),
                     contentPadding = PaddingValues(16.dp)
                 ) {
+                    item {
+                        Button(
+                            onClick = { onEvent(SavedCallerEvent.ImportContactsFromSystemClicked) },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(Icons.Default.ContactPhone, contentDescription = "Import Contacts")
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(stringResource(Res.string.add_contact_from_system))
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                    
+                    
                     items(uiState.contacts) { contact ->
                         SaveCallerItem(
                             contact = contact,

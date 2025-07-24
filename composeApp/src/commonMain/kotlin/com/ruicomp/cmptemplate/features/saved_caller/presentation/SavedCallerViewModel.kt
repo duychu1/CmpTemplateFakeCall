@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ruicomp.cmptemplate.IFakeCallManager
 import com.ruicomp.cmptemplate.core.models.Contact
+import com.ruicomp.cmptemplate.core.permissions.presentation.BasePermissionManager
 import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallEvent
 import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallManager
 import com.ruicomp.cmptemplate.features.saved_caller.domain.repository.CallerRepository
 import com.ruicomp.cmptemplate.features.call_history.domain.repository.CallHistoryRepository
+import com.ruicomp.cmptemplate.core.utils.launchSystemContactPicker // Added import
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -18,10 +20,17 @@ import kotlinx.coroutines.launch
 class SavedCallerViewModel(
     private val callerRepository: CallerRepository,
     val prepareCallManager: PrepareCallManager,
+    val basePermissionManager: BasePermissionManager // Added
 ) : ViewModel() {
+
+    companion object { // Added
+        const val READ_CONTACTS_PERMISSION = "android.permission.READ_CONTACTS" // Added
+    }
 
     private val _uiState = MutableStateFlow(SavedCallerState())
     val uiState = _uiState.asStateFlow()
+
+    val uiBasePermissionState = basePermissionManager.uiBasePermissionState // Added
 
     init {
         loadContacts()
@@ -92,6 +101,28 @@ class SavedCallerViewModel(
             is SavedCallerEvent.TriggerShowBottomSheet -> {
                 _uiState.value.selectedContactForCall?.let { contact ->
                     prepareCallManager.onEvent(PrepareCallEvent.ShowSheet(contact))
+                }
+            }
+            is SavedCallerEvent.ImportContactsFromSystemClicked -> { // Modified
+                if (!basePermissionManager.checkAndShowPermissionAwareness(READ_CONTACTS_PERMISSION)) {
+
+
+                    // Permission is already granted or not needed to be shown explicitly by PermissionAware
+                    viewModelScope.launch {
+                        val pickedContact = launchSystemContactPicker() // Call the expect function
+                        if (pickedContact != null) {
+                            try {
+                                callerRepository.insertCaller(pickedContact.name ?: "", pickedContact.phoneNumber ?: "")
+                                _uiState.update { it.copy(isLoading = false, addContactName = "", addContactNumber = "") } // Clear fields
+                            } catch (e: Exception) {
+                                _uiState.update { it.copy(isLoading = false, error = e.message) }
+                            }
+                        } else {
+                            // Handle case where no contact was picked, or an error occurred
+                            // You might want to show a message to the user
+                            _uiState.update { it.copy(error = "No contact selected or error during picking.") }
+                        }
+                    }
                 }
             }
         }

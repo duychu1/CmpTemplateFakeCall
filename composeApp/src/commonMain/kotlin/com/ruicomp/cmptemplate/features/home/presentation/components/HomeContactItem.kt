@@ -103,6 +103,7 @@ fun HomeContactItem(
                 )
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                     contentDescription = null,
                     modifier = Modifier.align(Alignment.CenterVertically)
                 )

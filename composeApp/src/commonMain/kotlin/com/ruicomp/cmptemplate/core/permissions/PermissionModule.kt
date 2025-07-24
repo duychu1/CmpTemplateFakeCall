@@ -6,7 +6,7 @@ import com.ruicomp.cmptemplate.core.permissions.presentation.BasePermissionManag
 import org.koin.dsl.module
 
 val permissionModule = module {
-    factory<PermissionHandler> { PermissionHandlerImpl() }
+//    factory<PermissionHandler> { PermissionHandlerImpl() }
     single { PhoneAccountPermissionManager(get()) }
-    single { BasePermissionManager() }
+    factory { BasePermissionManager() }
 }
