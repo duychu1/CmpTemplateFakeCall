@@ -17,6 +17,6 @@ sealed class SavedCallerEvent {
     object ImportContactsFromSystemClicked : SavedCallerEvent()
 
     // For Composable Contact Picker
-    data class ContactPicked(val contact: PickedContact?) : SavedCallerEvent()
+    data class ContactPicked(val name: String, val number: String) : SavedCallerEvent()
     data object ResetContactPickerLaunchTrigger : SavedCallerEvent()
 }

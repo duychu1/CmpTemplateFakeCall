@@ -36,8 +36,13 @@ actual object ContactPicker {
 
                                 val name = if (nameIndex != -1) it.getString(nameIndex) else null
                                 val number = if (numberIndex != -1) it.getString(numberIndex) else null
-                                onContactPicked(PickedContact(name, number))
-                            } else {
+                                if (name != null && number != null) {
+                                    onContactPicked(PickedContact(name, number))
+                                } else {
+                                    onContactPicked(null) // Name or number was null
+                                }
+                            }
+                            else {
                                 onContactPicked(null) // Cursor was empty
                             }
                         }

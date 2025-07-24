@@ -11,5 +11,6 @@ data class SavedCallerState(
     val selectedContactForCall: Contact? = null,
     val addContactName: String = "",
     val addContactNumber: String = "",
-    val triggerContactPickerLaunch: Boolean = false // Added for Composable Contact Picker
+    val triggerContactPickerLaunch: Boolean = false, // Added for Composable Contact Picker
+    val showPermissionDialog: Boolean = false,
 )

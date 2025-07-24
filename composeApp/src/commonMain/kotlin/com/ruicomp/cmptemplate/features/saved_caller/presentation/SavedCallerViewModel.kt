@@ -109,13 +109,14 @@ class SavedCallerViewModel(
                 }
             }
             is SavedCallerEvent.ContactPicked -> {
-                event.contact?.let { pickedContact ->
-                    _uiState.update {
-                        it.copy(
-                            addContactName = pickedContact.name ?: "",
-                            addContactNumber = pickedContact.phoneNumber ?: "",
-                            showAddContactDialog = true // Show dialog pre-filled
+                viewModelScope.launch {
+                    try {
+                        callerRepository.insertCaller(
+                            event.name,
+                            event.number
                         )
+                    } catch (e: Exception) {
+                        _uiState.update { it.copy(isLoading = false, error = e.message) }
                     }
                 }
                 _uiState.update { it.copy(triggerContactPickerLaunch = false) } // Reset trigger

@@ -36,7 +36,12 @@ fun SavedCallerScreen(
 
     // 1. Register the contact picker and get a launcher function
     val launchPicker = ContactPicker.RegisterPicker { pickedContact ->
-        viewModel.onEvent(SavedCallerEvent.ContactPicked(pickedContact))
+        if (pickedContact == null) {
+            // Handle the case where no contact was picked
+            //todo
+            return@RegisterPicker
+        }
+        viewModel.onEvent(SavedCallerEvent.ContactPicked(pickedContact.name, pickedContact.phoneNumber))
     }
 
     // 2. Effect to launch the picker when the ViewModel signals
@@ -118,7 +123,6 @@ private fun SavedCallerScreenContent(
                         ) {
                             Icon(Icons.Default.ContactPhone, contentDescription = "Import Contacts")
                             Spacer(modifier = Modifier.width(8.dp))
-                            // Ensure Res.string.add_contact_from_system exists
                             Text(stringResource(Res.string.add_contact_from_system))
                         }
                         Spacer(modifier = Modifier.height(16.dp))
