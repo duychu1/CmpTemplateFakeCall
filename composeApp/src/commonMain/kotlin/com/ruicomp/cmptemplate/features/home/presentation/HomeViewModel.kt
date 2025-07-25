@@ -45,6 +45,7 @@ class HomeViewModel(
                 )
             }
         }
+        basePermissionManager.initialize(READ_PHONE_NUMBERS_PERMISSION)
     }
 
     fun onEvent(event: HomeEvent) {

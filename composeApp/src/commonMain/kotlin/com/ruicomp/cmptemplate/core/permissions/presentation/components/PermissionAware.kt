@@ -14,6 +14,7 @@ import cmptemplate.composeapp.generated.resources.settings_title
 import com.ruicomp.cmptemplate.core.permissions.presentation.PermissionState
 import com.ruicomp.cmptemplate.core.permissions.presentation.PermissionStatus
 import com.ruicomp.cmptemplate.core.permissions.checkPermissionStatus
+import com.ruicomp.cmptemplate.core.permissions.presentation.BasePermissionEvent
 import com.ruicomp.cmptemplate.core.permissions.rememberPlatformPermissionController
 import org.jetbrains.compose.resources.stringResource
 
@@ -34,9 +35,8 @@ import org.jetbrains.compose.resources.stringResource
 fun PermissionAware(
     permission: String,
     permissionNameDialog: String,
-    onShowPermissionAwareChange: (Boolean) -> Unit = {},
-    onPermissionStatusChecked: (PermissionStatus) -> Unit,
-    onPermissionResult: (PermissionStatus) -> Unit,
+    initialed: Boolean,
+    onEvent: (BasePermissionEvent) -> Unit,
 ) {
 
     var isShowRationale by remember { mutableStateOf(true) }
@@ -47,7 +47,8 @@ fun PermissionAware(
     var permissionStatus: PermissionStatus by remember { mutableStateOf(tmpPermissionStatus) } // Now it's Compose State
 //    permissionStatus = tmpPermissionStatus
     LaunchedEffect(permissionStatus) {
-        onPermissionStatusChecked(permissionStatus)
+        onEvent(BasePermissionEvent.PermissionStatusChecked(permission, permissionStatus))
+        println("PermissionAware: LaunchedEffect Permission status for $permission is $permissionStatus")
     }
     println("PermissionAware: Initial permission status for $permission is $permissionStatus")
 
@@ -56,47 +57,55 @@ fun PermissionAware(
         onResult = {
             println("PermissionAware: Permission result for $permission is $it")
             permissionStatus = it
-            onPermissionResult(it)
+            onEvent(BasePermissionEvent.PermissionResult(permission,it))
         } // Pass the callback directly
     )
 
     // 2. Check the initial status and report it up via the callback.
-    when (permissionStatus) {
-        is PermissionStatus.Granted -> { }
-        PermissionStatus.NotApplicable -> { }
-        PermissionStatus.NotGranted -> {
-            LaunchedEffect(Unit) { // LaunchedEffect to call suspend function
-                controller.requestPermission()
+    if (!initialed) {
+        onEvent(BasePermissionEvent.OnInitialed(permission,true))
+    } else {
+        when (permissionStatus) {
+            is PermissionStatus.Granted -> {}
+            PermissionStatus.NotApplicable -> {}
+            PermissionStatus.NotGranted -> {
+                LaunchedEffect(Unit) { // LaunchedEffect to call suspend function
+                    controller.requestPermission()
+                }
+            }
+
+            PermissionStatus.PermanentlyDenied -> {
+                CustomAlertDialog(
+                    title = stringResource(Res.string.permission_required_title),
+                    message = stringResource(
+                        Res.string.permission_permanently_denied_message,
+                        permissionNameDialog
+                    ),
+                    onAgree = {
+                        controller.openAppSettings()
+                        onEvent(BasePermissionEvent.ShowPermissionAwareChange(permission,false))
+                    },
+                    agreeText = stringResource(Res.string.settings_title),
+                    onDismiss = { onEvent(BasePermissionEvent.ShowPermissionAwareChange(permission,false)) },
+                    onCancel = { onEvent(BasePermissionEvent.ShowPermissionAwareChange(permission,false)) },
+                )
+            }
+
+            PermissionStatus.RationaleNeeded -> {
+                CustomAlertDialog(
+                    title = stringResource(Res.string.permission_required_title),
+                    message = stringResource(
+                        Res.string.permission_rationale_message,
+                        permissionNameDialog
+                    ),
+                    onAgree = {
+                        controller.requestPermission()
+                        onEvent(BasePermissionEvent.ShowPermissionAwareChange(permission,false))
+                    },
+                    onDismiss = { onEvent(BasePermissionEvent.ShowPermissionAwareChange(permission,false)) },
+                    onCancel = { onEvent(BasePermissionEvent.ShowPermissionAwareChange(permission,false)) },
+                )
             }
         }
-        PermissionStatus.PermanentlyDenied -> {
-            CustomAlertDialog(
-                title = stringResource(Res.string.permission_required_title),
-                message = stringResource(
-                    Res.string.permission_permanently_denied_message,
-                    permissionNameDialog
-                ),
-                onAgree = {
-                    controller.openAppSettings()
-                    onShowPermissionAwareChange(false)
-                },
-                agreeText = stringResource(Res.string.settings_title),
-                onDismiss = { onShowPermissionAwareChange(false) },
-                onCancel = { onShowPermissionAwareChange(false) },
-            )
-        }
-        PermissionStatus.RationaleNeeded -> {
-            CustomAlertDialog(
-                title = stringResource(Res.string.permission_required_title),
-                message = stringResource(Res.string.permission_rationale_message, permissionNameDialog),
-                onAgree = {
-                    controller.requestPermission()
-                    onShowPermissionAwareChange(false)
-                },
-                onDismiss = { onShowPermissionAwareChange(false) },
-                onCancel = { onShowPermissionAwareChange(false) },
-            )
-        }
     }
-
 }

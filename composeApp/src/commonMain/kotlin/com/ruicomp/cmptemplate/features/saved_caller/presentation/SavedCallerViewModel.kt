@@ -32,6 +32,7 @@ class SavedCallerViewModel(
 
     init {
         loadContacts()
+        basePermissionManager.initialize(READ_CONTACTS_PERMISSION)
     }
 
     private fun loadContacts() {

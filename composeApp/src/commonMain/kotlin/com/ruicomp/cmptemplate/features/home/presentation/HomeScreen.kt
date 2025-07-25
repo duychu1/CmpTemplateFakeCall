@@ -48,10 +48,9 @@ fun HomeScreen(
     if (uiBasePermissionState.permissionAwareStates[phonePermission] == true) {
         PermissionAware(
             permission = phonePermission, // Pass the specific permission string
-            permissionNameDialog = stringResource(Res.string.PHONE), // This could also be made dynamic
-            onShowPermissionAwareChange = { show -> viewModel.basePermissionManager.onShowPermissionAwareChange(phonePermission, show) },
-            onPermissionStatusChecked = { status -> viewModel.basePermissionManager.onPermissionStatusChecked(phonePermission, status) },
-            onPermissionResult = { status -> viewModel.basePermissionManager.onPermissionResult(phonePermission, status) },
+            permissionNameDialog = stringResource(Res.string.PHONE),
+            initialed = uiBasePermissionState.initialized,
+            onEvent = viewModel.basePermissionManager::onEvent
         )
     }
 

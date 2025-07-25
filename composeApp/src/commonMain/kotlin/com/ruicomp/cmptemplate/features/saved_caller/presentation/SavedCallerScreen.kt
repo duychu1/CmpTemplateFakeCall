@@ -70,10 +70,9 @@ fun SavedCallerScreen(
         PermissionAware(
             permission = contactsPermission,
             permissionNameDialog = stringResource(Res.string.contacts_permission_name), // Ensure this string exists
-            onShowPermissionAwareChange = { show -> viewModel.basePermissionManager.onShowPermissionAwareChange(contactsPermission, show) },
-            onPermissionStatusChecked = { status -> viewModel.basePermissionManager.onPermissionStatusChecked(contactsPermission, status) },
-            onPermissionResult = { status -> viewModel.basePermissionManager.onPermissionResult(contactsPermission, status) },
-        )
+            initialed = uiBasePermissionState.initialized,
+            onEvent = viewModel.basePermissionManager::onEvent
+            )
     }
 }
 
