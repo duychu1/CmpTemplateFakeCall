@@ -175,8 +175,8 @@ private fun ScheduleCallScreenContent(
     if (uiState.isContactSheetVisible) {
         ModalBottomSheet(onDismissRequest = { onEvent(ScheduleCallEvent.HideContactSheet) }) {
             LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(16.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp)
             ) {
                 items(uiState.contacts) { contact ->
                     ContactPickerItem(
@@ -195,7 +195,7 @@ private fun ContactPickerItem(contact: Contact, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(vertical = 12.dp),
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {

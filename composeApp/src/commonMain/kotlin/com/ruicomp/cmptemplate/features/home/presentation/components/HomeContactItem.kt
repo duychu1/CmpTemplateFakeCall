@@ -59,7 +59,7 @@ fun HomeContactItem(
         ) {
             Text(
                 text = contact.name,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
             Row(
