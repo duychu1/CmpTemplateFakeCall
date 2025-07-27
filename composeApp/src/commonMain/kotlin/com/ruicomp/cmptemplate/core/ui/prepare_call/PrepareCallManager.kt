@@ -11,6 +11,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/**
+ * Manages the state and logic for preparing a fake call.
+ * This includes showing/hiding the bottom sheet, selecting a delay, and starting the call.
+ * Require permission and enable phone account
+ */
 class PrepareCallManager(
     private val fakeCallManager: IFakeCallManager,
     private val callHistoryRepository: CallHistoryRepository

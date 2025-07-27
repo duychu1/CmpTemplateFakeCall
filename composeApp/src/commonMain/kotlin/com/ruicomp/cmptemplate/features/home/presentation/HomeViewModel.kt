@@ -28,6 +28,7 @@ class HomeViewModel(
 
     init {
         loadInitialData()
+        basePermissionManager.initialize(READ_PHONE_NUMBERS_PERMISSION)
     }
 
     private fun loadInitialData() {
@@ -45,7 +46,6 @@ class HomeViewModel(
                 )
             }
         }
-        basePermissionManager.initialize(READ_PHONE_NUMBERS_PERMISSION)
     }
 
     fun onEvent(event: HomeEvent) {

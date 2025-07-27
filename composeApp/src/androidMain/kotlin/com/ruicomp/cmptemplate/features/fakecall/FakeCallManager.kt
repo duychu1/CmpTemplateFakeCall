@@ -32,6 +32,9 @@ class FakeCallManager {
         ) == android.content.pm.PackageManager.PERMISSION_GRANTED
     }
 
+    /**
+     * Required android.permission.READ_PHONE_NUMBERS
+     */
     fun isPhoneAccountEnabled(context: Context): Boolean {
         if (!isManageOwnCallsPermissionGranted(context)) {
             Log.d(TAG, "MANAGE_OWN_CALLS permission not granted. Cannot check PhoneAccount status.")
