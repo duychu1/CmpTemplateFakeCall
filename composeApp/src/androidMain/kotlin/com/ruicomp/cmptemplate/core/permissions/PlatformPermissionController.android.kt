@@ -10,7 +10,11 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import com.ruicomp.cmptemplate.core.permissions.presentation.PermissionStatus
@@ -19,7 +23,8 @@ import com.ruicomp.cmptemplate.core.permissions.presentation.PermissionStatus
 private class AndroidPermissionController(
     private val permission: String,
     private val context: Context,
-    private val launcher: androidx.activity.result.ActivityResultLauncher<String>
+    private val launcher: androidx.activity.result.ActivityResultLauncher<String>,
+    private val appSettingsLauncher: androidx.activity.result.ActivityResultLauncher<Intent>
 ) : PlatformPermissionController {
 
     override fun requestPermission() {
@@ -33,6 +38,8 @@ private class AndroidPermissionController(
         )
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
+
+//        appSettingsLauncher.launch(intent)
     }
 }
 
@@ -44,7 +51,11 @@ actual fun rememberPlatformPermissionController(
     val context = LocalContext.current
     val activity = context as androidx.activity.ComponentActivity
 
-    val launcher = rememberLauncherForActivityResult(
+//    var permissionStatus: PermissionStatus by remember {
+//        mutableStateOf(PermissionStatus.NotGranted)
+//    }
+
+    val launcherPermission = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             val status = if (isGranted) {
@@ -59,8 +70,49 @@ actual fun rememberPlatformPermissionController(
         }
     )
 
-    return remember(permission, context, launcher) {
-        AndroidPermissionController(permission, context, launcher)
+    val lifecycle = activity.lifecycle
+    DisposableEffect(lifecycle, permission) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                Log.d("PermissionControllerAndroid","PermissionAware: Lifecycle ON_RESUME")
+                val permissionStatus = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                    PermissionStatus.Granted
+                } else when {
+                    ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED ->
+                        PermissionStatus.Granted
+                    activity.shouldShowRequestPermissionRationale(permission) ->
+                        PermissionStatus.RationaleNeeded
+                    else ->
+                        PermissionStatus.PermanentlyDenied
+                }
+                onResult(permissionStatus)
+            }
+        }
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+        }
+    }
+
+    val appSettingsLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { _ -> // We don't need the ActivityResult data itself, just the fact that it returned
+        // Re-check permission status when returning from settings
+        val currentStatus = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            PermissionStatus.Granted
+        } else when {
+            ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED ->
+                PermissionStatus.Granted
+            activity?.shouldShowRequestPermissionRationale(permission) == true ->
+                PermissionStatus.RationaleNeeded
+            else ->
+                PermissionStatus.NotGranted
+        }
+        onResult(currentStatus) // Notify the caller of the potentially changed status
+    }
+
+    return remember(permission, context, launcherPermission, appSettingsLauncher) {
+        AndroidPermissionController(permission, context, launcherPermission, appSettingsLauncher)
     }
 }
 

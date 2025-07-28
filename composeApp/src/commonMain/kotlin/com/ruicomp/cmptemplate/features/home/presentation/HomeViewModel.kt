@@ -28,7 +28,8 @@ class HomeViewModel(
 
     init {
         loadInitialData()
-        basePermissionManager.initialize(READ_PHONE_NUMBERS_PERMISSION)
+//        basePermissionManager.initialize(READ_PHONE_NUMBERS_PERMISSION)
+        basePermissionManager.checkAndShowPermissionAwareness(READ_PHONE_NUMBERS_PERMISSION)
     }
 
     private fun loadInitialData() {
@@ -94,9 +95,12 @@ class HomeViewModel(
 
     private fun handleCallNow() {
         if (basePermissionManager.checkAndShowPermissionAwareness(READ_PHONE_NUMBERS_PERMISSION)){
+            println("handleCallNow: checkAndShowPermissionAwareness returned true")
             return
+
         }
         if (phoneAccountPermissionManager.checkAndShowRational()) {
+            println("handleCallNow: checkAndShowRational returned true")
             return
         }
         viewModelScope.launch {

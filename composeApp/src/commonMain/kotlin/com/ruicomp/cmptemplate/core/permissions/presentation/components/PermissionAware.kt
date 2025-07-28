@@ -83,11 +83,12 @@ fun PermissionAware(
                     ),
                     onAgree = {
                         controller.openAppSettings()
-                        onEvent(BasePermissionEvent.ShowPermissionAwareChange(permission,false))
+                        
                     },
                     agreeText = stringResource(Res.string.settings_title),
-                    onDismiss = { onEvent(BasePermissionEvent.ShowPermissionAwareChange(permission,false)) },
-                    onCancel = { onEvent(BasePermissionEvent.ShowPermissionAwareChange(permission,false)) },
+                    onDismiss = {  },
+                    onCancel = {  },
+                    isShowCancel = false,
                 )
             }
 
@@ -100,10 +101,11 @@ fun PermissionAware(
                     ),
                     onAgree = {
                         controller.requestPermission()
-                        onEvent(BasePermissionEvent.ShowPermissionAwareChange(permission,false))
+                        
                     },
-                    onDismiss = { onEvent(BasePermissionEvent.ShowPermissionAwareChange(permission,false)) },
-                    onCancel = { onEvent(BasePermissionEvent.ShowPermissionAwareChange(permission,false)) },
+                    onDismiss = {  },
+                    onCancel = {  },
+                    isShowCancel = false,
                 )
             }
         }

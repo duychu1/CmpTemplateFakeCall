@@ -35,9 +35,21 @@ fun HomeScreen(
     val uiPhoneAccountPermissionState by viewModel.phoneAccountPermissionManager.permissionState.collectAsStateWithLifecycle()
 
     HomeScreenContent(
-        onScheduleCall = onScheduleCall,
-        onSavedCaller = onSavedCaller,
-        onCallHistory = onCallHistory,
+        onScheduleCall = {
+            if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()){
+                onScheduleCall()
+            }
+        },
+        onSavedCaller = {
+            if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()){
+                onSavedCaller()
+            }
+        },
+        onCallHistory = {
+            if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()){
+                onCallHistory()
+            }
+        },
         onSettingsClick = onSettingsClick,
         onEvent = viewModel::onEvent,
         state = uiHomeState

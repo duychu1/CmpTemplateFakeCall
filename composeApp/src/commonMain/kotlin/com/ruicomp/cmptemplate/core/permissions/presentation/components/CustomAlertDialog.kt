@@ -17,6 +17,7 @@ fun CustomAlertDialog(
     message: String,
     agreeText: String = stringResource( Res.string.ok),
     cancelText: String = stringResource( Res.string.cancel),
+    isShowCancel: Boolean = true,
     onAgree: () -> Unit,
     onCancel: () -> Unit,
     onDismiss: () -> Unit
@@ -31,8 +32,10 @@ fun CustomAlertDialog(
             }
         },
         dismissButton = {
-            TextButton(onClick = onCancel) {
-                Text(cancelText)
+            if (isShowCancel) {
+                TextButton(onClick = onCancel) {
+                    Text(cancelText)
+                }
             }
         }
     )
