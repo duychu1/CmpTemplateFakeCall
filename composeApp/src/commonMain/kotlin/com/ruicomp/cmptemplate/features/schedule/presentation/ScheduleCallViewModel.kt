@@ -2,6 +2,7 @@ package com.ruicomp.cmptemplate.features.schedule.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ruicomp.cmptemplate.IFakeCallManager
 import com.ruicomp.cmptemplate.core.models.Contact
 import com.ruicomp.cmptemplate.features.saved_caller.domain.repository.CallerRepository
 import com.ruicomp.cmptemplate.features.call_history.domain.repository.CallHistoryRepository
@@ -11,7 +12,8 @@ import kotlinx.datetime.*
 
 class ScheduleCallViewModel(
     private val callHistoryRepository: CallHistoryRepository,
-    private val callerRepository: CallerRepository
+    private val callerRepository: CallerRepository,
+    private val fakeCallManager: IFakeCallManager,
 ) : ViewModel() {
 
     private fun formatDate(millis: Long?): String {
@@ -88,17 +90,41 @@ class ScheduleCallViewModel(
             }
             is ScheduleCallEvent.Schedule -> {
                 val currentState = _uiState.value
-                if (currentState.name.isNotBlank() && currentState.number.isNotBlank()) {
+                if (currentState.name.isNotBlank() && currentState.number.isNotBlank() &&
+                    currentState.selectedDateMillis != null && currentState.selectedHour != null && currentState.selectedMinute != null
+                ) {
                     val contactToSchedule = Contact(id = 0L, name = currentState.name, number = currentState.number)
+
+                    val selectedLocalDateTime = Instant.fromEpochMilliseconds(currentState.selectedDateMillis)
+                        .toLocalDateTime(TimeZone.currentSystemDefault()).date
+                        .atTime(currentState.selectedHour, currentState.selectedMinute)
+                    val triggerAtMillis = selectedLocalDateTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+
+                    val nowMillis = Clock.System.now().toEpochMilliseconds()
+
+                    if (triggerAtMillis < nowMillis) {
+                        _uiState.update { it.copy(isScheduling = false, error = "Cannot schedule a call in the past. Please select a future time.") }
+                        return
+                    }
+
                     viewModelScope.launch {
                         _uiState.update { it.copy(isScheduling = true, error = null) }
                         try {
+                            fakeCallManager.scheduleExactFakeCall(
+                                callerName = currentState.name,
+                                callerNumber = currentState.number,
+                                // callerAvatarUrl = currentState.avatarUrl, // If you have avatar
+                                triggerAtMillis = triggerAtMillis
+                            )
                             callHistoryRepository.addCallToHistory(contactToSchedule)
-                            _uiState.update { it.copy(isScheduling = false, scheduledTime = event.time) }
+                            val scheduledDateTimeStr = "${currentState.formattedDate} at ${currentState.formattedTime}"
+                            _uiState.update { it.copy(isScheduling = false, scheduledTime = scheduledDateTimeStr) }
                         } catch (e: Exception) {
                             _uiState.update { it.copy(isScheduling = false, error = e.message) }
                         }
                     }
+                } else {
+                    _uiState.update { it.copy(isScheduling = false, error = "Please select a valid name, number, date, and time.") }
                 }
             }
         }
