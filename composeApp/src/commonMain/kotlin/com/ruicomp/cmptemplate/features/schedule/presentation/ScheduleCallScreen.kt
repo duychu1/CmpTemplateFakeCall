@@ -57,11 +57,7 @@ private fun ScheduleCallScreenContent(
 
     var showTimePicker by remember { mutableStateOf(false) }
 
-    val currentTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-    val timePickerState = rememberTimePickerState(
-        initialHour = uiState.selectedHour ?: currentTime.hour,
-        initialMinute = uiState.selectedMinute ?: currentTime.minute
-    )
+
 
     val isFormValid by remember(
         uiState.name,
@@ -152,12 +148,17 @@ private fun ScheduleCallScreenContent(
     }
 
     if (showTimePicker) {
+        val currentTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        val timePickerState = rememberTimePickerState(
+            initialHour = uiState.selectedHour ?: currentTime.hour,
+            initialMinute = uiState.selectedMinute ?: currentTime.minute
+        )
         TimePickerDialog(
             onDismissRequest = { showTimePicker = false },
             confirmButton = {
                 TextButton(onClick = {
-                    showTimePicker = false
                     onEvent(ScheduleCallEvent.TimeSelected(timePickerState.hour, timePickerState.minute))
+                    showTimePicker = false
                 }) {
                     Text(stringResource(Res.string.dialog_ok))
                 }
