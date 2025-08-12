@@ -6,6 +6,8 @@ import com.ruicomp.cmptemplate.IFakeCallManager
 import com.ruicomp.cmptemplate.core.models.Contact
 import com.ruicomp.cmptemplate.features.saved_caller.domain.repository.CallerRepository
 import com.ruicomp.cmptemplate.features.call_history.domain.repository.CallHistoryRepository
+import com.ruicomp.cmptemplate.features.schedule.data.models.ScheduledCalled
+import com.ruicomp.cmptemplate.features.schedule.domain.repository.ScheduledCalledRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.*
@@ -14,6 +16,7 @@ class ScheduleCallViewModel(
     private val callHistoryRepository: CallHistoryRepository,
     private val callerRepository: CallerRepository,
     private val fakeCallManager: IFakeCallManager,
+    private val scheduledCalledRepository: ScheduledCalledRepository
 ) : ViewModel() {
 
     private fun formatDate(millis: Long?): String {
@@ -42,6 +45,17 @@ class ScheduleCallViewModel(
 
     init {
         onEvent(ScheduleCallEvent.LoadContacts)
+        // Load scheduled calls and remove any that are no longer scheduled by the system
+        scheduledCalledRepository.getScheduledCalls().onEach { scheduledCalls ->
+            val updatedScheduledCalls = scheduledCalls.toMutableList()
+            scheduledCalls.forEach { scheduledCall ->
+                if (!fakeCallManager.isAlarmCallScheduled(scheduledCall.id.toInt())) {
+                    scheduledCalledRepository.removeScheduledCall(scheduledCall.id.toInt())
+                    updatedScheduledCalls.remove(scheduledCall)
+                }
+            }
+            _uiState.update { it.copy(scheduledCalls = updatedScheduledCalls) }
+        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: ScheduleCallEvent) {
@@ -89,44 +103,64 @@ class ScheduleCallViewModel(
                 _uiState.update { it.copy(isContactSheetVisible = false) }
             }
             is ScheduleCallEvent.Schedule -> {
-                val currentState = _uiState.value
-                if (currentState.name.isNotBlank() && currentState.number.isNotBlank() &&
-                    currentState.selectedDateMillis != null && currentState.selectedHour != null && currentState.selectedMinute != null
-                ) {
-                    val contactToSchedule = Contact(id = 0L, name = currentState.name, number = currentState.number)
-
-                    val selectedLocalDateTime = Instant.fromEpochMilliseconds(currentState.selectedDateMillis)
-                        .toLocalDateTime(TimeZone.currentSystemDefault()).date
-                        .atTime(currentState.selectedHour, currentState.selectedMinute)
-                    val triggerAtMillis = selectedLocalDateTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
-
-                    val nowMillis = Clock.System.now().toEpochMilliseconds()
-
-                    if (triggerAtMillis < nowMillis) {
-                        _uiState.update { it.copy(isScheduling = false, error = "Cannot schedule a call in the past. Please select a future time.") }
-                        return
-                    }
-
-                    viewModelScope.launch {
-                        _uiState.update { it.copy(isScheduling = true, error = null) }
-                        try {
-                            fakeCallManager.scheduleExactFakeCall(
-                                callerName = currentState.name,
-                                callerNumber = currentState.number,
-                                // callerAvatarUrl = currentState.avatarUrl, // If you have avatar
-                                triggerAtMillis = triggerAtMillis
-                            )
-                            callHistoryRepository.addCallToHistory(contactToSchedule)
-                            val scheduledDateTimeStr = "${currentState.formattedDate} at ${currentState.formattedTime}"
-                            _uiState.update { it.copy(isScheduling = false, scheduledTime = scheduledDateTimeStr) }
-                        } catch (e: Exception) {
-                            _uiState.update { it.copy(isScheduling = false, error = e.message) }
-                        }
-                    }
-                } else {
-                    _uiState.update { it.copy(isScheduling = false, error = "Please select a valid name, number, date, and time.") }
+                handleScheduleCall()
+            }
+            is ScheduleCallEvent.CancelScheduleCall -> {
+                fakeCallManager.cancelCall(event.id)
+                viewModelScope.launch {
+                    scheduledCalledRepository.removeScheduledCall(event.id)
                 }
             }
+        }
+    }
+
+    private fun handleScheduleCall() {
+        val currentState = _uiState.value
+        if (currentState.name.isNotBlank() && currentState.number.isNotBlank() &&
+            currentState.selectedDateMillis != null && currentState.selectedHour != null && currentState.selectedMinute != null
+        ) {
+            val contactToSchedule = Contact(id = 0L, name = currentState.name, number = currentState.number)
+
+            val selectedLocalDateTime = Instant.fromEpochMilliseconds(currentState.selectedDateMillis)
+                .toLocalDateTime(TimeZone.currentSystemDefault()).date
+                .atTime(currentState.selectedHour, currentState.selectedMinute)
+            val triggerAtMillis = selectedLocalDateTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+
+            val nowMillis = Clock.System.now().toEpochMilliseconds()
+
+            if (triggerAtMillis < nowMillis) {
+                _uiState.update { it.copy(isScheduling = false, error = "Cannot schedule a call in the past. Please select a future time.") }
+                return
+            }
+
+            viewModelScope.launch {
+                _uiState.update { it.copy(isScheduling = true, error = null) }
+                try {
+                    val scheduledId = scheduledCalledRepository.addScheduledCallAndReturnId(
+                        ScheduledCalled(
+                            name = currentState.name,
+                            number = currentState.number,
+                            avatarUrl = null,
+                            triggerAtMillis = triggerAtMillis
+                        )
+                    )
+                    fakeCallManager.scheduleExactFakeCall(
+                        requestCode = scheduledId.toInt(),
+                        callerName = currentState.name,
+                        callerNumber = currentState.number,
+                        // callerAvatarUrl = currentState.avatarUrl, // If you have avatar
+                        triggerAtMillis = triggerAtMillis
+                    )
+                    callHistoryRepository.addCallToHistory(contactToSchedule)
+                    val scheduledDateTimeStr = "${currentState.formattedDate} at ${currentState.formattedTime}"
+                    _uiState.update { it.copy(isScheduling = false, scheduledTime = scheduledDateTimeStr) }
+                } catch (e: Exception) {
+                    _uiState.update { it.copy(isScheduling = false, error = e.message) }
+                    println("ScheduleCallViewModel: Error scheduling call: ${e.message}")
+                }
+            }
+        } else {
+            _uiState.update { it.copy(isScheduling = false, error = "Please select a valid name, number, date, and time.") }
         }
     }
 }

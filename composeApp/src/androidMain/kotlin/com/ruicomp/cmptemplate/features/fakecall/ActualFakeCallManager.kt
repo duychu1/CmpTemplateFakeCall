@@ -29,6 +29,7 @@ class ActualFakeCallManager(private val context: Context) : IFakeCallManager {
 
     companion object {
         const val ACTION_TRIGGER_FAKE_CALL = "com.ruicomp.cmptemplate.ACTION_TRIGGER_FAKE_CALL"
+        const val EXTRA_REQUEST_CODE = "requestCode"
         const val EXTRA_CALLER_NAME = "callerName"
         const val EXTRA_CALLER_NUMBER = "callerNumber"
         const val EXTRA_CALLER_AVATAR_URL = "callerAvatarUrl"
@@ -66,9 +67,10 @@ class ActualFakeCallManager(private val context: Context) : IFakeCallManager {
     }
 
     @RequiresPermission(Manifest.permission.SCHEDULE_EXACT_ALARM)
-    override fun scheduleExactFakeCall(callerName: String, callerNumber: String, callerAvatarUrl: String?, triggerAtMillis: Long) {
+    override fun scheduleExactFakeCall(requestCode: Int, callerName: String, callerNumber: String, callerAvatarUrl: String?, triggerAtMillis: Long) {
         val intent = Intent(context, FakeCallAlarmReceiver::class.java).apply {
             action = ACTION_TRIGGER_FAKE_CALL
+            putExtra(EXTRA_REQUEST_CODE, requestCode)
             putExtra(EXTRA_CALLER_NAME, callerName)
             putExtra(EXTRA_CALLER_NUMBER, callerNumber)
             putExtra(EXTRA_CALLER_AVATAR_URL, callerAvatarUrl)
@@ -76,7 +78,7 @@ class ActualFakeCallManager(private val context: Context) : IFakeCallManager {
 
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            FAKE_CALL_REQUEST_CODE,
+            requestCode,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -106,13 +108,35 @@ class ActualFakeCallManager(private val context: Context) : IFakeCallManager {
         }
     }
 
-    override fun cancelCall() {
-        // Cancel Handler-based call
-        try {
-            handler?.removeCallbacks(fakeCallRunnable!!)
-        } catch (e: Exception) {
-            e.printStackTrace()
+    /**
+     * Checks if an alarm for a fake call with the given request code is currently scheduled.
+     *
+     * @param requestCode The request code of the alarm to check.
+     * @return `true` if an alarm with the specified request code is scheduled, `false` otherwise.
+     *         Returns `false` if no such PendingIntent exists (meaning no alarm is scheduled with that request code).
+     */
+    override fun isAlarmCallScheduled(requestCode: Int): Boolean {
+        val intent = Intent(context, FakeCallAlarmReceiver::class.java).apply {
+            action = ACTION_TRIGGER_FAKE_CALL
         }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            intent,
+            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+        )
+        println("pendingIntent: $pendingIntent")
+        return pendingIntent != null
+    }
+
+
+    override fun cancelCall(requestCode: Int) {
+        // Cancel Handler-based call
+//        try {
+//            handler?.removeCallbacks(fakeCallRunnable!!)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
 
         // Cancel AlarmManager-based call
         val intent = Intent(context, FakeCallAlarmReceiver::class.java).apply {
@@ -120,7 +144,7 @@ class ActualFakeCallManager(private val context: Context) : IFakeCallManager {
         }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            FAKE_CALL_REQUEST_CODE,
+            requestCode,
             intent,
             PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
         )

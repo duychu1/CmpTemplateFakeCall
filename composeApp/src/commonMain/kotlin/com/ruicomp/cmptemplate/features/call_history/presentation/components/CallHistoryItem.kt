@@ -29,7 +29,7 @@ fun CallHistoryItem(
         actions = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // Timestamp
-                TimeStamp(item)
+                TimeStamp(item.timestamp)
 
                 // icon button recall
                 IconButton(onClick = { onRecall(item) }) {
@@ -41,20 +41,20 @@ fun CallHistoryItem(
 }
 
 @Composable
-private fun RowScope.TimeStamp(item: CallHistory) {
+fun RowScope.TimeStamp(timestamp: Long) {
     Column(
         horizontalAlignment = Alignment.End
     ) {
         // day and month
         Text(
-            text = formatTimestamp(item.timestamp).split(" ")[0].split("-").drop(1)
+            text = formatTimestamp(timestamp).split(" ")[0].split("-").drop(1)
                 .joinToString("-"),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         // time
         Text(
-            text = formatTimestamp(item.timestamp).split(" ")[1],
+            text = formatTimestamp(timestamp).split(" ")[1],
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

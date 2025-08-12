@@ -12,4 +12,5 @@ sealed class ScheduleCallEvent {
     data class SelectContact(val contact: Contact) : ScheduleCallEvent()
     object ShowContactSheet : ScheduleCallEvent()
     object HideContactSheet : ScheduleCallEvent()
+    data class CancelScheduleCall(val id: Int) : ScheduleCallEvent()
 }

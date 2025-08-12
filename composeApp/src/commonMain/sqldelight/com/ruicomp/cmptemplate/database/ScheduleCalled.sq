@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS scheduled_called (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    callerName TEXT NOT NULL,
+    callerNumber TEXT NOT NULL,
+    callerAvatarUrl TEXT,
+    triggerAtMillis INTEGER NOT NULL
+);
+
+selectAllScheduledCalls:
+SELECT * FROM scheduled_called;
+
+insertScheduledCall:
+INSERT INTO scheduled_called(callerName, callerNumber, callerAvatarUrl, triggerAtMillis)
+VALUES (?, ?, ?, ?);
+
+deleteScheduledCallById:
+DELETE FROM scheduled_called WHERE id = ?;
+
+lastInsertRowId:
+SELECT last_insert_rowid();

@@ -6,19 +6,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ruicomp.cmptemplate.core.models.Contact
@@ -26,6 +23,13 @@ import kotlinx.datetime.*
 import org.koin.compose.viewmodel.koinViewModel
 import cmptemplate.composeapp.generated.resources.*
 import com.ruicomp.cmptemplate.core.ui.components.ContactInputFields
+import com.ruicomp.cmptemplate.core.ui.components.ContactItem
+import com.ruicomp.cmptemplate.core.ui.components.TimePickerDialog
+import com.ruicomp.cmptemplate.features.call_history.presentation.components.TimeStamp
+import com.ruicomp.cmptemplate.features.schedule.presentation.components.ContactInformationSection
+import com.ruicomp.cmptemplate.features.schedule.presentation.components.ContactPickerItem
+import com.ruicomp.cmptemplate.features.schedule.presentation.components.ScheduledItem
+import com.ruicomp.cmptemplate.features.schedule.presentation.components.SelectDateTimeSection
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -103,6 +107,23 @@ private fun ScheduleCallScreenContent(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            if (uiState.scheduledCalls.size == 1) {
+                ScheduledItem(
+                    scheduledCall = uiState.scheduledCalls.first(),
+                    onClickStop = { onEvent(ScheduleCallEvent.CancelScheduleCall(uiState.scheduledCalls.first().id.toInt())) }
+                )
+            } else if (uiState.scheduledCalls.size > 1) {
+                Text(text = "Scheduling ${uiState.scheduledCalls.size} calls")
+
+                uiState.scheduledCalls.forEach { call ->
+                    ScheduledItem(
+                        scheduledCall = call,
+                        onClickStop = { onEvent(ScheduleCallEvent.CancelScheduleCall(call.id.toInt())) }
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
 
             ContactInformationSection(

@@ -1,6 +1,7 @@
 package com.ruicomp.cmptemplate.features.schedule.presentation
 
 import com.ruicomp.cmptemplate.core.models.Contact
+import com.ruicomp.cmptemplate.features.schedule.data.models.ScheduledCalled
 
 data class ScheduleCallState(
     // Schedule Call Screen State
@@ -23,5 +24,8 @@ data class ScheduleCallState(
     val selectedMinute: Int? = null,
     val formattedDate: String = "",
     val formattedTime: String = "",
+
+    //scheduling list
+    val scheduledCalls: List<ScheduledCalled> = emptyList()
 
 )
