@@ -1,5 +1,9 @@
 package com.ruicomp.cmptemplate.features.schedule.presentation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -9,12 +13,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -26,6 +33,7 @@ import com.ruicomp.cmptemplate.core.ui.components.ContactInputFields
 import com.ruicomp.cmptemplate.core.ui.components.ContactItem
 import com.ruicomp.cmptemplate.core.ui.components.TimePickerDialog
 import com.ruicomp.cmptemplate.features.call_history.presentation.components.TimeStamp
+import com.ruicomp.cmptemplate.features.schedule.data.models.ScheduledCalled
 import com.ruicomp.cmptemplate.features.schedule.presentation.components.ContactInformationSection
 import com.ruicomp.cmptemplate.features.schedule.presentation.components.ContactPickerItem
 import com.ruicomp.cmptemplate.features.schedule.presentation.components.ScheduledItem
@@ -60,8 +68,6 @@ private fun ScheduleCallScreenContent(
     var showDatePicker by remember { mutableStateOf(false) }
 
     var showTimePicker by remember { mutableStateOf(false) }
-
-
 
     val isFormValid by remember(
         uiState.name,
@@ -108,21 +114,12 @@ private fun ScheduleCallScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            if (uiState.scheduledCalls.size == 1) {
-                ScheduledItem(
-                    scheduledCall = uiState.scheduledCalls.first(),
-                    onClickStop = { onEvent(ScheduleCallEvent.CancelScheduleCall(uiState.scheduledCalls.first().id.toInt())) }
-                )
-            } else if (uiState.scheduledCalls.size > 1) {
-                Text(text = "Scheduling ${uiState.scheduledCalls.size} calls")
-
-                uiState.scheduledCalls.forEach { call ->
-                    ScheduledItem(
-                        scheduledCall = call,
-                        onClickStop = { onEvent(ScheduleCallEvent.CancelScheduleCall(call.id.toInt())) }
-                    )
+            ScheduledCallsList(
+                scheduledCalls = uiState.scheduledCalls,
+                onCancelSchedule = { callId ->
+                    onEvent(ScheduleCallEvent.CancelScheduleCall(callId))
                 }
-            }
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -212,18 +209,77 @@ private fun ScheduleCallScreenContent(
 }
 
 @Composable
-private fun ContactPickerItem(contact: Contact, onClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column {
-            Text(text = contact.name, style = MaterialTheme.typography.bodyLarge)
-            Text(text = contact.number, style = MaterialTheme.typography.bodyMedium)
+private fun ScheduledCallsList(
+    scheduledCalls: List<ScheduledCalled>,
+    onCancelSchedule: (Int) -> Unit
+) {
+    var isScheduledListExpanded by remember { mutableStateOf(false) }
+
+    if (scheduledCalls.size == 1) {
+        ScheduledItem(
+            scheduledCall = scheduledCalls.first(),
+            onClickStop = { onCancelSchedule(scheduledCalls.first().id.toInt()) }
+        )
+    } else if (scheduledCalls.size > 1) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colorScheme.inversePrimary)
+                .clickable { isScheduledListExpanded = !isScheduledListExpanded }
+                .padding(vertical = 8.dp, horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = "Scheduling ${scheduledCalls.size} calls")
+            Icon(
+                imageVector = if (isScheduledListExpanded) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
+                contentDescription = if (isScheduledListExpanded) "Collapse" else "Expand"
+            )
         }
+
+        Spacer(Modifier.height(4.dp))
+
+        AnimatedVisibility(
+            visible = isScheduledListExpanded,
+            enter = expandVertically(),
+            exit = shrinkVertically()
+        ) {
+            Column {
+                scheduledCalls.forEach { call ->
+                    ScheduledItem(
+                        scheduledCall = call,
+                        onClickStop = { onCancelSchedule(call.id.toInt()) }
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ScheduledCallsListPreview() {
+    val scheduledCalls = listOf(
+        ScheduledCalled(
+            id = 1,
+            name = "John Doe",
+            number = "1234567890",
+            triggerAtMillis = Clock.System.now().toEpochMilliseconds() + 3600000 // 1 hour from now
+        ),
+        ScheduledCalled(
+            id = 2,
+            name = "Jane Smith",
+            number = "0987654321",
+            triggerAtMillis = Clock.System.now().toEpochMilliseconds() + 7200000 // 2 hours from now
+        )
+    )
+    Surface {
+        ScheduledCallsList(
+            scheduledCalls = scheduledCalls,
+            onCancelSchedule = {}
+        )
     }
 }
 
@@ -248,98 +304,6 @@ private fun TimePickerDialog(
         dismissButton = dismissButton,
         containerColor = containerColor
     )
-}
-
-@Composable
-private fun ContactInformationSection(
-    name: String,
-    number: String,
-    onPickContact: () -> Unit,
-    onNameChange: (String) -> Unit,
-    onNumberChange: (String) -> Unit
-) {
-    Column(horizontalAlignment = Alignment.Start) {
-        Text(stringResource(Res.string.contact_information_title), style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(8.dp))
-        Card(elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                ContactInputFields(
-                    name = name,
-                    number = number,
-                    onNameChange = onNameChange,
-                    onNumberChange = onNumberChange,
-
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = onPickContact,
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
-                ) {
-                    Text(stringResource(Res.string.pick_from_contacts_button))
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun SelectDateTimeSection(
-    date: String,
-    onDateSelect: () -> Unit,
-    time: String,
-    onTimeSelect: () -> Unit
-) {
-    Column(horizontalAlignment = Alignment.Start) {
-        Text(stringResource(Res.string.select_date_time_title), style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(8.dp))
-        Card(elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Box {
-                    OutlinedTextField(
-                        value = date,
-                        onValueChange = {},
-                        label = { Text(stringResource(Res.string.date_label)) },
-                        trailingIcon = {
-                            IconButton(onClick = onDateSelect) {
-                                Icon(Icons.Default.CalendarToday, contentDescription = "Select Date")
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        readOnly = true,
-                        
-                    )
-                    // This Box will intercept the click and prevent the OutlinedTextField from gaining focus
-                    Box(
-                        modifier = Modifier
-                            .matchParentSize()
-                            .clickable(onClick = onDateSelect, indication = null, interactionSource = remember { MutableInteractionSource() })
-                    )
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-                Box {
-                    OutlinedTextField(
-                        value = time,
-                        onValueChange = {},
-                        label = { Text(stringResource(Res.string.time_label)) },
-                        trailingIcon = {
-                            IconButton(onClick = onTimeSelect) {
-                                Icon(Icons.Default.CalendarToday, contentDescription = "Select Time") // Consider Icons.Default.AccessTime
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        readOnly = true,
-                    )
-                    // This Box will intercept the click and prevent the OutlinedTextField from gaining focus
-                    Box(
-                        modifier = Modifier
-                            .matchParentSize()
-                            .clickable(onClick = onTimeSelect, indication = null, interactionSource = remember { MutableInteractionSource() })
-                    )
-                }
-            }
-        }
-    }
 }
 
 @Preview
