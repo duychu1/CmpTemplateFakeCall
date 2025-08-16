@@ -71,8 +71,9 @@ fun SavedCallerScreen(
             permission = contactsPermission,
             permissionNameDialog = stringResource(Res.string.contacts_permission_name), // Ensure this string exists
             initialed = uiBasePermissionState.initialized,
-            onEvent = viewModel.basePermissionManager::onEvent
-            )
+            onEvent = viewModel.basePermissionManager::onEvent,
+            isShowCancel = true
+        )
     }
 }
 

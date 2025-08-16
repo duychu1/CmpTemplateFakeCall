@@ -25,11 +25,12 @@ import org.jetbrains.compose.resources.stringResource
  *
  * @param permission The permission string (e.g., `android.permission.CAMERA`).
  * @param permissionNameDialog The user-friendly name of the permission to be displayed in dialogs.
- * @param onShowPermissionAwareChange Callback invoked when the visibility of the permission-aware component should change.
- *                                   Typically used to dismiss the component after a user interaction.
- * @param onPermissionStatusChecked Callback invoked with the initial or updated [PermissionStatus].
- *                                  This allows the caller to react to the current permission state.
- * @param onPermissionResult Callback invoked with the [PermissionStatus] after a permission request has been processed.
+ * @param initialed A boolean flag indicating whether the initial permission check has been performed.
+ *                  If `false`, it triggers an initial event.
+ * @param onEvent Callback to dispatch [BasePermissionEvent]s, allowing the caller to react to
+ *                permission status changes, results, and UI interactions.
+ * @param isShowCancel A boolean flag to determine if the cancel button should be shown in the
+ *                     permanently denied dialog. Defaults to `false`.
  */
 @Composable
 fun PermissionAware(
@@ -37,6 +38,7 @@ fun PermissionAware(
     permissionNameDialog: String,
     initialed: Boolean,
     onEvent: (BasePermissionEvent) -> Unit,
+    isShowCancel: Boolean = false,
 ) {
 
     var isShowRationale by remember { mutableStateOf(true) }
@@ -86,9 +88,13 @@ fun PermissionAware(
                         
                     },
                     agreeText = stringResource(Res.string.settings_title),
-                    onDismiss = {  },
-                    onCancel = {  },
-                    isShowCancel = false,
+                    onDismiss = {
+                        if (isShowCancel) { onEvent(BasePermissionEvent.ShowPermissionAwareChange(permission, false)) }
+                    },
+                    onCancel = {
+                        onEvent(BasePermissionEvent.ShowPermissionAwareChange(permission, false))
+                    },
+                    isShowCancel = isShowCancel,
                 )
             }
 
