@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -125,16 +126,8 @@ fun HomeContactItem(
         }
 
         Spacer(modifier = Modifier.weight(1f))
-        FilledIconButton(
-            onClick = onCall,
-            modifier = Modifier.size(56.dp).align(Alignment.CenterVertically),
-        ) {
-            Icon(
-                imageVector =Icons.Default.Call,
-                modifier = Modifier.fillMaxHeight(0.6f).fillMaxWidth(0.6f),
-                contentDescription = "Call"
-            )
-        }
+        PulsatingCallButtonOverflow(onCall = onCall)
+        Spacer(modifier = Modifier.width(4.dp))
     }
 }
 
