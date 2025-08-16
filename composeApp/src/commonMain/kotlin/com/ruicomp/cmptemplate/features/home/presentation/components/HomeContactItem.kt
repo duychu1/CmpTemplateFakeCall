@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ruicomp.cmptemplate.app.DefaultValues
@@ -48,7 +49,9 @@ fun HomeContactItem(
     onCall: () -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
-    Row(modifier = Modifier.fillMaxWidth()
+    Row(
+        modifier = Modifier.fillMaxWidth()
+            .shadow(elevation = 4.dp, shape = MaterialTheme.shapes.medium,)
             .clip(MaterialTheme.shapes.medium)
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(10.dp),
