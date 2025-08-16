@@ -31,11 +31,13 @@ fun ScheduledItem(scheduledCall: ScheduledCalled, onClickStop: () -> Unit = {}) 
             // Timestamp
             TimeStamp(scheduledCall.triggerAtMillis)
 
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(16.dp))
             // button to stop scheduled call
-            Button(onClick = onClickStop) {
+            Button( shape = MaterialTheme.shapes.medium, onClick = onClickStop) {
                 Text("Stop")
             }
+            Spacer(modifier = Modifier.width(10.dp))
+
         }
     }
 }
