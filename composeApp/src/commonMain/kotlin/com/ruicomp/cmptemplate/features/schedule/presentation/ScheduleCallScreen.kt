@@ -2,6 +2,8 @@ package com.ruicomp.cmptemplate.features.schedule.presentation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,6 +21,8 @@ import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,10 +38,12 @@ import com.ruicomp.cmptemplate.core.ui.components.ContactItem
 import com.ruicomp.cmptemplate.core.ui.components.TimePickerDialog
 import com.ruicomp.cmptemplate.features.call_history.presentation.components.TimeStamp
 import com.ruicomp.cmptemplate.features.schedule.data.models.ScheduledCalled
+import com.ruicomp.cmptemplate.features.schedule.presentation.components.AnimatedErrorText
 import com.ruicomp.cmptemplate.features.schedule.presentation.components.ContactInformationSection
 import com.ruicomp.cmptemplate.features.schedule.presentation.components.ContactPickerItem
 import com.ruicomp.cmptemplate.features.schedule.presentation.components.ScheduledItem
 import com.ruicomp.cmptemplate.features.schedule.presentation.components.SelectDateTimeSection
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -66,7 +72,6 @@ private fun ScheduleCallScreenContent(
         initialSelectedDateMillis = uiState.selectedDateMillis ?: Clock.System.now().toEpochMilliseconds()
     )
     var showDatePicker by remember { mutableStateOf(false) }
-
     var showTimePicker by remember { mutableStateOf(false) }
 
     val isFormValid by remember(
@@ -94,14 +99,24 @@ private fun ScheduleCallScreenContent(
             )
         },
         bottomBar = {
-            Button(
-                onClick = { onEvent(ScheduleCallEvent.Schedule("${uiState.formattedDate} at ${uiState.formattedTime}")) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                enabled = isFormValid && !uiState.isScheduling
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp)
+//                    .background(MaterialTheme.colorScheme.errorContainer)
             ) {
-                Text(stringResource(Res.string.schedule_call_button))
+                AnimatedErrorText(
+                    errorMessage = uiState.error,
+                    onDismiss = {
+                        onEvent(ScheduleCallEvent.ClearError) // Clear error in ViewModel when dismissed
+                    }
+                )
+                Button(
+                    onClick = { onEvent(ScheduleCallEvent.Schedule("${uiState.formattedDate} at ${uiState.formattedTime}")) },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    enabled = isFormValid && !uiState.isScheduling
+                ) {
+                    Text(stringResource(Res.string.schedule_call_button))
+                }
             }
         }
     ) { paddingValues ->
@@ -282,7 +297,7 @@ private fun ScheduledCallsListPreview() {
         )
     )
     Column(
-        modifier = Modifier.background(MaterialTheme.colorScheme.surface,)
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
     ) {
         ScheduledCallsList(
             scheduledCalls = scheduledCalls,
@@ -336,6 +351,7 @@ fun ScheduleCallScreenPreview() {
         onBack = {},
         uiState = ScheduleCallState(
             scheduledCalls = scheduledCalls,
+            error = "Provide time in future"
         ),
         onEvent = {}
     )

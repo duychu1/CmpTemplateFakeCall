@@ -2,6 +2,8 @@ package com.ruicomp.cmptemplate.features.schedule.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cmptemplate.composeapp.generated.resources.Res
+import cmptemplate.composeapp.generated.resources.schedule_call_button
 import com.ruicomp.cmptemplate.IFakeCallManager
 import com.ruicomp.cmptemplate.core.models.Contact
 import com.ruicomp.cmptemplate.features.saved_caller.domain.repository.CallerRepository
@@ -102,6 +104,9 @@ class ScheduleCallViewModel(
             is ScheduleCallEvent.HideContactSheet -> {
                 _uiState.update { it.copy(isContactSheetVisible = false) }
             }
+            is ScheduleCallEvent.ClearError -> {
+                _uiState.update { it.copy(error = null) }
+            }
             is ScheduleCallEvent.Schedule -> {
                 handleScheduleCall()
             }
@@ -129,7 +134,7 @@ class ScheduleCallViewModel(
             val nowMillis = Clock.System.now().toEpochMilliseconds()
 
             if (triggerAtMillis < nowMillis) {
-                _uiState.update { it.copy(isScheduling = false, error = "Cannot schedule a call in the past. Please select a future time.") }
+                _uiState.update { it.copy(isScheduling = false, error = "Please select a future time.") }
                 return
             }
 
