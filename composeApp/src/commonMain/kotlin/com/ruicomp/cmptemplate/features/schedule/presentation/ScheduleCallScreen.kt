@@ -209,11 +209,12 @@ private fun ScheduleCallScreenContent(
 }
 
 @Composable
-private fun ScheduledCallsList(
+private fun ColumnScope.ScheduledCallsList(
     scheduledCalls: List<ScheduledCalled>,
-    onCancelSchedule: (Int) -> Unit
+    onCancelSchedule: (Int) -> Unit,
+    expandList: Boolean = false
 ) {
-    var isScheduledListExpanded by remember { mutableStateOf(false) }
+    var isScheduledListExpanded by remember { mutableStateOf(expandList) }
 
     if (scheduledCalls.size == 1) {
         ScheduledItem(
@@ -245,7 +246,12 @@ private fun ScheduledCallsList(
             enter = expandVertically(),
             exit = shrinkVertically()
         ) {
-            Column {
+            Column (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(MaterialTheme.shapes.medium)
+                    .padding(horizontal = 8.dp)
+            ) {
                 scheduledCalls.forEach { call ->
                     ScheduledItem(
                         scheduledCall = call,
@@ -275,10 +281,13 @@ private fun ScheduledCallsListPreview() {
             triggerAtMillis = Clock.System.now().toEpochMilliseconds() + 7200000 // 2 hours from now
         )
     )
-    Surface {
+    Column(
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface,)
+    ) {
         ScheduledCallsList(
             scheduledCalls = scheduledCalls,
-            onCancelSchedule = {}
+            onCancelSchedule = {},
+            expandList = true
         )
     }
 }
@@ -309,9 +318,25 @@ private fun TimePickerDialog(
 @Preview
 @Composable
 fun ScheduleCallScreenPreview() {
+    val scheduledCalls = listOf(
+        ScheduledCalled(
+            id = 1,
+            name = "John Doe",
+            number = "1234567890",
+            triggerAtMillis = Clock.System.now().toEpochMilliseconds() + 3600000 // 1 hour from now
+        ),
+        ScheduledCalled(
+            id = 2,
+            name = "Jane Smith",
+            number = "0987654321",
+            triggerAtMillis = Clock.System.now().toEpochMilliseconds() + 7200000 // 2 hours from now
+        )
+    )
     ScheduleCallScreenContent(
         onBack = {},
-        uiState = ScheduleCallState(),
+        uiState = ScheduleCallState(
+            scheduledCalls = scheduledCalls,
+        ),
         onEvent = {}
     )
 }

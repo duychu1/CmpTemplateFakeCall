@@ -34,43 +34,45 @@ fun ContactInformationSection(
     onNameChange: (String) -> Unit,
     onNumberChange: (String) -> Unit
 ) {
-    Column(horizontalAlignment = Alignment.Start) {
-        Text(stringResource(Res.string.contact_information_title), style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(8.dp))
-        Card(elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = onNameChange,
-                    label = { Text(stringResource(Res.string.caller_name_label)) },
-                    leadingIcon = { Icon(Icons.Default.Person, contentDescription = "Caller Name") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
-                    value = number,
-                    onValueChange = {
-                        val allowedChars = "0123456789+ -()#"
-                        if (it.all { char -> allowedChars.contains(char) }) {
-                            onNumberChange(it)
-                        }
-                    },
-                    label = { Text(stringResource(Res.string.phone_number_label)) },
-                    leadingIcon = { Icon(Icons.Default.Phone, contentDescription = "Phone Number") },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = onPickContact,
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
-                ) {
-                    Text(stringResource(Res.string.pick_from_contacts_button))
-                }
+    Card(elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+            Text(
+                stringResource(Res.string.contact_information_title),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = name,
+                onValueChange = onNameChange,
+                label = { Text(stringResource(Res.string.caller_name_label)) },
+                leadingIcon = { Icon(Icons.Default.Person, contentDescription = "Caller Name") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = number,
+                onValueChange = {
+                    val allowedChars = "0123456789+ -()#"
+                    if (it.all { char -> allowedChars.contains(char) }) {
+                        onNumberChange(it)
+                    }
+                },
+                label = { Text(stringResource(Res.string.phone_number_label)) },
+                leadingIcon = { Icon(Icons.Default.Phone, contentDescription = "Phone Number") },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = onPickContact,
+                modifier = Modifier.fillMaxWidth(),
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
+            ) {
+                Text(stringResource(Res.string.pick_from_contacts_button))
             }
         }
     }
+
 }
 
 @Preview

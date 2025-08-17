@@ -29,39 +29,45 @@ fun SelectDateTimeSection(
     time: String,
     onTimeSelect: () -> Unit
 ) {
-    Column(horizontalAlignment = Alignment.Start) {
-        Text(stringResource(Res.string.select_date_time_title), style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(8.dp))
-        Card(elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                OutlinedTextField(
-                    value = date,
-                    onValueChange = {},
-                    label = { Text(stringResource(Res.string.date_label)) },
-                    trailingIcon = {
-                        IconButton(onClick = onDateSelect) {
-                            Icon(Icons.Default.CalendarToday, contentDescription = stringResource(Res.string.select_date_description))
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    readOnly = true
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
-                    value = time,
-                    onValueChange = {},
-                    label = { Text(stringResource(Res.string.time_label)) },
-                    trailingIcon = {
-                        IconButton(onClick = onTimeSelect) {
-                            Icon(Icons.Default.CalendarToday, contentDescription = "Select Time")
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    readOnly = true
-                )
-            }
+    Card(elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+            Text(
+                stringResource(Res.string.select_date_time_title),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = date,
+                onValueChange = {},
+                label = { Text(stringResource(Res.string.date_label)) },
+                trailingIcon = {
+                    IconButton(onClick = onDateSelect) {
+                        Icon(
+                            Icons.Default.CalendarToday,
+                            contentDescription = stringResource(Res.string.select_date_description)
+                        )
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                readOnly = true
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = time,
+                onValueChange = {},
+                label = { Text(stringResource(Res.string.time_label)) },
+                trailingIcon = {
+                    IconButton(onClick = onTimeSelect) {
+                        Icon(Icons.Default.CalendarToday, contentDescription = "Select Time")
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                readOnly = true
+            )
+            Spacer(modifier = Modifier.height(4.dp))
         }
     }
+
 }
 
 @Preview

@@ -1,6 +1,8 @@
 package com.ruicomp.cmptemplate.features.home.presentation.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ruicomp.cmptemplate.app.DefaultValues
@@ -48,13 +51,22 @@ fun HomeContactItem(
     onEdit: () -> Unit = {},
     onCall: () -> Unit = {}
 ) {
+    val gradientBrush = Brush.linearGradient(
+        colors = listOf(
+            MaterialTheme.colorScheme.primary,
+            MaterialTheme.colorScheme.secondary
+        )
+    )
+
     var expanded by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier.fillMaxWidth()
-            .shadow(elevation = 4.dp, shape = MaterialTheme.shapes.medium,)
-            .clip(MaterialTheme.shapes.medium)
+            .shadow(elevation = 4.dp, shape = MaterialTheme.shapes.large,)
+            .border(border = BorderStroke(1.dp, gradientBrush), shape = MaterialTheme.shapes.large)
+            .clip(MaterialTheme.shapes.large)
             .background(MaterialTheme.colorScheme.surfaceVariant)
-            .padding(10.dp),
+            .padding(10.dp)
+        ,
         ) {
         // Name and Number
         Column(
