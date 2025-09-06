@@ -46,6 +46,8 @@ import com.ruicomp.cmptemplate.features.schedule.presentation.components.SelectD
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,7 +63,7 @@ fun ScheduleCallScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 private fun ScheduleCallScreenContent(
     onBack: () -> Unit,
@@ -69,7 +71,7 @@ private fun ScheduleCallScreenContent(
     onEvent: (ScheduleCallEvent) -> Unit
 ) {
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = uiState.selectedDateMillis ?: Clock.System.now().toEpochMilliseconds()
+        initialSelectedDateMillis = uiState.selectedDateMillis ?: kotlin.time.Clock.System.now().toEpochMilliseconds()
     )
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
@@ -181,7 +183,7 @@ private fun ScheduleCallScreenContent(
     }
 
     if (showTimePicker) {
-        val currentTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        val currentTime = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
         val timePickerState = rememberTimePickerState(
             initialHour = uiState.selectedHour ?: currentTime.hour,
             initialMinute = uiState.selectedMinute ?: currentTime.minute
@@ -279,6 +281,7 @@ private fun ColumnScope.ScheduledCallsList(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Preview
 @Composable
 private fun ScheduledCallsListPreview() {
@@ -287,13 +290,13 @@ private fun ScheduledCallsListPreview() {
             id = 1,
             name = "John Doe",
             number = "1234567890",
-            triggerAtMillis = Clock.System.now().toEpochMilliseconds() + 3600000 // 1 hour from now
+            triggerAtMillis = kotlin.time.Clock.System.now().toEpochMilliseconds() + 3600000 // 1 hour from now
         ),
         ScheduledCalled(
             id = 2,
             name = "Jane Smith",
             number = "0987654321",
-            triggerAtMillis = Clock.System.now().toEpochMilliseconds() + 7200000 // 2 hours from now
+            triggerAtMillis = kotlin.time.Clock.System.now().toEpochMilliseconds() + 7200000 // 2 hours from now
         )
     )
     Column(
@@ -330,6 +333,7 @@ private fun TimePickerDialog(
     )
 }
 
+@OptIn(ExperimentalTime::class)
 @Preview
 @Composable
 fun ScheduleCallScreenPreview() {
@@ -338,7 +342,7 @@ fun ScheduleCallScreenPreview() {
             id = 1,
             name = "John Doe",
             number = "1234567890",
-            triggerAtMillis = Clock.System.now().toEpochMilliseconds() + 3600000 // 1 hour from now
+            triggerAtMillis = kotlin.time.Clock.System.now().toEpochMilliseconds() + 3600000 // 1 hour from now
         ),
         ScheduledCalled(
             id = 2,

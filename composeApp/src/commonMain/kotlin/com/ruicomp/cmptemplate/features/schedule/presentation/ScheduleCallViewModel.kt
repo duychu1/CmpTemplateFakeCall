@@ -13,6 +13,9 @@ import com.ruicomp.cmptemplate.features.schedule.domain.repository.ScheduledCall
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.*
+import kotlinx.datetime.LocalDate
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 class ScheduleCallViewModel(
     private val callHistoryRepository: CallHistoryRepository,
@@ -21,12 +24,13 @@ class ScheduleCallViewModel(
     private val scheduledCalledRepository: ScheduledCalledRepository
 ) : ViewModel() {
 
+    @OptIn(ExperimentalTime::class)
     private fun formatDate(millis: Long?): String {
         return millis?.let {
             val instant = Instant.fromEpochMilliseconds(it)
             val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
             val monthName = localDate.month.name.lowercase().take(3).replaceFirstChar { char -> char.uppercase() }
-            "$monthName ${localDate.dayOfMonth.toString().padStart(2, '0')}, ${localDate.year}"
+            "$monthName ${localDate.day.toString().padStart(2, '0')}, ${localDate.year}"
         } ?: ""
     }
 
@@ -119,6 +123,7 @@ class ScheduleCallViewModel(
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun handleScheduleCall() {
         val currentState = _uiState.value
         if (currentState.name.isNotBlank() && currentState.number.isNotBlank() &&

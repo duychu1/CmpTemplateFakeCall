@@ -15,6 +15,8 @@ import com.ruicomp.cmptemplate.core.ui.components.ContactItem
 import com.ruicomp.cmptemplate.features.call_history.presentation.components.TimeStamp
 import com.ruicomp.cmptemplate.features.schedule.data.models.ScheduledCalled
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @Composable
 fun ScheduledItem(scheduledCall: ScheduledCalled, onClickStop: () -> Unit = {}) {
@@ -42,6 +44,7 @@ fun ScheduledItem(scheduledCall: ScheduledCalled, onClickStop: () -> Unit = {}) 
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Preview
 @Composable
 fun ScheduledItemPreview() {
@@ -50,7 +53,7 @@ fun ScheduledItemPreview() {
         name = "John Doe",
         number = "1234567890",
         avatarUrl = null,
-        triggerAtMillis = kotlinx.datetime.Clock.System.now().toEpochMilliseconds() + 3600000 // 1 hour from now
+        triggerAtMillis = Clock.System.now().toEpochMilliseconds() + 3600000 // 1 hour from now
     )
     ScheduledItem(scheduledCall = scheduledCall)
 }

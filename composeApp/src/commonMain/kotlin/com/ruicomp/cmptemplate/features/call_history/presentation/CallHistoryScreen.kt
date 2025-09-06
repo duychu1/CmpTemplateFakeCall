@@ -55,6 +55,7 @@ import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallBottomSheet
 import com.ruicomp.cmptemplate.features.call_history.presentation.components.CallHistoryItem
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -151,6 +152,7 @@ private fun CallHistoryScreenContentPreview() {
 }
 
 
+@OptIn(ExperimentalTime::class)
 private fun formatTimestamp(timestamp: Long): String {
     val instant = Instant.fromEpochMilliseconds(timestamp)
     val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())

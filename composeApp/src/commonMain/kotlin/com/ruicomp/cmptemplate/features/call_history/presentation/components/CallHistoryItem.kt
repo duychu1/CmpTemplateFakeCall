@@ -13,11 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import com.ruicomp.cmptemplate.core.ui.components.ContactItem
 import com.ruicomp.cmptemplate.features.call_history.domain.models.CallHistory
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.time.ExperimentalTime
 
 @Composable
 fun CallHistoryItem(
@@ -61,12 +61,14 @@ fun RowScope.TimeStamp(timestamp: Long) {
     }
 }
 
+@OptIn(ExperimentalTime::class)
 private fun formatTimestamp(timestamp: Long): String {
     val instant = Instant.fromEpochMilliseconds(timestamp)
     val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
     return "${localDateTime.date} ${localDateTime.hour.toString().padStart(2, '0')}:${localDateTime.minute.toString().padStart(2, '0')}"
 }
 
+@OptIn(ExperimentalTime::class)
 @Preview
 @Composable
 fun CallHistoryItemPreview() {
@@ -75,7 +77,7 @@ fun CallHistoryItemPreview() {
             id = 1,
             name = "John Doe",
             number = "+1 234 567 890",
-            timestamp = Clock.System.now().toEpochMilliseconds()
+            timestamp = kotlin.time.Clock.System.now().toEpochMilliseconds()
         ),
         onRecall = {}
     )

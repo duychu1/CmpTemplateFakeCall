@@ -9,6 +9,7 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
+import kotlin.time.ExperimentalTime
 
 class CallHistoryDataSource(
     private val database: AppDatabase
@@ -30,11 +31,12 @@ class CallHistoryDataSource(
             }
     }
 
+    @OptIn(ExperimentalTime::class)
     suspend fun insertCallHistory(name: String, number: String) {
         database.callHistoryQueries.insertCallHistory(
             name = name,
             number = number,
-            timestamp = Clock.System.now().toEpochMilliseconds()
+            timestamp = kotlin.time.Clock.System.now().toEpochMilliseconds()
         )
     }
 } 
