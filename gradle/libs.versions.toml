@@ -22,10 +22,28 @@ sqldelight = "2.1.0"
 koin = "4.1.0"
 navigationCompose = "2.9.0-beta02"
 datastore = "1.1.7"
-gitLiveFirebase = "2.1.0"
+gitLiveFirebase = "2.3.0"
 googleServicesPlugin = "4.4.1"
 desugarJdkLibs = "2.1.5" # Added this line
 firebaseCrashlyticsPlugin = "3.0.4" # Added Crashlytics plugin version
+#commonlib
+material = "1.13.0" # Or your current version
+androidxRecyclerView = "1.4.0"
+androidxCardview = "1.0.0"
+googlePlayServicesAds = "24.5.0" # Or your current version
+facebookShimmer = "0.5.0" # Already in your TOML
+androidxLifecycleProcess = "2.9.3" # Or your current version
+githubAndroidSpinkit = "1.4.0" # For com.github.ybq:AndroidSpinKit
+androidxMultidex = "2.0.1"
+githubRatingbar = "1.0.0" # For com.github.omeNore:simpleRatingBar - verify artifact name
+googleGson = "2.13.1"
+androidBillingClient = "8.0.0" # Or your current version
+adjustAndroidSdk = "5.4.3" # Or your current version
+firebaseBom = "33.12.0" # Or your current version for com.google.firebase:firebase-bom
+facebookAudienceNetworkSdk = "6.20.0" # Or your current version
+googleMediationTestSuite = "3.0.0" # Or your current version
+reyunSolarEngineCore = "1.2.8.2" # CRITICAL: You MUST find the correct version for this
+
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
@@ -56,6 +74,40 @@ firebase-crashlytics = { group = "dev.gitlive", name = "firebase-crashlytics", v
 firebase-config = { group = "dev.gitlive", name = "firebase-config", version.ref = "gitLiveFirebase" }
 firebase-messaging = { group = "dev.gitlive", name = "firebase-messaging", version.ref = "gitLiveFirebase" }
 desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugarJdkLibs" } # Added this line
+
+# Libraries from CommonLib that might be missing or need specific aliases
+
+# AndroidX
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+androidx-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidxRecyclerView" }
+androidx-cardview = { group = "androidx.cardview", name = "cardview", version.ref = "androidxCardview" }
+androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "androidxLifecycleProcess" }
+androidx-multidex = { group = "androidx.multidex", name = "multidex", version.ref = "androidxMultidex" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
+
+# Google
+google-playservices-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "googlePlayServicesAds" }
+google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "googleGson" }
+android-billingclient = { group = "com.android.billingclient", name = "billing", version.ref = "androidBillingClient" }
+google-mediationtestsuite = { group = "com.google.android.ads", name = "mediation-test-suite", version.ref = "googleMediationTestSuite" }
+# Firebase (using Google's BOM, not GitLive's based on CommonLib's dependencies)
+google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+# The following Firebase libraries from CommonLib will use the BOM, so no version.ref here
+firebase-crashlytics-google = { group = "com.google.firebase", name = "firebase-crashlytics" } # Renamed to avoid conflict if you keep GitLive
+firebase-analytics-google = { group = "com.google.firebase", name = "firebase-analytics" } # Renamed
+firebase-config-google = { group = "com.google.firebase", name = "firebase-config" }     # Renamed
+firebase-messaging-google = { group = "com.google.firebase", name = "firebase-messaging" } # Renamed
+# Facebook
+# facebook-shimmer is already in your TOML
+facebook-shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref = "facebookShimmer" }
+facebook-audiencenetworksdk = { group = "com.facebook.android", name = "audience-network-sdk", version.ref = "facebookAudienceNetworkSdk" }
+# Other Libraries
+github-androidspinkit = { group = "com.github.ybq", name = "Android-SpinKit", version.ref = "githubAndroidSpinkit" }
+github-ratingbar = { group = "com.github.yangmbin", name = "RatingBar", version.ref = "githubRatingbar" }
+adjust-androidsdk = { group = "com.adjust.sdk", name = "adjust-android", version.ref = "adjustAndroidSdk" }
+reyun-solarenginecore = { group = "com.reyun.solar.engine.oversea", name = "solar-engine-core", version.ref = "reyunSolarEngineCore" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

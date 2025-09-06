@@ -41,6 +41,7 @@ kotlin {
             implementation(libs.sqldelight.android.driver)
             implementation(libs.koin.android)
             implementation(libs.androidx.datastore.preferences)
+            implementation(project(":CommonLib"))
         }
         commonMain.dependencies {
             implementation(compose.runtime)
