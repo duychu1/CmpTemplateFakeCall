@@ -13,7 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.common.control.BaseApplicationKt
+import com.common.control.BaseApplication
 import com.common.control.dialog.WelcomeBackDialog
 import com.common.control.interfaces.AdCallback
 import com.google.android.gms.ads.AdActivity
@@ -255,7 +255,7 @@ class AppOpenManagerKt private constructor() : Application.ActivityLifecycleCall
         
         if (!startLoading) {
             val app = myApplication
-            if (app is BaseApplicationKt) {
+            if (app is BaseApplication) {
                 if (app.firstActForOpenApp.name == activity.javaClass.name) {
                     startLoading = true
                 }

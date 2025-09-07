@@ -1,11 +1,10 @@
 package com.ruicomp.cmptemplate.di
 
-import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import app.cash.sqldelight.db.SqlDriver
 import com.ruicomp.cmptemplate.IFakeCallManager
+import com.ruicomp.cmptemplate.core.ads.AdsController
 import com.ruicomp.cmptemplate.core.database.DatabaseDriverFactory
 import com.ruicomp.cmptemplate.core.datastore.DataStoreFactory
 import com.ruicomp.cmptemplate.core.utils.Localization
@@ -28,5 +27,7 @@ actual val platformModule: Module = module {
     single<IFakeCallManager> { ActualFakeCallManager(androidContext()) }
 
     single { Localization(androidContext()) }
+
+    single { AdsController(androidContext()) }
 }
 

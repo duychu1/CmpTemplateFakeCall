@@ -42,7 +42,7 @@ adjustAndroidSdk = "5.4.3" # Or your current version
 firebaseBom = "33.12.0" # Or your current version for com.google.firebase:firebase-bom
 facebookAudienceNetworkSdk = "6.20.0" # Or your current version
 googleMediationTestSuite = "3.0.0" # Or your current version
-reyunSolarEngineCore = "1.2.8.2" # CRITICAL: You MUST find the correct version for this
+reyunSolarEngineCore = "1.2.8.2"
 
 
 [libraries]

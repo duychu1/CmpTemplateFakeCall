@@ -21,7 +21,7 @@ import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.common.control.R
-import com.common.control.dialog.PrepareLoadingAdsDialogKt
+import com.common.control.dialog.PrepareLoadingAdsDialog
 import com.common.control.interfaces.AdCallback
 import com.facebook.ads.AudienceNetworkAds
 import com.google.android.gms.ads.AdError
@@ -276,7 +276,7 @@ class AdmobManagerKt private constructor() {
     fun showInterstitial(
         context: Activity,
         interstitialAd: InterstitialAd?, // Made nullable to match the check
-        hasLoadingWhenShow: Boolean,
+        hasLoadingWhenShow: Boolean = false,
         callback: AdCallback?, // Made nullable to match checks
     ) {
         if (interstitialAd == null || PurchaseManagerKt.getInstance().isPurchased()) {
@@ -290,7 +290,7 @@ class AdmobManagerKt private constructor() {
 
         interstitialAd.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
-                context.sendBroadcast(Intent(PrepareLoadingAdsDialogKt.ACTION_DISMISS_DIALOG))
+                context.sendBroadcast(Intent(PrepareLoadingAdsDialog.ACTION_DISMISS_DIALOG))
                 if (AppOpenManagerKt.getInstance().isInitialized()) {
                     AppOpenManagerKt.getInstance().enableAppResume()
                 }
@@ -305,7 +305,7 @@ class AdmobManagerKt private constructor() {
                 if (AppOpenManagerKt.getInstance().isInitialized()) {
                     AppOpenManagerKt.getInstance().enableAppResume()
                 }
-                context.sendBroadcast(Intent(PrepareLoadingAdsDialogKt.ACTION_DISMISS_DIALOG))
+                context.sendBroadcast(Intent(PrepareLoadingAdsDialog.ACTION_DISMISS_DIALOG))
                 callback?.let {
                     // Consider if you should pass 'adError' to the callback here as well
                     // e.g., it.onAdFailedToShowFullScreenContent(adError)
@@ -316,9 +316,9 @@ class AdmobManagerKt private constructor() {
 
             override fun onAdShowedFullScreenContent() {
                 if (!hasLoadingWhenShow) {
-                    context.sendBroadcast(Intent(PrepareLoadingAdsDialogKt.ACTION_DISMISS_DIALOG))
+                    context.sendBroadcast(Intent(PrepareLoadingAdsDialog.ACTION_DISMISS_DIALOG))
                 } else {
-                    context.sendBroadcast(Intent(PrepareLoadingAdsDialogKt.ACTION_CLEAR_TEXT_AD))
+                    context.sendBroadcast(Intent(PrepareLoadingAdsDialog.ACTION_CLEAR_TEXT_AD))
                 }
                 callback?.onAdShowedFullScreenContent()
             }
@@ -340,7 +340,8 @@ class AdmobManagerKt private constructor() {
 
         var timeShowLoadingDlg = 0L
         if (isShowLoadingDialog) { // Assuming isShowLoadingDialog is a property
-            PrepareLoadingAdsDialogKt.start(context)
+            log("show loading dialog")
+            PrepareLoadingAdsDialog.start(context)
             timeShowLoadingDlg = customTimeLoadingDialog // Assuming customTimeLoadingDialog is a property
         }
 
@@ -350,6 +351,9 @@ class AdmobManagerKt private constructor() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             log("show inter: ${interstitialAd.adUnitId}") // Assuming log() and hasLog are accessible
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { // Android 15+
+                interstitialAd.setImmersiveMode(true)
+            }
             interstitialAd.show(context)
         }, timeShowLoadingDlg)
     }
@@ -925,7 +929,7 @@ class AdmobManagerKt private constructor() {
     }
     // --- Begin ported methods from AdmobManagerKt.java 976-1343 ---
 
-    fun getAdCollapsibleBannerRequest(): AdRequest? {
+    private fun getAdCollapsibleBannerRequest(): AdRequest? {
         if (!hasAds || PurchaseManagerKt.getInstance().isPurchased()) {
             return null
         }

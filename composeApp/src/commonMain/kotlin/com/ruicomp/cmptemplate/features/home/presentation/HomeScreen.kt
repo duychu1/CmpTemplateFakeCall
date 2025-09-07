@@ -23,6 +23,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeScreen(
+    activity: Any? = null,
     onCallNow: () -> Unit,
     onScheduleCall: () -> Unit,
     onSavedCaller: () -> Unit,
@@ -46,9 +47,25 @@ fun HomeScreen(
             }
         },
         onCallHistory = {
-            if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()){
-                onCallHistory()
+            if (activity == null) {
+                if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()){
+                    onCallHistory()
+                }
+            } else {
+                viewModel.adsController.loadAndShowInterstitialAd(
+                    onAdLoaded = { println("Ad interstitial loaded") },
+                    onAdFailedToLoad = { error -> println("Ad interstitial failed to load: $error") },
+                    activity = activity,
+                    onGotoNext = {
+                        if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()) {
+                            onCallHistory()
+                        }
+                    }
+                )
             }
+//            if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()){
+//                onCallHistory()
+//            }
         },
         onSettingsClick = onSettingsClick,
         onEvent = viewModel::onEvent,

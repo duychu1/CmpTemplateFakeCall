@@ -13,7 +13,7 @@ import com.common.control.model.PurchaseModel
 import com.common.control.utils.AppUtilsKt
 import com.google.android.datatransport.backend.cct.BuildConfig
 
-abstract class BaseApplicationKt : Application() {
+abstract class BaseApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -68,7 +68,7 @@ abstract class BaseApplicationKt : Application() {
 
     protected abstract fun onApplicationCreate()
     protected abstract fun hasAdjust(): Boolean
-    protected abstract val adjustAppToken: String
+    protected abstract val adjustAppToken: String?
     protected abstract fun hasAds(): Boolean
     protected abstract fun isShowDialogLoadingAd(): Boolean
     protected abstract fun isShowAdsTest(): Boolean

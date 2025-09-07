@@ -19,6 +19,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 @Preview
 fun App(
+    activity: Any? = null,
     appViewModel: AppViewModel = koinInject()
 ) {
     val languageInitialized by appViewModel.isLocalizationInitialized.collectAsState()
@@ -29,7 +30,7 @@ fun App(
                 .windowInsetsPadding(WindowInsets.navigationBars)
         ) {
             if (languageInitialized) {
-                NavGraph()
+                NavGraph(activity = activity)
             } else {
                 // Optional: Show a loading indicator while language is being initialized
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

@@ -1,62 +1,64 @@
-package com.common.control.dialog;
+package com.common.control.dialog
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Bundle;
-import android.widget.TextView;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Bundle
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.common.control.R
+import com.common.control.utils.BroadcastUtils
 
-import androidx.appcompat.app.AppCompatActivity;
+class PrepareLoadingAdsDialog : AppCompatActivity() {
 
-import com.common.control.R;
-import com.common.control.utils.BroadcastUtils;
-
-
-public class PrepareLoadingAdsDialog extends AppCompatActivity {
-
-    public static final String ACTION_DISMISS_DIALOG = "action_dismiss_dialog";
-    public static final String ACTION_CLEAR_TEXT_AD = "action_clear_text_ad";
-    public static final String ACTION_UPDATE_TEXT = "action_update_text";
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(ACTION_DISMISS_DIALOG)) {
-                finish();
-                return;
-            }
-            if (intent.getAction().equals(ACTION_CLEAR_TEXT_AD)) {
-                clearTextAd();
+    private val receiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            when (intent?.action) {
+                ACTION_DISMISS_DIALOG -> {
+                    finish()
+                    return
+                }
+                ACTION_CLEAR_TEXT_AD -> {
+                    clearTextAd()
+                }
             }
         }
-    };
-
-    public static void start(Context context) {
-        Intent starter = new Intent(context, PrepareLoadingAdsDialog.class);
-        context.startActivity(starter);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_prepair_loading_ads);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_DISMISS_DIALOG);
-        filter.addAction(ACTION_CLEAR_TEXT_AD);
-        BroadcastUtils.INSTANCE.registerReceiver(this, receiver, filter);
+    companion object {
+        const val ACTION_DISMISS_DIALOG = "action_dismiss_dialog"
+        const val ACTION_CLEAR_TEXT_AD = "action_clear_text_ad"
+        const val ACTION_UPDATE_TEXT = "action_update_text"
+
+        fun start(context: Context) {
+            val starter = Intent(context, PrepareLoadingAdsDialog::class.java)
+            context.startActivity(starter)
+        }
+
+        fun remove() {
+            // Empty implementation
+        }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(receiver);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.dialog_prepair_loading_ads)
+        
+        val filter = IntentFilter().apply {
+            addAction(ACTION_DISMISS_DIALOG)
+            addAction(ACTION_CLEAR_TEXT_AD)
+        }
+        BroadcastUtils.registerReceiver(this, receiver, filter)
     }
 
-    public void clearTextAd() {
-        TextView tvLoading = findViewById(R.id.loading_dialog_tv);
-        tvLoading.setText("Loading...");
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
     }
 
-    public static void remove() {
+    private fun clearTextAd() {
+        val tvLoading = findViewById<TextView>(R.id.loading_dialog_tv)
+        tvLoading.text = "Loading..."
     }
 }

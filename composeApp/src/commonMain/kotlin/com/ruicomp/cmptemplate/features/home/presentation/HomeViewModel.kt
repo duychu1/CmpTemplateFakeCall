@@ -2,6 +2,7 @@ package com.ruicomp.cmptemplate.features.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ruicomp.cmptemplate.core.ads.AdsController
 import com.ruicomp.cmptemplate.core.datastore.DataStoreKeys
 import com.ruicomp.cmptemplate.core.datastore.DataStorePreferences
 import com.ruicomp.cmptemplate.core.permissions.presentation.BasePermissionManager
@@ -16,7 +17,8 @@ class HomeViewModel(
     val basePermissionManager: BasePermissionManager,
     val phoneAccountPermissionManager: PhoneAccountPermissionManager,
     private val dataStorePreferences: DataStorePreferences,
-    private val callHistoryRepository: CallHistoryRepository
+    private val callHistoryRepository: CallHistoryRepository,
+    val adsController: AdsController
 ) : ViewModel() {
 
     companion object {
@@ -118,4 +120,5 @@ class HomeViewModel(
             callHistoryRepository.addCallToHistory(contactToCall)
         }
     }
+
 }

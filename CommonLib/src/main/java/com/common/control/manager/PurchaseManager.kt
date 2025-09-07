@@ -7,6 +7,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.android.billingclient.api.*
+import com.android.billingclient.api.PendingPurchasesParams
 import com.common.control.interfaces.PurchaseCallback
 import com.common.control.model.PurchaseModel
 import java.time.Period
@@ -71,6 +72,9 @@ class PurchaseManagerKt private constructor() {
         this.purchaseModelList = purchaseModelList
         billingClient = BillingClient.newBuilder(context)
             .setListener(purchasesUpdatedListener)
+            .enablePendingPurchases(
+                PendingPurchasesParams.newBuilder().enableOneTimeProducts().build()
+            )
             .build()
         connectGooglePlay()
     }

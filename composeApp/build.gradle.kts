@@ -3,6 +3,9 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -42,6 +45,7 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.androidx.datastore.preferences)
             implementation(project(":CommonLib"))
+            implementation(libs.google.playservices.ads)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -100,17 +104,35 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+
+        val formattedDate = SimpleDateFormat("MMM.dd.yyyy.hh.mm.ss", Locale.getDefault()).format(Date())
+        base.archivesName = "${namespace}_v${versionCode}_V${versionName}_${formattedDate}"
     }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("<folder>/filename.jks") //ex: signkey/release.jks
+            storePassword = "strongpassword"
+            keyAlias = "release"
+            keyPassword = "strongpassword"
+        }
+    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
     buildTypes {
-        getByName("release") {
+        debug {
             isMinifyEnabled = false
         }
+        release {
+            isMinifyEnabled = true
+            signingConfig = signingConfigs.getByName("release")
+        }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
