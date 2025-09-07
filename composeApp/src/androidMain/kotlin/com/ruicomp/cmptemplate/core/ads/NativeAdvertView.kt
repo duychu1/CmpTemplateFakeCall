@@ -51,7 +51,7 @@ fun NativeAdvertView(
                             context,
                             nativeAd,
                             frameLayoutContainer,
-                            AdmobManagerKt.NativeAdType.BIG
+                            AdmobManagerKt.NativeAdType.MEDIUM
                         )
                         Log.d("NativeAdvertView","Show NativeAd")
                     }

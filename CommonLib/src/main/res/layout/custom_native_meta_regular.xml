@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.gms.ads.nativead.NativeAdView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:background="@drawable/bg_card_ads"
     android:layout_height="wrap_content">
@@ -22,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@id/tvHead"
+            android:id="@+id/tvHead"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
@@ -108,7 +109,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                 android:id="@+id/ad_call_to_action"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_24sdp"
@@ -116,7 +117,6 @@
                 android:background="@drawable/bg_action_native_1"
                 android:backgroundTint="@color/color_action_ads"
                 android:fontFamily="@font/poppins_bold"
-                android:foreground="?attr/selectableItemBackground"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:text="Learn More"
