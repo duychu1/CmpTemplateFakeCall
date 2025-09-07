@@ -18,6 +18,7 @@ import com.ruicomp.cmptemplate.features.home.presentation.components.FeatureCard
 import cmptemplate.composeapp.generated.resources.*
 import com.ruicomp.cmptemplate.core.ads.BannerAdComposable
 import com.ruicomp.cmptemplate.core.ads.NativeAdComposable
+import com.ruicomp.cmptemplate.core.ads.NativeAdSize
 import com.ruicomp.cmptemplate.core.permissions.phoneaccount.PhoneAccountPermissionEvent
 import com.ruicomp.cmptemplate.core.permissions.presentation.components.CustomAlertDialog
 import com.ruicomp.cmptemplate.core.permissions.presentation.components.PermissionAware
@@ -135,6 +136,7 @@ fun HomeScreenContent(
         {
             NativeAdComposable(
                 adUnitIds = listOf("ca-app-pub-3940256099942544/2247696110"), // Test Ad ID
+                adSize = NativeAdSize.Medium,
                 modifier = Modifier.fillMaxWidth()
             )
 

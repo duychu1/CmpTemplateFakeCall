@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmptemplate.composeapp.generated.resources.*
+import com.ruicomp.cmptemplate.core.ads.BannerAdComposable
 import com.ruicomp.cmptemplate.core.models.Contact
 import com.ruicomp.cmptemplate.core.permissions.presentation.components.PermissionAware
 import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallBottomSheet
@@ -100,6 +101,12 @@ private fun SavedCallerScreenContent(
             FloatingActionButton(onClick = { onEvent(SavedCallerEvent.ShowAddContactDialog(true)) }) {
                 Icon(Icons.Default.Add, contentDescription = "Add Contact")
             }
+        },
+        bottomBar = {
+            BannerAdComposable(
+                adUnitIds = listOf("ca-app-pub-3940256099942544/6300978111"),
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     ) { paddingValues ->
         Column(

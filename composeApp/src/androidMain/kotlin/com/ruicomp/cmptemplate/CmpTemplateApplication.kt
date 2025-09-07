@@ -58,7 +58,7 @@ class CmpTemplateApplication(
     }
 
     override fun enableAdsResume(): Boolean {
-        return true
+        return false
     }
 
     override fun onActivityCreated(p0: Activity, p1: Bundle?) {

@@ -12,9 +12,17 @@ import com.common.control.interfaces.AdCallback
 import com.common.control.manager.AdmobManagerKt
 import com.google.android.gms.ads.nativead.NativeAd
 
+// Assume NativeAdSize is an enum defined in your project, for example:
+// enum class NativeAdSize {
+//     MEDIUM,
+//     SMALL // Add other sizes as needed
+// }
+// Ensure it's imported if it's in a different file/package.
+
 @Composable
 fun NativeAdvertView(
     adUnitIds: List<String>,
+    adSize: NativeAdSize, // Input parameter
     modifier: Modifier = Modifier,
 ) {
     // Restore adUnitId as an internal remembered value
@@ -29,6 +37,14 @@ fun NativeAdvertView(
     if (activity == null) {
         println("NativeAdvertView: Activity is null, cannot display ad.")
         return
+    }
+
+    // Convert NativeAdSize to AdmobManagerKt.NativeAdType
+    val admobNativeAdType = when (adSize) {
+        NativeAdSize.Small -> AdmobManagerKt.NativeAdType.SMALL
+        NativeAdSize.Medium -> AdmobManagerKt.NativeAdType.MEDIUM
+        NativeAdSize.Large -> AdmobManagerKt.NativeAdType.BIG
+        NativeAdSize.Fullscreen -> AdmobManagerKt.NativeAdType.FULLSCREEN
     }
 
     AndroidView(
@@ -51,7 +67,7 @@ fun NativeAdvertView(
                             context,
                             nativeAd,
                             frameLayoutContainer,
-                            AdmobManagerKt.NativeAdType.MEDIUM
+                            admobNativeAdType
                         )
                         Log.d("NativeAdvertView","Show NativeAd")
                     }

@@ -51,6 +51,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
 import cmptemplate.composeapp.generated.resources.*
+import com.ruicomp.cmptemplate.core.ads.NativeAdComposable
+import com.ruicomp.cmptemplate.core.ads.NativeAdSize
 import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallBottomSheet
 import com.ruicomp.cmptemplate.features.call_history.presentation.components.CallHistoryItem
 import org.jetbrains.compose.resources.stringResource
@@ -95,6 +97,13 @@ private fun CallHistoryScreenContent(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
+            )
+        },
+        bottomBar = {
+            NativeAdComposable(
+                adUnitIds = listOf("ca-app-pub-3940256099942544/2247696110"),
+                adSize = NativeAdSize.Medium,
+                modifier = Modifier.fillMaxWidth()
             )
         }
     ) { paddingValues ->

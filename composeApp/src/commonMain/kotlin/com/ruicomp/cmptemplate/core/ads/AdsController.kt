@@ -22,5 +22,11 @@ expect fun BannerAdComposable(
 @Composable
 expect fun NativeAdComposable(
     adUnitIds: List<String>,
+    adSize: NativeAdSize,
     modifier: Modifier
 )
+
+enum class NativeAdSize{
+    Small, Medium, Large, Fullscreen
+}
+

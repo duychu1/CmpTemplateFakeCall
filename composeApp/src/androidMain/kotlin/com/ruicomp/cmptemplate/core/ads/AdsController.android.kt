@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.common.control.interfaces.AdCallback
 import com.common.control.manager.AdmobManagerKt
+import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 
@@ -84,7 +85,8 @@ actual fun BannerAdComposable(
 @Composable
 actual fun NativeAdComposable(
     adUnitIds: List<String>,
+    adSize: NativeAdSize,
     modifier: Modifier
 ) {
-    NativeAdvertView(adUnitIds, modifier)
+    NativeAdvertView(adUnitIds, adSize, modifier)
 }
