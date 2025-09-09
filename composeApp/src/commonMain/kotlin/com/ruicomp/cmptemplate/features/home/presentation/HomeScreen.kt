@@ -164,14 +164,14 @@ fun HomeScreenContent(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     FeatureCard(
-                        stringResource(Res.string.feature_call_now),
-                        Icons.Default.Call,
-                        onClick = { onEvent(HomeEvent.CallNowClicked) }
-                    )
-                    FeatureCard(
                         stringResource(Res.string.feature_schedule_call),
                         Icons.Default.Schedule,
                         onScheduleCall
+                    )
+                    FeatureCard(
+                        stringResource(Res.string.feature_call_now),
+                        Icons.Default.Call,
+                        onClick = { onEvent(HomeEvent.CallNowClicked) }
                     )
                 }
 

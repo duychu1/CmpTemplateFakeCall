@@ -126,7 +126,8 @@ private fun SavedCallerScreenContent(
                     item {
                         Button(
                             onClick = { onEvent(SavedCallerEvent.ImportContactsFromSystemClicked) },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = MaterialTheme.shapes.large
                         ) {
                             Icon(Icons.Default.ContactPhone, contentDescription = "Import Contacts")
                             Spacer(modifier = Modifier.width(8.dp))
