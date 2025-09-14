@@ -54,25 +54,27 @@ fun HomeScreen(
             }
         },
         onCallHistory = {
-            if (activity == null) {
-                if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()){
-                    onCallHistory()
-                }
-            } else {
-                viewModel.adsController.loadAndShowInterstitialAd(
-                    onAdLoaded = { println("Ad interstitial loaded") },
-                    onAdFailedToLoad = { error -> println("Ad interstitial failed to load: $error") },
-                    activity = activity,
-                    onGotoNext = {
-                        if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()) {
-                            onCallHistory()
-                        }
-                    }
-                )
-            }
-//            if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()){
-//                onCallHistory()
+            //test inter ads
+//            if (activity == null) {
+//                if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()){
+//                    onCallHistory()
+//                }
+//            } else {
+//                viewModel.adsController.loadAndShowInterstitialAd(
+//                    onAdLoaded = { println("Ad interstitial loaded") },
+//                    onAdFailedToLoad = { error -> println("Ad interstitial failed to load: $error") },
+//                    activity = activity,
+//                    onGotoNext = {
+//                        if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()) {
+//                            onCallHistory()
+//                        }
+//                    }
+//                )
 //            }
+
+            if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()){
+                onCallHistory()
+            }
         },
         onSettingsClick = onSettingsClick,
         onEvent = viewModel::onEvent,
