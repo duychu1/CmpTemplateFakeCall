@@ -65,10 +65,13 @@ fun ContactInformationSection(
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = onPickContact,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.align(Alignment.CenterHorizontally),
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
             ) {
-                Text(stringResource(Res.string.pick_from_contacts_button))
+                Text(
+                    text = stringResource(Res.string.pick_from_contacts_button),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
             }
         }
     }

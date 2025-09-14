@@ -22,7 +22,7 @@ fun ContactAvatar(
     name: String,
     size: Int = 40,
     fontSize: TextUnit = TextUnit.Unspecified,
-    backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    backgroundColor: Color = MaterialTheme.colorScheme.inversePrimary,
     textColor: Color = MaterialTheme.colorScheme.onPrimaryContainer
 ) {
     Box(
