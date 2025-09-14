@@ -1,6 +1,10 @@
 package com.ruicomp.cmptemplate.features.home.presentation
 
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -12,6 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ruicomp.cmptemplate.features.home.presentation.components.FeatureCard
 import cmptemplate.composeapp.generated.resources.*
+import com.ruicomp.cmptemplate.core.ads.BannerAdComposable
+import com.ruicomp.cmptemplate.core.ads.NativeAdComposable
+import com.ruicomp.cmptemplate.core.ads.NativeAdSize
 import com.ruicomp.cmptemplate.core.permissions.phoneaccount.PhoneAccountPermissionEvent
 import com.ruicomp.cmptemplate.core.permissions.presentation.components.CustomAlertDialog
 import com.ruicomp.cmptemplate.core.permissions.presentation.components.PermissionAware
@@ -23,6 +30,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeScreen(
+    activity: Any? = null,
     onCallNow: () -> Unit,
     onScheduleCall: () -> Unit,
     onSavedCaller: () -> Unit,
@@ -46,9 +54,25 @@ fun HomeScreen(
             }
         },
         onCallHistory = {
-            if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()){
-                onCallHistory()
+            if (activity == null) {
+                if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()){
+                    onCallHistory()
+                }
+            } else {
+                viewModel.adsController.loadAndShowInterstitialAd(
+                    onAdLoaded = { println("Ad interstitial loaded") },
+                    onAdFailedToLoad = { error -> println("Ad interstitial failed to load: $error") },
+                    activity = activity,
+                    onGotoNext = {
+                        if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()) {
+                            onCallHistory()
+                        }
+                    }
+                )
             }
+//            if (!viewModel.phoneAccountPermissionManager.checkAndShowRational()){
+//                onCallHistory()
+//            }
         },
         onSettingsClick = onSettingsClick,
         onEvent = viewModel::onEvent,
@@ -108,50 +132,73 @@ fun HomeScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            HomeContactItem(
-                contact = state.contact,
-                onEdit = { onEvent(HomeEvent.ShowTmpContactDialog(true)) },
-                onCall = { onEvent(HomeEvent.CallNowClicked) },
-                onDelaySelected = { delay -> onEvent(HomeEvent.DelayItemSelected(delay))},
-                selectedDelay = state.selectedDelaySeconds,
+        )
+        {
+            NativeAdComposable(
+                adUnitIds = listOf("ca-app-pub-3940256099942544/2247696110"), // Test Ad ID
+                adSize = NativeAdSize.Medium,
+                modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(16.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                FeatureCard(
-                    stringResource(Res.string.feature_call_now),
-                    Icons.Default.Call,
-                    onClick = { onEvent(HomeEvent.CallNowClicked) }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            )
+            {
+
+                HomeContactItem(
+                    contact = state.contact,
+                    onEdit = { onEvent(HomeEvent.ShowTmpContactDialog(true)) },
+                    onCall = { onEvent(HomeEvent.CallNowClicked) },
+                    onDelaySelected = { delay -> onEvent(HomeEvent.DelayItemSelected(delay)) },
+                    selectedDelay = state.selectedDelaySeconds,
                 )
-                FeatureCard(
-                    stringResource(Res.string.feature_schedule_call),
-                    Icons.Default.Schedule,
-                    onScheduleCall
-                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    FeatureCard(
+                        stringResource(Res.string.feature_schedule_call),
+                        Icons.Default.Schedule,
+                        onScheduleCall
+                    )
+                    FeatureCard(
+                        stringResource(Res.string.feature_call_now),
+                        Icons.Default.Call,
+                        onClick = { onEvent(HomeEvent.CallNowClicked) }
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    FeatureCard(
+                        stringResource(Res.string.feature_saved_caller),
+                        Icons.Default.People,
+                        onSavedCaller
+                    )
+                    FeatureCard(
+                        stringResource(Res.string.feature_call_history),
+                        Icons.Default.History,
+                        onCallHistory
+                    )
+                }
+
+
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                FeatureCard(
-                    stringResource(Res.string.feature_saved_caller),
-                    Icons.Default.People,
-                    onSavedCaller
-                )
-                FeatureCard(
-                    stringResource(Res.string.feature_call_history),
-                    Icons.Default.History,
-                    onCallHistory
-                )
-            }
+            BannerAdComposable(
+                adUnitIds = listOf("ca-app-pub-3940256099942544/6300978111"), // Test Ad ID
+                modifier = Modifier.fillMaxWidth()
+            )
         }
 
         if (state.showInputContactDialog) {

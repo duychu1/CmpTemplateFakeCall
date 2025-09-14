@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                 onDispose {} // No cleanup needed
             }
             MaterialTheme {
-                App()
+                App(activity = this)
             }
         }
     }

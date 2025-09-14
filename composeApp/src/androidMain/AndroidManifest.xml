@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools">
 
     <uses-feature android:name="android.hardware.telecom" android:required="true" />
     <uses-feature android:name="android.hardware.telephony" android:required="false" />
@@ -17,6 +18,7 @@
         android:label="CmpTemplate"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        tool:replace="android:label"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
         <service
             android:name=".features.fakecall.FakeCallConnectionService"

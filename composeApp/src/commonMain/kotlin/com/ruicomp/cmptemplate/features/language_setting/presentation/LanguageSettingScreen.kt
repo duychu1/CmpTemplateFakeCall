@@ -20,6 +20,8 @@ import androidx.compose.ui.Modifier
 import cmptemplate.composeapp.generated.resources.Res
 import cmptemplate.composeapp.generated.resources.back_button_description
 import cmptemplate.composeapp.generated.resources.language_setting_title
+import com.ruicomp.cmptemplate.core.ads.NativeAdComposable
+import com.ruicomp.cmptemplate.core.ads.NativeAdSize
 import com.ruicomp.cmptemplate.features.language_setting.data.provider.LanguageProvider
 import com.ruicomp.cmptemplate.features.language_setting.domain.models.Language
 import com.ruicomp.cmptemplate.features.language_setting.presentation.components.LanguageItem
@@ -70,6 +72,13 @@ fun LanguageSettingScreenContent(
                         )
                     }
                 }
+            )
+        },
+        bottomBar = {
+            NativeAdComposable(
+                adUnitIds = listOf("ca-app-pub-3940256099942544/2247696110"),
+                adSize = NativeAdSize.Large,
+                modifier = Modifier.fillMaxWidth()
             )
         }
     ) { paddingValues ->

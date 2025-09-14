@@ -15,11 +15,12 @@ import com.ruicomp.cmptemplate.features.language_setting.presentation.LanguageSe
 import com.ruicomp.cmptemplate.features.settings.presentation.webview.WebViewScreen
 
 @Composable
-fun NavGraph() {
+fun NavGraph(activity: Any? = null) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = HomeRoute) {
         composable<HomeRoute> {
             HomeScreen(
+                activity = activity,
                 onCallNow = { },
                 onScheduleCall = { navController.navigate(ScheduleCallRoute) },
                 onSavedCaller = { navController.navigate(SavedCallerRoute) },

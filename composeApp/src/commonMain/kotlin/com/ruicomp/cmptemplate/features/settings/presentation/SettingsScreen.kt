@@ -1,6 +1,8 @@
 package com.ruicomp.cmptemplate.features.settings.presentation
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -15,6 +17,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ruicomp.cmptemplate.features.settings.presentation.components.SettingsGroup
 import com.ruicomp.cmptemplate.features.settings.presentation.components.SettingsItem
 import cmptemplate.composeapp.generated.resources.*
+import com.ruicomp.cmptemplate.core.ads.NativeAdComposable
+import com.ruicomp.cmptemplate.core.ads.NativeAdSize
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.resources.stringResource
 
@@ -65,6 +69,13 @@ private fun SettingsScreenContent(
                     }
                 }
             )
+        },
+        bottomBar = {
+            NativeAdComposable(
+                adUnitIds = listOf("ca-app-pub-3940256099942544/2247696110"),
+                adSize = NativeAdSize.Large,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     ) { paddingValues ->
         Column(
@@ -72,6 +83,7 @@ private fun SettingsScreenContent(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(vertical = 8.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             // Language Setting
             Surface(

@@ -33,6 +33,7 @@ import com.ruicomp.cmptemplate.core.models.Contact
 import kotlinx.datetime.*
 import org.koin.compose.viewmodel.koinViewModel
 import cmptemplate.composeapp.generated.resources.*
+import com.ruicomp.cmptemplate.core.ads.BannerAdComposable
 import com.ruicomp.cmptemplate.core.ui.components.ContactInputFields
 import com.ruicomp.cmptemplate.core.ui.components.ContactItem
 import com.ruicomp.cmptemplate.core.ui.components.TimePickerDialog
@@ -101,24 +102,30 @@ private fun ScheduleCallScreenContent(
             )
         },
         bottomBar = {
-            Column(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp)
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp)
 //                    .background(MaterialTheme.colorScheme.errorContainer)
-            ) {
-                AnimatedErrorText(
-                    errorMessage = uiState.error,
-                    onDismiss = {
-                        onEvent(ScheduleCallEvent.ClearError) // Clear error in ViewModel when dismissed
-                    }
-                )
-                Button(
-                    onClick = { onEvent(ScheduleCallEvent.Schedule("${uiState.formattedDate} at ${uiState.formattedTime}")) },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    enabled = isFormValid && !uiState.isScheduling
                 ) {
-                    Text(stringResource(Res.string.schedule_call_button))
+                    AnimatedErrorText(
+                        errorMessage = uiState.error,
+                        onDismiss = {
+                            onEvent(ScheduleCallEvent.ClearError) // Clear error in ViewModel when dismissed
+                        }
+                    )
+                    Button(
+                        onClick = { onEvent(ScheduleCallEvent.Schedule("${uiState.formattedDate} at ${uiState.formattedTime}")) },
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        enabled = isFormValid && !uiState.isScheduling
+                    ) {
+                        Text(stringResource(Res.string.schedule_call_button))
+                    }
                 }
+                BannerAdComposable(
+                    adUnitIds = listOf("ca-app-pub-3940256099942544/6300978111"),
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     ) { paddingValues ->
