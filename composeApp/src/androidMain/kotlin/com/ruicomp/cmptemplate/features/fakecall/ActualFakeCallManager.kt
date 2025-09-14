@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.annotation.RequiresPermission
 import com.ruicomp.cmptemplate.IFakeCallManager
 
@@ -46,6 +47,10 @@ class ActualFakeCallManager(private val context: Context) : IFakeCallManager {
     }
 
     override fun triggerFakeCall(callerName: String, callerNumber: String, callerAvatarUrl: String?, delayMillis: Long) {
+        if (!isPhoneAccountEnable()) {
+            Toast.makeText(context, "Please enable the phone account first.", Toast.LENGTH_SHORT).show()
+        }
+
         // Send the app to the background
         val homeIntent = Intent(Intent.ACTION_MAIN)
         homeIntent.addCategory(Intent.CATEGORY_HOME)
