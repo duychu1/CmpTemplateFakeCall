@@ -21,6 +21,7 @@ import com.ruicomp.cmptemplate.core.ads.NativeAdComposable
 import com.ruicomp.cmptemplate.core.ads.NativeAdSize
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.resources.stringResource
+import com.ruicomp.cmptemplate.BuildKonfig
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,7 +73,7 @@ private fun SettingsScreenContent(
         },
         bottomBar = {
             NativeAdComposable(
-                adUnitIds = listOf("ca-app-pub-3940256099942544/2247696110"),
+                adUnitIds = listOf(BuildKonfig.ADMOB_NATIVE_ID),
                 adSize = NativeAdSize.Large,
                 modifier = Modifier.fillMaxWidth()
             )

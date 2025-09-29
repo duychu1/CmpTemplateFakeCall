@@ -47,6 +47,7 @@ import com.ruicomp.cmptemplate.features.schedule.presentation.components.SelectD
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import com.ruicomp.cmptemplate.BuildKonfig
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -123,7 +124,7 @@ private fun ScheduleCallScreenContent(
                     }
                 }
                 BannerAdComposable(
-                    adUnitIds = listOf("ca-app-pub-3940256099942544/6300978111"),
+                    adUnitIds = listOf(BuildKonfig.ADMOB_BANNER_ID),
                     modifier = Modifier.fillMaxWidth()
                 )
             }

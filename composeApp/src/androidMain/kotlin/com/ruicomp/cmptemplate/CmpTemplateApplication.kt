@@ -13,7 +13,7 @@ import org.koin.android.ext.koin.androidLogger
 
 class CmpTemplateApplication(
     override val adjustAppToken: String? = null,
-    override val openAppAdId: String= "ca-app-pub-3940256099942544/9257395921",
+    override val openAppAdId: String= BuildKonfig.ADMOB_OPEN_AD_ID,
     override val policyUrl: String = "",
     override val subjectSupport: String = "",
     override val emailSupport: String  = "",

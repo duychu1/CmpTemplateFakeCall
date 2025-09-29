@@ -28,6 +28,7 @@ import com.ruicomp.cmptemplate.features.saved_caller.presentation.components.Inp
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import com.ruicomp.cmptemplate.BuildKonfig
 
 @Composable
 fun HomeScreen(
@@ -139,7 +140,7 @@ fun HomeScreenContent(
         )
         {
             NativeAdComposable(
-                adUnitIds = listOf("ca-app-pub-3940256099942544/2247696110"), // Test Ad ID
+                adUnitIds = listOf(BuildKonfig.ADMOB_NATIVE_ID), 
                 adSize = NativeAdSize.Medium,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -201,7 +202,7 @@ fun HomeScreenContent(
             }
 
             BannerAdComposable(
-                adUnitIds = listOf("ca-app-pub-3940256099942544/6300978111"), // Test Ad ID
+                adUnitIds = listOf(BuildKonfig.ADMOB_BANNER_ID), 
                 modifier = Modifier.fillMaxWidth()
             )
         }

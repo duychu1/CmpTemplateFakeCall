@@ -14,6 +14,7 @@ import com.common.control.manager.AdmobManagerKt
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.ruicomp.cmptemplate.BuildKonfig
 
 actual class AdsController(private val context: Context) {
 
@@ -26,7 +27,7 @@ actual class AdsController(private val context: Context) {
 
         AdmobManagerKt.Companion.getInstance().loadAlternateInter(
             context,
-            listOf("ca-app-pub-3940256099942544/1033173712"),
+            listOf(BuildKonfig.ADMOB_INTERSTITIAL_ID),
             object : AdCallback() {
                 override fun onAdFailedToLoad(i: LoadAdError) {
                     super.onAdFailedToLoad(i)

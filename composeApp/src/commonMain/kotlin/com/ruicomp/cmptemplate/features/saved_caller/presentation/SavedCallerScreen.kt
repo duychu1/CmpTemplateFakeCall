@@ -24,6 +24,7 @@ import com.ruicomp.cmptemplate.features.saved_caller.presentation.components.Sav
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import com.ruicomp.cmptemplate.BuildKonfig
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -104,7 +105,7 @@ private fun SavedCallerScreenContent(
         },
         bottomBar = {
             BannerAdComposable(
-                adUnitIds = listOf("ca-app-pub-3940256099942544/6300978111"),
+                adUnitIds = listOf(BuildKonfig.ADMOB_BANNER_ID),
                 modifier = Modifier.fillMaxWidth()
             )
         }

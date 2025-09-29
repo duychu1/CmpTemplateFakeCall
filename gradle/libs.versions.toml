@@ -26,6 +26,7 @@ gitLiveFirebase = "2.3.0"
 googleServicesPlugin = "4.4.1"
 desugarJdkLibs = "2.1.5" # Added this line
 firebaseCrashlyticsPlugin = "3.0.4" # Added Crashlytics plugin version
+buildkonfig = "0.17.1"
 #commonlib
 material = "1.13.0" # Or your current version
 androidxRecyclerView = "1.4.0"
@@ -120,3 +121,5 @@ kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", versio
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 googleServices = { id = "com.google.gms.google-services", version.ref = "googleServicesPlugin" }
 firebase-crashlytics-gradle = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" } # Added Crashlytics plugin
+buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
+

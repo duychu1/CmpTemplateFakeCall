@@ -29,7 +29,7 @@ import com.ruicomp.cmptemplate.features.language_setting.presentation.components
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.compose.viewmodel.koinViewModel
+import com.ruicomp.cmptemplate.BuildKonfig
 
 @Composable
 fun LanguageSettingScreen(
@@ -76,7 +76,7 @@ fun LanguageSettingScreenContent(
         },
         bottomBar = {
             NativeAdComposable(
-                adUnitIds = listOf("ca-app-pub-3940256099942544/2247696110"),
+                adUnitIds = listOf(BuildKonfig.ADMOB_NATIVE_ID),
                 adSize = NativeAdSize.Large,
                 modifier = Modifier.fillMaxWidth()
             )

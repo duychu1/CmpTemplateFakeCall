@@ -57,6 +57,7 @@ import com.ruicomp.cmptemplate.core.ui.prepare_call.PrepareCallBottomSheet
 import com.ruicomp.cmptemplate.features.call_history.presentation.components.CallHistoryItem
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import com.ruicomp.cmptemplate.BuildKonfig
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -101,7 +102,7 @@ private fun CallHistoryScreenContent(
         },
         bottomBar = {
             NativeAdComposable(
-                adUnitIds = listOf("ca-app-pub-3940256099942544/2247696110"),
+                adUnitIds = listOf(BuildKonfig.ADMOB_NATIVE_ID),
                 adSize = NativeAdSize.Medium,
                 modifier = Modifier.fillMaxWidth()
             )

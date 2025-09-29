@@ -1,5 +1,5 @@
 
-
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -16,11 +16,11 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.googleServices) // Added Google Services plugin
     alias(libs.plugins.firebase.crashlytics.gradle) // Added Crashlytics plugin
+    alias(libs.plugins.buildkonfig)
 }
 
 kotlin {
-    androidTarget {
-    }
+    androidTarget()
 
     listOf(
         iosX64(),
@@ -105,6 +105,8 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        manifestPlaceholders["ADMOB_APP_ID"] = "ca-app-pub-3940256099942544~3347511713"
+
         val formattedDate = SimpleDateFormat("MMM.dd.yyyy.hh.mm.ss", Locale.getDefault()).format(Date())
         base.archivesName = "${namespace}_v${versionCode}_V${versionName}_${formattedDate}"
     }
@@ -166,3 +168,28 @@ compose.desktop {
     }
 }
 
+buildkonfig {
+    packageName = "com.ruicomp.cmptemplate"
+    defaultConfigs {
+        buildConfigField(Type.STRING, "BASE_URL", "\"https://api.github.com/\"")
+    }
+
+    targetConfigs {
+        create("android") {
+            buildConfigField(Type.STRING, "ADMOB_APP_ID", "\"ca-app-pub-3940256099942544~3347511713\"")
+            buildConfigField(Type.STRING, "ADMOB_BANNER_ID", "\"ca-app-pub-3940256099942544/6300978111\"")
+            buildConfigField(Type.STRING, "ADMOB_INTERSTITIAL_ID", "\"ca-app-pub-3940256099942544/1033173712\"")
+            buildConfigField(Type.STRING, "ADMOB_REWARDED_ID", "\"ca-app-pub-3940256099942544/5224354917\"")
+            buildConfigField(Type.STRING, "ADMOB_NATIVE_ID", "\"ca-app-pub-3940256099942544/2247696110\"")
+            buildConfigField(Type.STRING, "ADMOB_OPEN_AD_ID", "\"ca-app-pub-3940256099942544/9257395921\"")
+        }
+        create("ios") {
+            buildConfigField(Type.STRING, "ADMOB_APP_ID", "\"ca-app-pub-3940256099942544~1458002511\"")
+            buildConfigField(Type.STRING, "ADMOB_BANNER_ID", "\"ca-app-pub-3940256099942544/2934735716\"")
+            buildConfigField(Type.STRING, "ADMOB_INTERSTITIAL_ID", "\"ca-app-pub-3940256099942544/4411468910\"")
+            buildConfigField(Type.STRING, "ADMOB_REWARDED_ID", "\"ca-app-pub-3940256099942544/1712485313\"")
+            buildConfigField(Type.STRING, "ADMOB_NATIVE_ID", "\"ca-app-pub-3940256099942544/3986624511\"")
+            buildConfigField(Type.STRING, "ADMOB_OPEN_AD_ID", "\"ca-app-pub-3940256099942544/5575463023\"")
+        }
+    }
+}
