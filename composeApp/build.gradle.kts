@@ -171,72 +171,54 @@ compose.desktop {
 buildkonfig {
     packageName = "com.ruicomp.cmptemplate"
     defaultConfigs {
-        buildConfigField(Type.STRING, "BASE_URL", "\"https://api.github.com/\"")
+
+        val addConstant: (constantName: String, constantValue: String) -> Unit = { constantName, constantValue ->
+            buildConfigField(Type.STRING, constantName, "\"$constantValue\"")
+        }
+
+        addConstant("banner_home_high", "ca-app-pub-3940256099942544/6300978111")
+        addConstant("banner_home", "ca-app-pub-3940256099942544/6300978111")
+        addConstant("native_home_high", "ca-app-pub-3940256099942544/2247696110")
+        addConstant("native_home", "ca-app-pub-3940256099942544/2247696110")
+        addConstant("native_history_high", "ca-app-pub-3940256099942544/2247696110")
+        addConstant("native_history", "ca-app-pub-3940256099942544/2247696110")
+        addConstant("native_setting_high", "ca-app-pub-3940256099942544/2247696110")
+        addConstant("native_setting", "ca-app-pub-3940256099942544/2247696110")
+        addConstant("banner_schedule_high", "ca-app-pub-3940256099942544/6300978111")
+        addConstant("banner_schedule", "ca-app-pub-3940256099942544/6300978111")
+        addConstant("banner_saved_caller_high", "ca-app-pub-3940256099942544/6300978111")
+        addConstant("banner_saved_caller", "ca-app-pub-3940256099942544/6300978111")
+        addConstant("native_language_high", "ca-app-pub-3940256099942544/2247696110")
+        addConstant("native_language", "ca-app-pub-3940256099942544/2247696110")
+        addConstant("interstitial_home_high", "ca-app-pub-3940256099942544/1033173712")
+        addConstant("interstitial_home", "ca-app-pub-3940256099942544/1033173712")
+        addConstant("open_ad_id", "ca-app-pub-3940256099942544/9257395921")
     }
 
     targetConfigs {
-        create("common") {
-            buildConfigField(Type.STRING, "ADMOB_APP_ID", "\"\"") // Default value
-            buildConfigField(Type.STRING, "banner_home_high", "\"\"")
-            buildConfigField(Type.STRING, "banner_home", "\"\"")
-            buildConfigField(Type.STRING, "native_home_high", "\"\"")
-            buildConfigField(Type.STRING, "native_home", "\"\"")
-            buildConfigField(Type.STRING, "native_history_high", "\"\"")
-            buildConfigField(Type.STRING, "native_history", "\"\"")
-            buildConfigField(Type.STRING, "native_setting_high", "\"\"")
-            buildConfigField(Type.STRING, "native_setting", "\"\"")
-            buildConfigField(Type.STRING, "banner_schedule_high", "\"\"")
-            buildConfigField(Type.STRING, "banner_schedule", "\"\"")
-            buildConfigField(Type.STRING, "banner_saved_caller_high", "\"\"")
-            buildConfigField(Type.STRING, "banner_saved_caller", "\"\"")
-            buildConfigField(Type.STRING, "native_language_high", "\"\"")
-            buildConfigField(Type.STRING, "native_language", "\"\"")
-            buildConfigField(Type.STRING, "interstitial_home_high", "\"\"")
-            buildConfigField(Type.STRING, "interstitial_home", "\"\"")
-            buildConfigField(Type.STRING, "open_ad_id", "\"\"")
-        }
-
-        create("android") {
-            buildConfigField(Type.STRING, "ADMOB_APP_ID", "\"ca-app-pub-3940256099942544~3347511713\"")
-
-            buildConfigField(Type.STRING, "banner_home_high", "\"ca-app-pub-3940256099942544/6300978111\"")
-            buildConfigField(Type.STRING, "banner_home", "\"ca-app-pub-3940256099942544/6300978111\"")
-            buildConfigField(Type.STRING, "native_home_high", "\"ca-app-pub-3940256099942544/2247696110\"")
-            buildConfigField(Type.STRING, "native_home", "\"ca-app-pub-3940256099942544/2247696110\"")
-            buildConfigField(Type.STRING, "native_history_high", "\"ca-app-pub-3940256099942544/2247696110\"")
-            buildConfigField(Type.STRING, "native_history", "\"ca-app-pub-3940256099942544/2247696110\"")
-            buildConfigField(Type.STRING, "native_setting_high", "\"ca-app-pub-3940256099942544/2247696110\"")
-            buildConfigField(Type.STRING, "native_setting", "\"ca-app-pub-3940256099942544/2247696110\"")
-            buildConfigField(Type.STRING, "banner_schedule_high", "\"ca-app-pub-3940256099942544/6300978111\"")
-            buildConfigField(Type.STRING, "banner_schedule", "\"ca-app-pub-3940256099942544/6300978111\"")
-            buildConfigField(Type.STRING, "banner_saved_caller_high", "\"ca-app-pub-3940256099942544/6300978111\"")
-            buildConfigField(Type.STRING, "banner_saved_caller", "\"ca-app-pub-3940256099942544/6300978111\"")
-            buildConfigField(Type.STRING, "native_language_high", "\"ca-app-pub-3940256099942544/2247696110\"")
-            buildConfigField(Type.STRING, "native_language", "\"ca-app-pub-3940256099942544/2247696110\"")
-            buildConfigField(Type.STRING, "interstitial_home_high", "\"ca-app-pub-3940256099942544/1033173712\"")
-            buildConfigField(Type.STRING, "interstitial_home", "\"ca-app-pub-3940256099942544/1033173712\"")
-            buildConfigField(Type.STRING, "open_ad_id", "\"ca-app-pub-3940256099942544/9257395921\"")
-        }
+        create("android") {}
         create("ios") {
-            buildConfigField(Type.STRING, "ADMOB_APP_ID", "\"ca-app-pub-3940256099942544~1458002511\"")
+            val addConstant: (constantName: String, constantValue: String) -> Unit = { constantName, constantValue ->
+                buildConfigField(Type.STRING, constantName, "\"$constantValue\"")
+            }
 
-            buildConfigField(Type.STRING, "banner_home_high", "\"ca-app-pub-3940256099942544/2934735716\"")
-            buildConfigField(Type.STRING, "banner_home", "\"ca-app-pub-3940256099942544/2934735716\"")
-            buildConfigField(Type.STRING, "native_home_high", "\"ca-app-pub-3940256099942544/3986624511\"")
-            buildConfigField(Type.STRING, "native_home", "\"ca-app-pub-3940256099942544/3986624511\"")
-            buildConfigField(Type.STRING, "native_history_high", "\"ca-app-pub-3940256099942544/3986624511\"")
-            buildConfigField(Type.STRING, "native_history", "\"ca-app-pub-3940256099942544/3986624511\"")
-            buildConfigField(Type.STRING, "native_setting_high", "\"ca-app-pub-3940256099942544/3986624511\"")
-            buildConfigField(Type.STRING, "native_setting", "\"ca-app-pub-3940256099942544/3986624511\"")
-            buildConfigField(Type.STRING, "banner_schedule_high", "\"ca-app-pub-3940256099942544/2934735716\"")
-            buildConfigField(Type.STRING, "banner_schedule", "\"ca-app-pub-3940256099942544/2934735716\"")
-            buildConfigField(Type.STRING, "banner_saved_caller_high", "\"ca-app-pub-3940256099942544/2934735716\"")
-            buildConfigField(Type.STRING, "banner_saved_caller", "\"ca-app-pub-3940256099942544/2934735716\"")
-            buildConfigField(Type.STRING, "native_language_high", "\"ca-app-pub-3940256099942544/3986624511\"")
-            buildConfigField(Type.STRING, "native_language", "\"ca-app-pub-3940256099942544/3986624511\"")
-            buildConfigField(Type.STRING, "interstitial_home_high", "\"ca-app-pub-3940256099942544/4411468910\"")
-            buildConfigField(Type.STRING, "interstitial_home", "\"ca-app-pub-3940256099942544/4411468910\"")
-            buildConfigField(Type.STRING, "open_ad_id", "\"ca-app-pub-3940256099942544/5575463023\"")
+            addConstant("banner_home_high", "ca-app-pub-3940256099942544/2934735716")
+            addConstant("banner_home", "ca-app-pub-3940256099942544/2934735716")
+            addConstant("native_home_high", "ca-app-pub-3940256099942544/3986624511")
+            addConstant("native_home", "ca-app-pub-3940256099942544/3986624511")
+            addConstant("native_history_high", "ca-app-pub-3940256099942544/3986624511")
+            addConstant("native_history", "ca-app-pub-3940256099942544/3986624511")
+            addConstant("native_setting_high", "ca-app-pub-3940256099942544/3986624511")
+            addConstant("native_setting", "ca-app-pub-3940256099942544/3986624511")
+            addConstant("banner_schedule_high", "ca-app-pub-3940256099942544/2934735716")
+            addConstant("banner_schedule", "ca-app-pub-3940256099942544/2934735716")
+            addConstant("banner_saved_caller_high", "ca-app-pub-3940256099942544/2934735716")
+            addConstant("banner_saved_caller", "ca-app-pub-3940256099942544/2934735716")
+            addConstant("native_language_high", "ca-app-pub-3940256099942544/3986624511")
+            addConstant("native_language", "ca-app-pub-3940256099942544/3986624511")
+            addConstant("interstitial_home_high", "ca-app-pub-3940256099942544/4411468910")
+            addConstant("interstitial_home", "ca-app-pub-3940256099942544/4411468910")
+            addConstant("open_ad_id", "ca-app-pub-3940256099942544/5575463023")
         }
     }
 }
