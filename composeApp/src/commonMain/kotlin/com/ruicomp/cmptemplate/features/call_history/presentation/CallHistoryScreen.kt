@@ -102,7 +102,7 @@ private fun CallHistoryScreenContent(
         },
         bottomBar = {
             NativeAdComposable(
-                adUnitIds = listOf(BuildKonfig.ADMOB_NATIVE_ID),
+                adUnitIds = listOf(BuildKonfig.native_history_high, BuildKonfig.native_history),
                 adSize = NativeAdSize.Medium,
                 modifier = Modifier.fillMaxWidth()
             )

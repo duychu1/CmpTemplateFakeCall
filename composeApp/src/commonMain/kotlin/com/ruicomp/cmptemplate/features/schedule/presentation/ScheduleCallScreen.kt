@@ -124,7 +124,7 @@ private fun ScheduleCallScreenContent(
                     }
                 }
                 BannerAdComposable(
-                    adUnitIds = listOf(BuildKonfig.ADMOB_BANNER_ID),
+                    adUnitIds = listOf(BuildKonfig.banner_schedule_high, BuildKonfig.banner_schedule),
                     modifier = Modifier.fillMaxWidth()
                 )
             }

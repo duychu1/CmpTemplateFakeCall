@@ -73,7 +73,7 @@ private fun SettingsScreenContent(
         },
         bottomBar = {
             NativeAdComposable(
-                adUnitIds = listOf(BuildKonfig.ADMOB_NATIVE_ID),
+                adUnitIds = listOf(BuildKonfig.native_setting_high, BuildKonfig.native_setting),
                 adSize = NativeAdSize.Large,
                 modifier = Modifier.fillMaxWidth()
             )

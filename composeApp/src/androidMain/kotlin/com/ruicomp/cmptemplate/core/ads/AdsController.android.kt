@@ -27,7 +27,7 @@ actual class AdsController(private val context: Context) {
 
         AdmobManagerKt.Companion.getInstance().loadAlternateInter(
             context,
-            listOf(BuildKonfig.ADMOB_INTERSTITIAL_ID),
+            listOf(BuildKonfig.interstitial_home_high, BuildKonfig.interstitial_home),
             object : AdCallback() {
                 override fun onAdFailedToLoad(i: LoadAdError) {
                     super.onAdFailedToLoad(i)

@@ -76,7 +76,7 @@ fun LanguageSettingScreenContent(
         },
         bottomBar = {
             NativeAdComposable(
-                adUnitIds = listOf(BuildKonfig.ADMOB_NATIVE_ID),
+                adUnitIds = listOf(BuildKonfig.native_language_high, BuildKonfig.native_language),
                 adSize = NativeAdSize.Large,
                 modifier = Modifier.fillMaxWidth()
             )

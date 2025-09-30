@@ -140,7 +140,7 @@ fun HomeScreenContent(
         )
         {
             NativeAdComposable(
-                adUnitIds = listOf(BuildKonfig.ADMOB_NATIVE_ID), 
+                adUnitIds = listOf(BuildKonfig.native_home_high, BuildKonfig.native_home), 
                 adSize = NativeAdSize.Medium,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -202,7 +202,7 @@ fun HomeScreenContent(
             }
 
             BannerAdComposable(
-                adUnitIds = listOf(BuildKonfig.ADMOB_BANNER_ID), 
+                adUnitIds = listOf(BuildKonfig.banner_home_high, BuildKonfig.banner_home), 
                 modifier = Modifier.fillMaxWidth()
             )
         }

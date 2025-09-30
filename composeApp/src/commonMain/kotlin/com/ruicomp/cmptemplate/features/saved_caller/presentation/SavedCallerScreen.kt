@@ -105,7 +105,7 @@ private fun SavedCallerScreenContent(
         },
         bottomBar = {
             BannerAdComposable(
-                adUnitIds = listOf(BuildKonfig.ADMOB_BANNER_ID),
+                adUnitIds = listOf(BuildKonfig.banner_saved_caller_high, BuildKonfig.banner_saved_caller),
                 modifier = Modifier.fillMaxWidth()
             )
         }
