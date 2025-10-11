@@ -51,6 +51,7 @@ fun ContactItem(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+            Spacer(modifier = Modifier.weight(1f))
 
             if (actions != null) {
                 actions()

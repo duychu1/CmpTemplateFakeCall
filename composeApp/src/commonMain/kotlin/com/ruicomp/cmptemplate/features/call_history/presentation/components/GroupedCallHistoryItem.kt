@@ -25,38 +25,56 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun GroupedCallHistoryItem(
     historyItems: List<CallHistory>,
-    onRecall: (CallHistory) -> Unit
+    onRecall: (CallHistory) -> Unit,
+    defaultExpanded: Boolean = false
 ) {
     val mostRecentItem = historyItems.first()
-    var isExpanded by remember { mutableStateOf(false) }
+    var isExpanded by remember { mutableStateOf(defaultExpanded) }
 
-    ContactItem(
-        contact = mostRecentItem.asContact(),
-        onClick = { isExpanded = !isExpanded },
-        actions = {
+    Column(modifier = Modifier.fillMaxWidth().clip(MaterialTheme.shapes.medium).background(MaterialTheme.colorScheme.surfaceVariant)) {
+        ContactItem(
+            contact = mostRecentItem.asContact(),
+            onClick = { isExpanded = !isExpanded },
+            actions = {
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
 
-                if (historyItems.size > 1) {
-                    Text(text = "(${historyItems.size})", style = MaterialTheme.typography.bodySmall)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Icon(
-                        imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                        contentDescription = if (isExpanded) "Collapse" else "Expand"
-                    )
+                    if (historyItems.size > 1) {
+                        Text(text = "(${historyItems.size})", style = MaterialTheme.typography.bodySmall)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Icon(
+                            imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                            contentDescription = if (isExpanded) "Collapse" else "Expand"
+                        )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    // Timestamp
+                    TimeStamp(mostRecentItem.timestamp)
+
+                    // icon button recall
+                    IconButton(onClick = { onRecall(mostRecentItem) }) {
+                        Icon(Icons.Filled.Call, contentDescription = "Recall")
+                    }
                 }
-                Spacer(modifier = Modifier.weight(1f))
+            }
+        )
 
-                // Timestamp
-                TimeStamp(mostRecentItem.timestamp)
+        // Expanded list of individual calls
+        AnimatedVisibility(visible = isExpanded && historyItems.size > 1) {
+            Column() {
 
-                // icon button recall
-                IconButton(onClick = { onRecall(mostRecentItem) }) {
-                    Icon(Icons.Filled.Call, contentDescription = "Recall")
+                historyItems.drop(1).forEach { historyItem ->
+                    HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                    CallHistoryItem(
+                        item = historyItem,
+                        onRecall = { onRecall(historyItem) },
+//                            showContactInfo = false // Hide name/number as it's in the header
+                    )
                 }
             }
         }
-    )
+    }
 }
 
 @Preview
@@ -68,5 +86,19 @@ fun GroupedCallHistoryItemPreview() {
             CallHistory(id = 2, name = "John Doe", number = "+123456789", timestamp = 1672534800000L),
         ),
         onRecall = {}
+    )
+}
+@Preview
+@Composable
+fun GroupedCallHistoryItemExpandedPreview() {
+    GroupedCallHistoryItem(
+        historyItems = listOf(
+            CallHistory(id = 1, name = "John Doe", number = "+123456789", timestamp = 1672531200000L),
+            CallHistory(id = 2, name = "John Doe", number = "+123456789", timestamp = 1672534800000L),
+            CallHistory(id = 3, name = "John Doe", number = "+123456789", timestamp = 1672533300000L),
+
+            ),
+        defaultExpanded = true,
+        onRecall = {},
     )
 }
