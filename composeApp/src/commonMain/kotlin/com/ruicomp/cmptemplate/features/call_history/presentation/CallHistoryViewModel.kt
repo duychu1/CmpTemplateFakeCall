@@ -45,9 +45,18 @@ class CallHistoryViewModel(
     private fun loadHistory() {
         _uiState.update { it.copy(isLoading = true, error = null) }
         callHistoryRepository.getCallHistory().onEach { history ->
+            val grouped = history.groupBy { it.number }
+                .map { (number, items) ->
+                    com.ruicomp.cmptemplate.features.call_history.domain.models.CallHistoryGroup(
+                        groupTitle = number,
+                        items = items
+                    )
+                }
+                .sortedByDescending { it.groupTitle }
             _uiState.update {
                 it.copy(
                     history = history,
+                    groupedHistory = grouped,
                     isLoading = false,
                     error = null
                 )
@@ -60,4 +69,3 @@ class CallHistoryViewModel(
         prepareCallManager.clear()
     }
 }
-

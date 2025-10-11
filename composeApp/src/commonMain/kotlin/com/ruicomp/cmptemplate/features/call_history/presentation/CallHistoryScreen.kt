@@ -58,6 +58,7 @@ import com.ruicomp.cmptemplate.features.call_history.presentation.components.Cal
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import com.ruicomp.cmptemplate.BuildKonfig
+import com.ruicomp.cmptemplate.features.call_history.presentation.components.GroupedCallHistoryItem
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -126,10 +127,15 @@ private fun CallHistoryScreenContent(
                     modifier = Modifier.weight(1f),
                     contentPadding = PaddingValues(16.dp)
                 ) {
-                    items(uiState.history) { historyItem ->
-                        CallHistoryItem(
-                            item = historyItem,
-                            onRecall = {
+                    items(uiState.groupedHistory) { group ->
+                        Text(
+                            text = group.groupTitle,
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                        GroupedCallHistoryItem(
+                            historyItems = group.items,
+                            onRecall = { historyItem ->
                                 onEvent(CallHistoryEvent.SelectHistoryForRecall(historyItem))
                             }
                         )
@@ -145,13 +151,25 @@ private fun CallHistoryScreenContent(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun CallHistoryScreenContentPreview() {
+    val history = listOf(
+        CallHistory(id = 1, name = "John Doe", number = "123456789", timestamp = 1678886400000L),
+        CallHistory(id = 2, name = "Jane Smith", number = "987654321", timestamp = 1678886400000L),
+        CallHistory(id = 1, name = "John Doe", number = "123456789", timestamp = 1678886400000L),
+        CallHistory(id = 3, name = "John Doe", number = "3456789", timestamp = 1678886400000L),
+        CallHistory(id = 3, name = "John Doe", number = "3456789", timestamp = 1678886400000L),
+    )
+    val groupedHistory = history.groupBy { it.number }
+        .map { (number, items) ->
+            com.ruicomp.cmptemplate.features.call_history.domain.models.CallHistoryGroup(
+                groupTitle = number,
+                items = items
+            )
+        }
     CallHistoryScreenContent(
         onBack = {},
         uiState = CallHistoryState(
-            history = listOf(
-                CallHistory(id = 1, name = "John Doe", number = "123456789", timestamp = 1678886400000L),
-                CallHistory(id = 2, name = "Jane Smith", number = "987654321", timestamp = 1678886400000L)
-            ),
+            history = history,
+            groupedHistory = groupedHistory,
             isLoading = false,
             error = null,
             showBottomSheet = false,
@@ -168,4 +186,3 @@ private fun formatTimestamp(timestamp: Long): String {
     val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
     return "${localDateTime.date} ${localDateTime.hour.toString().padStart(2, '0')}:${localDateTime.minute.toString().padStart(2, '0')}"
 }
-
