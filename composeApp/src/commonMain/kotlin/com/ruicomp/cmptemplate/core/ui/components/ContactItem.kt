@@ -1,5 +1,6 @@
 package com.ruicomp.cmptemplate.core.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,9 +26,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun ContactItem(
     contact: Contact,
+    onClick: () -> Unit = {},
     actions: @Composable (() -> Unit)? = null
 ) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(modifier = Modifier.fillMaxWidth().clickable(onClick = onClick)) {
         Row(
             modifier = Modifier
                 .padding(start = 12.dp, end = 4.dp, top = 8.dp, bottom = 8.dp)
@@ -38,7 +40,7 @@ fun ContactItem(
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            Column(modifier = Modifier.weight(1f)) {
+            Column(modifier = Modifier.padding(end = 8.dp)) {
                 Text(
                     text = contact.name,
                     style = MaterialTheme.typography.bodyLarge,

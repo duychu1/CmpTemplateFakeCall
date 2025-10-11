@@ -128,11 +128,6 @@ private fun CallHistoryScreenContent(
                     contentPadding = PaddingValues(16.dp)
                 ) {
                     items(uiState.groupedHistory) { group ->
-                        Text(
-                            text = group.groupTitle,
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
                         GroupedCallHistoryItem(
                             historyItems = group.items,
                             onRecall = { historyItem ->
