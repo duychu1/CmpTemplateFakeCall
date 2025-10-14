@@ -173,7 +173,7 @@ buildkonfig {
     defaultConfigs {
 
         val addConstant: (constantName: String, constantValue: String) -> Unit = { constantName, constantValue ->
-            buildConfigField(Type.STRING, constantName, "\"$constantValue\"")
+            buildConfigField(Type.STRING, constantName, constantValue)
         }
 
         addConstant("banner_home_high", "ca-app-pub-3940256099942544/6300978111")

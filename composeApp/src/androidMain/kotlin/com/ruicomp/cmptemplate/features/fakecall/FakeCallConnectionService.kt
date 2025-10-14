@@ -19,9 +19,9 @@ class FakeCallConnectionService : ConnectionService() {
         request: ConnectionRequest?
     ): Connection {
         val extras = request?.extras
-        val callerName = extras?.getString(FakeCallManager.EXTRA_CALLER_NAME) ?: "NameTest"
+        val callerName = extras?.getString(FakeCallManager.EXTRA_CALLER_NAME) ?: "N/A"
         Log.d("FakeCallConnectionSvc", "Incoming call from $callerName")
-        val callerNumber = extras?.getString(FakeCallManager.EXTRA_CALLER_NUMBER) ?: "+65467890909"
+        val callerNumber = extras?.getString(FakeCallManager.EXTRA_CALLER_NUMBER) ?: "+0123456789"
         Log.d("FakeCallConnectionSvc", "Incoming call from $callerNumber")
         val callerAvatarUri = extras?.getString(FakeCallManager.EXTRA_CALLER_AVATAR_URI)
         return FakeCallConnection(callerName, callerNumber, callerAvatarUri).apply {
