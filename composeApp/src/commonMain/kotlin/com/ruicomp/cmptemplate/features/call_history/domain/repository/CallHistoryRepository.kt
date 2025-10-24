@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface CallHistoryRepository {
     fun getCallHistory(): Flow<List<CallHistory>>
     suspend fun addCallToHistory(contact: Contact)
-} 
+    suspend fun deleteCallHistory(callHistory: CallHistory)
+}

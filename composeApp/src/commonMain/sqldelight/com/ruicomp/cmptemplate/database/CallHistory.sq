@@ -11,5 +11,8 @@ SELECT * FROM call_history ORDER BY timestamp DESC;
 insertCallHistory:
 INSERT INTO call_history(name, number, timestamp) VALUES (?, ?, ?);
 
+deleteCallHistory:
+DELETE FROM call_history WHERE id = ?;
+
 clearCallHistory:
 DELETE FROM call_history; 

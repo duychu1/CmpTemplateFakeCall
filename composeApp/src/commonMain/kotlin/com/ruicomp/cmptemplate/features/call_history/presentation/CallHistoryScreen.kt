@@ -132,6 +132,9 @@ private fun CallHistoryScreenContent(
                             historyItems = group.items,
                             onRecall = { historyItem ->
                                 onEvent(CallHistoryEvent.SelectHistoryForRecall(historyItem))
+                            },
+                            onDelete = { historyItem ->
+                                onEvent(CallHistoryEvent.DeleteHistory(historyItem))
                             }
                         )
                         Spacer(modifier = Modifier.height(8.dp))

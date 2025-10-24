@@ -9,8 +9,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,7 +28,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun GroupedCallHistoryItem(
     historyItems: List<CallHistory>,
     onRecall: (CallHistory) -> Unit,
-    defaultExpanded: Boolean = false
+    onDelete: (CallHistory) -> Unit = {},
+    defaultExpanded: Boolean = false,
 ) {
     val mostRecentItem = historyItems.first()
     var isExpanded by remember { mutableStateOf(defaultExpanded) }
@@ -49,6 +52,8 @@ fun GroupedCallHistoryItem(
                     }
                     Spacer(modifier = Modifier.weight(1f))
 
+                    DeleteIconButton(onClick = { onDelete(mostRecentItem) })
+
                     // Timestamp
                     TimeStamp(mostRecentItem.timestamp)
 
@@ -69,6 +74,7 @@ fun GroupedCallHistoryItem(
                     CallHistoryItem(
                         item = historyItem,
                         onRecall = { onRecall(historyItem) },
+                        onDelete = { onDelete(historyItem) },
 //                            showContactInfo = false // Hide name/number as it's in the header
                     )
                 }

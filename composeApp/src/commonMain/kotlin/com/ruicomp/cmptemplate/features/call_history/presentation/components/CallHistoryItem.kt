@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
@@ -43,12 +44,15 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun CallHistoryItem(
     item: CallHistory,
-    onRecall: (CallHistory) -> Unit
+    onRecall: (CallHistory) -> Unit,
+    onDelete: (CallHistory) -> Unit = {},
 ) {
     ContactItem(
         contact = item.asContact(),
         actions = {
             Row(verticalAlignment = Alignment.CenterVertically) {
+                // icon button recall
+                DeleteIconButton(onClick = { onDelete(item) })
                 // Timestamp
                 TimeStamp(item.timestamp)
 

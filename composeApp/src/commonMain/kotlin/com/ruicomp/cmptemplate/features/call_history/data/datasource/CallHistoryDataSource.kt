@@ -39,4 +39,8 @@ class CallHistoryDataSource(
             timestamp = kotlin.time.Clock.System.now().toEpochMilliseconds()
         )
     }
+
+    suspend fun deleteCallHistory(id: Long) {
+        database.callHistoryQueries.deleteCallHistory(id)
+    }
 } 

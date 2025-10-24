@@ -39,6 +39,11 @@ class CallHistoryViewModel(
                     prepareCallManager.onEvent(PrepareCallEvent.ShowSheet(history.asContact()))
                 }
             }
+            is CallHistoryEvent.DeleteHistory -> {
+                viewModelScope.launch {
+                    callHistoryRepository.deleteCallHistory(event.history)
+                }
+            }
         }
     }
 

@@ -7,4 +7,5 @@ sealed class CallHistoryEvent {
     object LoadHistory : CallHistoryEvent()
     data class SelectHistoryForRecall(val history: CallHistory?) : CallHistoryEvent()
     object TriggerShowBottomSheet : CallHistoryEvent()
+    data class DeleteHistory(val history: CallHistory) : CallHistoryEvent()
 }

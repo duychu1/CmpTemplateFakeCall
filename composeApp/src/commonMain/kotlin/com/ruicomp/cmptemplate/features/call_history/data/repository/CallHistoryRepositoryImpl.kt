@@ -19,4 +19,8 @@ class CallHistoryRepositoryImpl(
             number = contact.number
         )
     }
+
+    override suspend fun deleteCallHistory(callHistory: CallHistory) {
+        dataSource.deleteCallHistory(callHistory.id)
+    }
 } 
