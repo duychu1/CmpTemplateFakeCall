@@ -119,16 +119,16 @@ private fun SettingsScreenContent(
                         color = MaterialTheme.colorScheme.outlineVariant
                     )
                     
-                    SettingsItem(
-                        icon = Icons.Default.Description,
-                        title = stringResource(Res.string.terms_and_conditions),
-                        onClick = onTermsClick
-                    )
-                    
-                    HorizontalDivider(
-                        modifier = Modifier.padding(start = 56.dp, end = 24.dp),
-                        color = MaterialTheme.colorScheme.outlineVariant
-                    )
+//                    SettingsItem(
+//                        icon = Icons.Default.Description,
+//                        title = stringResource(Res.string.terms_and_conditions),
+//                        onClick = onTermsClick
+//                    )
+//
+//                    HorizontalDivider(
+//                        modifier = Modifier.padding(start = 56.dp, end = 24.dp),
+//                        color = MaterialTheme.colorScheme.outlineVariant
+//                    )
                     
                     SettingsItem(
                         icon = Icons.Default.Star,
